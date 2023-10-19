@@ -1,0 +1,26 @@
+import mongoose, { Schema, Document } from "mongoose";
+
+export interface IMessageData {
+    UserID: string;
+    Date: number;
+}
+
+export interface IMessageDocument extends Document {
+    GuildID: string;
+    Collection: Map<string, IMessageData>;
+}
+
+const StatsSchema = new Schema({
+    GuildID: { type: String },
+    Collection: [
+        {
+            UserID: String,
+            Date: Number,
+            MessageId: String,
+            ChannelId: String
+        }
+    ]
+})
+
+const name = 'Stats-log'
+export default mongoose.models[name] || mongoose.model<IMessageDocument>(name, StatsSchema);
