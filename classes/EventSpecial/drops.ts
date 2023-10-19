@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, ComponentType, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
+import { ActionRowBuilder, Activity, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, ComponentType, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
 import DropSchema from "../../models/Drop-Schema";
 import { client } from "../..";
 import { InventoryClass } from "./inventory";
@@ -124,12 +124,12 @@ export class DropClass {
         }
     }
 
-    public trigger() {
-        this.sendDrops(false);
+    public trigger(checkActivity: boolean) {
+        this.sendDrops(checkActivity ?? true);
     }
 
     private uploadDropsDataToMongoDbAndIdkIWantToMakeThisLongAsFuck() {
-        
+
     }
 
     private startUp() {
