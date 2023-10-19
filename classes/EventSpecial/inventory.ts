@@ -4,7 +4,7 @@ import { ItemClass } from "./item";
 
 export class InventoryClass {
     private static instance: InventoryClass;
-    private inventoryCollection: Collection<string, Collection<string, { name: string, amount: number }[]>> = new Collection()
+    private inventoryCollection: Collection<string, Collection<string, { name: string, amount: number }[]>> = new Collection();
 
     private constructor() {
         this.initializeInventoryData().then(() => {
@@ -16,40 +16,43 @@ export class InventoryClass {
         return this.instance || (this.instance = new InventoryClass());
     }
 
-    public async addItemToInventory(member: GuildMember, item: { name: string, amount: number }) {
-        const guildID = member.guild.id;
-        const userID = member.id;
+    public getInventory(member: GuildMember) {
+        return this.inventoryCollection.get(member.guild.id)?.get(member.id) || [];
+    }
 
-        if (!this.inventoryCollection.has(guildID)) {
-            this.inventoryCollection.set(guildID, new Collection());
-        }
-
-        if (!this.inventoryCollection.get(guildID)!.has(userID)) {
-            this.inventoryCollection.get(guildID)!.set(userID, []);
-        }
-
-        const userInventory = this.inventoryCollection.get(guildID)!.get(userID)!;
-
-        if (this.ValidateItem(item.name)) {
-            const existingItem = userInventory.find((i) => i.name === item.name);
-
-            if (existingItem) {
-                existingItem.amount += item.amount;
-            } else {
-                userInventory.push(item);
-            }
+    public addCratesToInventory(member: GuildMember, crates: { crateName: string; amount: number } | { crateName: string, amount: number }[]) {
+        const guildId = member.guild.id;
+        const userId = member.id;
+        const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
+    
+        if (!inventoryData) {
+            this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>().set(userId, this.cratesAsArray(crates)));
         } else {
-            console.log(`Invalid item: ${item.name}`);
+            if (Array.isArray(crates)) {
+                crates.forEach((crate) => {
+                    const existing = inventoryData.find((item) => item.name === crate.crateName);
+                    if (existing) {
+                        existing.amount += crate.amount;
+                    } else {
+                        inventoryData.push({ name: crate.crateName, amount: crate.amount });
+                    }
+                });
+            } else {
+                const existing = inventoryData.find((item) => item.name === crates.crateName);
+                if (existing) {
+                    existing.amount += crates.amount;
+                } else {
+                    inventoryData.push({ name: crates.crateName, amount: crates.amount });
+                }
+            }
         }
     }
 
-    public getInventory(member: GuildMember) {
-        const guildID = member.guild.id;
-        const userID = member.id;
-        if (this.inventoryCollection.has(guildID) && this.inventoryCollection.get(guildID)!.has(userID)) {
-            return this.inventoryCollection.get(guildID)!.get(userID);
+    private cratesAsArray(crates: { crateName: string; amount: number } | { crateName: string, amount: number } | { crateName: string, amount: number }[]) {
+        if (Array.isArray(crates)) {
+            return crates.map(crate => ({ name: crate.crateName, amount: crate.amount }));
         } else {
-            return [];
+            return [{ name: crates.crateName, amount: crates.amount }];
         }
     }
 
@@ -67,7 +70,6 @@ export class InventoryClass {
                 this.inventoryCollection.get(guildID)!.set(userID, items);
             }
         } catch (error) {
-            console.error('Error initializing inventory data:', error);
         }
     }
 
@@ -83,7 +85,6 @@ export class InventoryClass {
                 }
             }
         } catch (error) {
-            console.error('Error uploading inventory data to MongoDB:', error);
         }
     }
 
