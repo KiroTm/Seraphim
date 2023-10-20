@@ -41,6 +41,6 @@ export class CacheLoader {
 
     private emit(instance: ConfigInstance) {
         console.log(instance._chalk.bold.white(`➙ Emitting 'messageCreate' to remove command response delay!\n`));
-        instance._client?.emit('messageCreate', {content: ""} as any);
+        instance._client?.emit('messageCreate', { content: 'null' } as any);
     }
 }
