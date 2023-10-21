@@ -219,7 +219,7 @@ type animals = {
     name: string,
     description: string,
     emoji?: string
-    type: 'Common' | 'Uncommon' | 'Rare' | 'Mythic';
+    type: 'Common' | 'Uncommon' | 'Rare' | 'Mythic' | 'Ultra Rare' | 'Godlike'
     weight: number
     sell_price: number
 }
@@ -228,44 +228,59 @@ const AllAnimals: Record<string, animals> = {
         name: "pig",
         description: "Oink Oink~~",
         type: 'Common',
-        weight: 50,
+        weight: 100,
         sell_price: 2000
     },
     Sheep: {
         name: "sheep",
         description: "bɑɑɑɑɑɑɑ!",
         type: 'Common',
-        weight: 20,
+        weight: 50,
         sell_price: 3000
     },
     Boar: {
         name: "boar",
         description: "Never heard a boar scream....",
         type: 'Uncommon',
-        weight: 10,
+        weight: 40,
         sell_price: 4000
+    },
+    Eagle: {
+        name: "eagle",
+        description: "'MURICA 🦅🦅🦅🦅",
+        type: 'Uncommon',
+        weight: 30,
+        sell_price: 4600
     },
     Leopard: {
         name: "leopard",
         description: "https://africafreak.com/what-sound-does-a-leopard-make",
         type: 'Rare',
-        weight: 5,
+        weight: 20,
         sell_price: 5000
     },
     Lynx: {
         name: "lynx",
         description: "ew furry",
         type: 'Rare',
-        weight: 3,
+        weight: 10,
         sell_price: 10000
     },
     Yuuki: {
         name: "Yuuki",
         description: "Furry",
         type: 'Mythic',
-        weight: 1,
+        weight: 5,
         sell_price: 1
-    }
+    },
+    Dodo: {
+        name: "dodo",
+        description: "The dodo is an extinct flightless bird that was endemic to the island of Mauritius",
+        type: 'Ultra Rare',
+        weight: 3,
+        sell_price: 50000
+    },
+
 }
 
 export {AllItems, AllAnimals}

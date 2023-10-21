@@ -49,7 +49,7 @@ export default {
                 if (!amount) return message.channel.send("Invalid amount");
                 
                 // Use the InventoryClass to add crates to a user's inventory
-                inventoryInstance.addCratesToInventory(member, [{ crateName: crate_name, amount: amount }]);
+                inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: amount }]);
                 
                 message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription(`Granted ${amount} ${crate_name} crates to ${member.user.username}`)] });
             } else if (args[0] === 'remove') {

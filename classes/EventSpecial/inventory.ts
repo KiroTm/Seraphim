@@ -20,41 +20,42 @@ export class InventoryClass {
         return this.inventoryCollection.get(member.guild.id)?.get(member.id) || [];
     }
 
-    public addCratesToInventory(member: GuildMember, crates: { crateName: string; amount: number } | { crateName: string, amount: number }[]) {
+    public addItemAnimalCrate(member: GuildMember, itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number }[]) {
         const guildId = member.guild.id;
         const userId = member.id;
         const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
-    
+
         if (!inventoryData) {
-            this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>().set(userId, this.cratesAsArray(crates)));
+            this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>().set(userId, this.itemsOrAnimalsAsArray(itemsOrAnimals)));
         } else {
-            if (Array.isArray(crates)) {
-                crates.forEach((crate) => {
-                    const existing = inventoryData.find((item) => item.name === crate.crateName);
+            if (Array.isArray(itemsOrAnimals)) {
+                itemsOrAnimals.forEach((itemOrAnimal) => {
+                    const existing = inventoryData.find((entry) => entry.name === itemOrAnimal.name);
                     if (existing) {
-                        existing.amount += crate.amount;
+                        existing.amount += itemOrAnimal.amount;
                     } else {
-                        inventoryData.push({ name: crate.crateName, amount: crate.amount });
+                        inventoryData.push({ name: itemOrAnimal.name, amount: itemOrAnimal.amount });
                     }
                 });
             } else {
-                const existing = inventoryData.find((item) => item.name === crates.crateName);
+                const existing = inventoryData.find((entry) => entry.name === itemsOrAnimals.name);
                 if (existing) {
-                    existing.amount += crates.amount;
+                    existing.amount += itemsOrAnimals.amount;
                 } else {
-                    inventoryData.push({ name: crates.crateName, amount: crates.amount });
+                    inventoryData.push({ name: itemsOrAnimals.name, amount: itemsOrAnimals.amount });
                 }
             }
         }
     }
 
-    private cratesAsArray(crates: { crateName: string; amount: number } | { crateName: string, amount: number } | { crateName: string, amount: number }[]) {
-        if (Array.isArray(crates)) {
-            return crates.map(crate => ({ name: crate.crateName, amount: crate.amount }));
+    private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {
+        if (Array.isArray(itemsOrAnimals)) {
+            return itemsOrAnimals.map((itemOrAnimal) => ({ name: itemOrAnimal.name, amount: itemOrAnimal.amount }));
         } else {
-            return [{ name: crates.crateName, amount: crates.amount }];
+            return [{ name: itemsOrAnimals.name, amount: itemsOrAnimals.amount }];
         }
     }
+
 
     private async initializeInventoryData() {
         try {
