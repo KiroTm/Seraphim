@@ -1,5 +1,5 @@
 import { EmbedBuilder, Message } from "discord.js";
-import AllItems, { recipe, items } from "./types";
+import {AllItems, recipe, items } from "./types";
 import { ItemClass } from "./item";
 type Recipe = {
     itemName: string

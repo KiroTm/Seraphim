@@ -159,6 +159,18 @@ const AllItems: Record<string, items> = {
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
         }
     },
+    rifle: {
+        name: "Hunting Rifle",
+        price: 40000,
+        description: "GET HERE SHAWN, ONE STEP CLOSER AND YOU DIE!",
+        emoji: "<:rifle:1165170154167091280>",
+        info: {
+            type: 'Tool',
+            usable: false,
+            usage: 'Having a rifle in your inventory would allow you to hunt',
+            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
+        }
+    },
     // All the materials:
     metal: {
         name: "Metal Scrap",
@@ -202,4 +214,58 @@ const AllItems: Record<string, items> = {
     }
 } as const
 
-export default AllItems
+
+type animals = {
+    name: string,
+    description: string,
+    emoji?: string
+    type: 'Common' | 'Uncommon' | 'Rare' | 'Mythic';
+    weight: number
+    sell_price: number
+}
+const AllAnimals: Record<string, animals> = {
+    Pig: {
+        name: "pig",
+        description: "Oink Oink~~",
+        type: 'Common',
+        weight: 50,
+        sell_price: 2000
+    },
+    Sheep: {
+        name: "sheep",
+        description: "bɑɑɑɑɑɑɑ!",
+        type: 'Common',
+        weight: 20,
+        sell_price: 3000
+    },
+    Boar: {
+        name: "boar",
+        description: "Never heard a boar scream....",
+        type: 'Uncommon',
+        weight: 10,
+        sell_price: 4000
+    },
+    Leopard: {
+        name: "leopard",
+        description: "https://africafreak.com/what-sound-does-a-leopard-make",
+        type: 'Rare',
+        weight: 5,
+        sell_price: 5000
+    },
+    Lynx: {
+        name: "lynx",
+        description: "ew furry",
+        type: 'Rare',
+        weight: 3,
+        sell_price: 10000
+    },
+    Yuuki: {
+        name: "Yuuki",
+        description: "Furry",
+        type: 'Mythic',
+        weight: 1,
+        sell_price: 1
+    }
+}
+
+export {AllItems, AllAnimals}

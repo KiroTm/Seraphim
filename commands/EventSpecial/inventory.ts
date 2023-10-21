@@ -2,9 +2,9 @@ import { EmbedBuilder, GuildMember } from "discord.js";
 import { CommandType } from "../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../typings";
 import { MemberClass } from "../../classes/misc/member";
-import { DropClass, dropTypes } from "../../classes/EventSpecial/drops";
+import { dropTypes } from "../../classes/EventSpecial/drops";
 import { InventoryClass } from "../../classes/EventSpecial/inventory";
-import AllItems from "../../classes/EventSpecial/types";
+import { AllItems } from "../../classes/EventSpecial/types";
 const memberClass = new MemberClass()
 const Inventory  = InventoryClass.getInstance()
 export default {
