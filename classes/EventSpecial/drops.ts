@@ -90,7 +90,6 @@ export class DropClass {
                         components: []
                     });
 
-                    // Add the crate to the user's inventory
                     inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: 1 }]);
                     setTimeout(() => {
                         interaction.message.delete().catch(() => { });

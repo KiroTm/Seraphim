@@ -227,6 +227,7 @@ const AllAnimals: Record<string, animals> = {
     Pig: {
         name: "pig",
         description: "Oink Oink~~",
+        emoji: "<:piggy:1165210242813022230>",
         type: 'Common',
         weight: 100,
         sell_price: 2000
@@ -234,6 +235,7 @@ const AllAnimals: Record<string, animals> = {
     Sheep: {
         name: "sheep",
         description: "bɑɑɑɑɑɑɑ!",
+        emoji: "<:sheep:1165259262675656714> ",
         type: 'Common',
         weight: 50,
         sell_price: 3000
@@ -241,6 +243,7 @@ const AllAnimals: Record<string, animals> = {
     Boar: {
         name: "boar",
         description: "Never heard a boar scream....",
+        emoji: "<:boar:1165259809914884096> ",
         type: 'Uncommon',
         weight: 40,
         sell_price: 4000
@@ -248,13 +251,23 @@ const AllAnimals: Record<string, animals> = {
     Eagle: {
         name: "eagle",
         description: "'MURICA 🦅🦅🦅🦅",
+        emoji: "<a:eagle:1165261157645430804>",
         type: 'Uncommon',
         weight: 30,
         sell_price: 4600
     },
+    Tiger: {
+        name: "tiger",
+        description: "SIMBAAAAA!!!!1AAHHHH",
+        emoji: "",
+        type: 'Rare',
+        weight: 15,
+        sell_price: 4800
+    },
     Leopard: {
         name: "leopard",
-        description: "https://africafreak.com/what-sound-does-a-leopard-make",
+        description: "[Description..](https://africafreak.com/what-sound-does-a-leopard-make)",
+        emoji: "<:leopard:1165263075193135195>",
         type: 'Rare',
         weight: 20,
         sell_price: 5000
@@ -262,6 +275,7 @@ const AllAnimals: Record<string, animals> = {
     Lynx: {
         name: "lynx",
         description: "ew furry",
+        emoji: "<:lynx:1165264087551324250> ",
         type: 'Rare',
         weight: 10,
         sell_price: 10000
@@ -276,6 +290,7 @@ const AllAnimals: Record<string, animals> = {
     Dodo: {
         name: "dodo",
         description: "The dodo is an extinct flightless bird that was endemic to the island of Mauritius",
+        emoji: "<:dodo:1165264720870244372>",
         type: 'Ultra Rare',
         weight: 3,
         sell_price: 50000
