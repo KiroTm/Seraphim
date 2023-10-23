@@ -8,6 +8,7 @@ export interface IMessageData {
 export interface IMessageDocument extends Document {
     GuildID: string;
     Collection: Map<string, IMessageData>;
+    Lookback: string;
 }
 
 const StatsSchema = new Schema({
@@ -19,8 +20,8 @@ const StatsSchema = new Schema({
             MessageId: String,
             ChannelId: String
         }
-    ]
-})
-
-const name = 'Stats-log'
+    ],
+    Lookback: { type: String }
+});
+const name = 'Stats-log';
 export default mongoose.models[name] || mongoose.model<IMessageDocument>(name, StatsSchema);

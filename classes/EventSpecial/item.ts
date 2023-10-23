@@ -1,13 +1,13 @@
 import { Messagepagination } from '../../functions/utility/pagination';
-import AllItems, { items } from './types'
+import {AllItems, items } from './types'
 import { Message, Collection, EmbedBuilder, parseEmoji } from "discord.js"
 const ShopItemsCollection: Collection<string, items> = new Collection<string, items>(Object.entries(AllItems))
 export class ItemClass {
     public async generate(message: Message, item?: string) {
         const createEmbed = (item: items) => {
             const { name, description, emoji, info } = item
-            const { usage, boosts, type, craft } = info || {type: 'Other'}
-            const { recipe } = craft || {usedInCrafting: false, canbeCrafted: false, recipe: null}
+            const { usage, boosts, type, craft } = info || { type: 'Other' }
+            const { recipe } = craft || { usedInCrafting: false, canbeCrafted: false, recipe: null }
 
             return new EmbedBuilder()
                 .setColor('Blurple')
@@ -30,6 +30,12 @@ export class ItemClass {
         const Item = ShopItemsCollection.find((_, key) => key.toLowerCase().includes(itemName.toLowerCase()));
         return Item || undefined
     }
+
+    public AllItems(): Collection<string, items> {
+        const itemCollection = new Collection(Object.entries(AllItems));
+        return itemCollection;
+    }
+
 }
 
 

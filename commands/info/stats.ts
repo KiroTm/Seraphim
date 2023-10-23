@@ -23,7 +23,7 @@ export default {
     aliases: ['s', 'stat'],
     callback: async ({ message, args, guild }: Callback) => {
         const time = Date.now()
-        const queryType = ['top', 'me', 'role'].includes(args[0]) ? args[0] : memberClass.fetch(guild, args[0] ?? message.author.id as string) as GuildMember;
+        const queryType = ['top', 'me', 'role', 'lookback'].includes(args[0]) ? args[0] : memberClass.fetch(guild, args[0] ?? message.author.id as string) as GuildMember;
         if (queryType == 'top') {
             const top = statsClass.getTopMembers(guild, 10)
             return message.channel.send({
@@ -110,8 +110,17 @@ export default {
                         })
                 ]
             })
+        } else if (queryType == 'lookback') {
+            const days = parseInt(args[1] ?? undefined)
+            if (!days) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time!\nCorrect usage example: ?stats lookback 2 <-- sets lookback 2 days")]})
         } else {
-            return message.channel.send("Invalid Args!")
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                    .setColor('Red')
+                    .setDescription(`Invalid args! Must be one of \`top, me, lookback <days>, role <@role>, @user\``)
+                ]
+            })
         }
     }
 } as Command;

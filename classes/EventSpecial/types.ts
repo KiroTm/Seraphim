@@ -159,6 +159,18 @@ const AllItems: Record<string, items> = {
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
         }
     },
+    rifle: {
+        name: "Hunting Rifle",
+        price: 40000,
+        description: "GET HERE SHAWN, ONE STEP CLOSER AND YOU DIE!",
+        emoji: "<:rifle:1165170154167091280>",
+        info: {
+            type: 'Tool',
+            usable: false,
+            usage: 'Having a rifle in your inventory would allow you to hunt',
+            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
+        }
+    },
     // All the materials:
     metal: {
         name: "Metal Scrap",
@@ -202,4 +214,88 @@ const AllItems: Record<string, items> = {
     }
 } as const
 
-export default AllItems
+
+type animals = {
+    name: string,
+    description: string,
+    emoji?: string
+    type: 'Common' | 'Uncommon' | 'Rare' | 'Mythic' | 'Ultra Rare' | 'Godlike'
+    weight: number
+    sell_price: number
+}
+const AllAnimals: Record<string, animals> = {
+    Pig: {
+        name: "pig",
+        description: "Oink Oink~~",
+        emoji: "<:piggy:1165210242813022230>",
+        type: 'Common',
+        weight: 100,
+        sell_price: 2000
+    },
+    Sheep: {
+        name: "sheep",
+        description: "bɑɑɑɑɑɑɑ!",
+        emoji: "<:sheep:1165259262675656714> ",
+        type: 'Common',
+        weight: 50,
+        sell_price: 3000
+    },
+    Boar: {
+        name: "boar",
+        description: "Never heard a boar scream....",
+        emoji: "<:boar:1165259809914884096> ",
+        type: 'Uncommon',
+        weight: 40,
+        sell_price: 4000
+    },
+    Eagle: {
+        name: "eagle",
+        description: "'MURICA 🦅🦅🦅🦅",
+        emoji: "<a:eagle:1165261157645430804>",
+        type: 'Uncommon',
+        weight: 30,
+        sell_price: 4600
+    },
+    Tiger: {
+        name: "tiger",
+        description: "SIMBAAAAA!!!!1AAHHHH",
+        emoji: "",
+        type: 'Rare',
+        weight: 15,
+        sell_price: 4800
+    },
+    Leopard: {
+        name: "leopard",
+        description: "[Description..](https://africafreak.com/what-sound-does-a-leopard-make)",
+        emoji: "<:leopard:1165263075193135195>",
+        type: 'Rare',
+        weight: 20,
+        sell_price: 5000
+    },
+    Lynx: {
+        name: "lynx",
+        description: "ew furry",
+        emoji: "<:lynx:1165264087551324250> ",
+        type: 'Rare',
+        weight: 10,
+        sell_price: 10000
+    },
+    Yuuki: {
+        name: "Yuuki",
+        description: "Furry",
+        type: 'Mythic',
+        weight: 5,
+        sell_price: 1
+    },
+    Dodo: {
+        name: "dodo",
+        description: "The dodo is an extinct flightless bird that was endemic to the island of Mauritius",
+        emoji: "<:dodo:1165264720870244372>",
+        type: 'Ultra Rare',
+        weight: 3,
+        sell_price: 50000
+    },
+
+}
+
+export {AllItems, AllAnimals}

@@ -1,7 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, Interaction, PermissionFlagsBits } from "discord.js";
-import { Callback, Command } from "../../typings";
-import { CraftingClass } from "../../classes/EventSpecial/crafting";
-import { ItemClass } from "../../classes/EventSpecial/item";
+import { Callback, Command } from "../../../typings";
+import { CraftingClass } from "../../../classes/EventSpecial/crafting"
 export default {
     name: "craft",
     description: "Craft items using materials!",

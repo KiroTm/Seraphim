@@ -26,16 +26,16 @@ export default {
                     .setColor(`${role.hexColor}`)
                     .setTitle(`${role.name}`)
                     .addFields(
-                        { name: "ID", value: `${role.id}`, inline: true },
-                        { name: "Name", value: `${role.name}`, inline: true },
-                        { name: "Color", value: `${role.hexColor}`, inline: true },
+                        { name: "ID", value: `${role.id || "Unknown"}`, inline: true },
+                        { name: "Name", value: `${role.name || "Unknown"}`, inline: true },
+                        { name: "Color", value: `${role.hexColor || "Default"}`, inline: true },
                         { name: "Mention", value: `\`<@&${role.id}>\``, inline: true },
                         { name: "Hoisted", value: `${role.hoist}`, inline: true },
                         { name: "Position", value: `${role.position}`, inline: true },
                         { name: "Mentionable", value: `${role.mentionable}`, inline: true },
                         { name: "Managed", value: `${role.managed}`, inline: true },
                         { name: "Permissions", value: (role.permissions.toArray().join(', ') || "None"), inline: false },
-                        { name: "Tags", value: `${tags}`, inline: false}
+                        { name: "Tags", value: `${tags || "None"}`, inline: false}
                     )
             ]
         })

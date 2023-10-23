@@ -1,5 +1,5 @@
-import { ItemClass } from "../../classes/EventSpecial/item";
-import { Callback, Command } from "../../typings";
+import { ItemClass } from "../../../classes/EventSpecial/item";
+import { Callback, Command } from "../../../typings";
 export default {
     name: "item",
     description: "Get information about an item!",
