@@ -22,7 +22,7 @@ export default {
     callback: async ({ message, guild, args }: Callback) => {
         const member = new MemberClass().fetch(guild, args[0], message) as GuildMember;
         if (!member) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid member!")] });
-        const modlogs = ModlogsClass.Modlogs.filter((value, key) => value.UserID == member.user.id)
+        const modlogs = ModlogsClass.getMemberModlogs(member)
         if (modlogs.size < 1) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`${member.user.username} has no modlogs!`)] });
         const chunkify = (arr: Array<any>, len: number) => Array.from({ length: Math.ceil(arr.length / len) }, (_, i) => arr.slice(i * len, i * len + len));
         const pages = chunkify(modlogs.map((value, key) => {

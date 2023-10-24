@@ -27,7 +27,7 @@ export default {
         const role = (new RoleClass).fetch(guild, args[2], message) as Role | undefined
         if (!role) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid Role!")] })
         if (role.position > bot.roles.highest.position) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("I cannot moderate that role")]})
-        if (role.tags) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription(`${role.name} is managed by discord! ${bot.user.username} cannot access that role!`)]})
+        if (role.tags == null) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription(`${role.name} is managed by discord! ${bot.user.username} cannot access that role!`)]})
         if (['-', 'remove'].includes(subcommand)) {
             if (!member.roles.cache.has(role.id)) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription(`${member.user.username} doesn't have the ${role.name} role!`)]})
             member.roles.remove(role)

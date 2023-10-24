@@ -16,7 +16,7 @@ export class CraftingClass {
             return {
                 itemName: value.itemName,
                 amount: value.amount,
-                emoji: AllItems[value.itemName].emoji || ""
+                emoji: AllItems[value.itemName]?.emoji || ""
             }
         })
         return Materials

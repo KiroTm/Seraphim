@@ -23,10 +23,10 @@ type ModlogsObject = {
 export class Modlogs {
     public Modlogs = new Collection<string, ModlogsObject>()
     private static instance: Modlogs;
-    private readonly timer: NodeJS.Timeout;
     private constructor() {
-        this.cacheMutes()
-        this.timer = setInterval(this.cacheMutes.bind(this), 30 * 1000)
+        this.initializeData().then(() => {
+            this.PeriodicUpdates()
+        })
     }
     public static getInstance(): Modlogs {
         return this.instance || (this.instance = new Modlogs());
@@ -34,26 +34,25 @@ export class Modlogs {
 
     public async create(member: GuildMember, moderator: GuildMember, type: ModlogType, reason?: string) {
         const GuildID = member.guild.id as string
-        ModlogsSchema.create({
-            GuildID,
-            UserID: member.id,
-            StaffID: moderator.id,
-            Reason: reason,
-            Type: type
-        })
+        const data = await ModlogsSchema.create({ GuildID,UserID: member.id, StaffID: moderator.id, Reason: reason, Type: type})
+        this.Modlogs.set(data._id, { GuildID,UserID: member.id, StaffID: moderator.id, Reason: data.reason, Type: type, CreatedAt: data.createdAt})
     }
 
-    public async remove(id: string) {
-        return (await ModlogsSchema.findOneAndDelete({ _id: id }))
-
+    public async remove(id: string): Promise<void> {
+        this.Modlogs.delete(id)
+        return;
     }
 
-    public async fetch(member: GuildMember) {
+    public getGuildModlogs(guild: Guild) {
+        return this.Modlogs.filter((value, _) => value.GuildID == guild.id)
+    }
+
+    public getMemberModlogs(member: GuildMember) {
         const guild = member.guild as Guild
-        return (await ModlogsSchema.find({ GuildID: guild.id, UserID: member.user.id }))
+        return this.Modlogs.filter((value, _) => value.GuildID == guild.id && value.UserID == member.id)
     }
 
-    private async cacheMutes() {
+    private async initializeData() {
         const modlogs = await ModlogsSchema.find()
         for (const modlog of modlogs) {
             const key = modlog._id
@@ -67,5 +66,15 @@ export class Modlogs {
             }
             this.Modlogs.set(key, muteobject)
         }
+    }
+
+    private async uploadDataToMongoDB() {
+
+    }
+
+    private PeriodicUpdates() {
+        setTimeout(() => {
+            this.uploadDataToMongoDB()
+        }, 1000 * 30);
     }
 }

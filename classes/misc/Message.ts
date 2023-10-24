@@ -1,11 +1,9 @@
 import { Collection, Guild, GuildMember, Message, User } from 'discord.js';
 import StatsSchema from '../../models/StatsSchema';
-import { ChannelClass } from './channel';
-
 export class StatsClass {
     private static instance: StatsClass;
     private statsData: Collection<string, Collection<string, Collection<string, string>>> = new Collection();
-
+    private lookbacks: Collection<string, number> = new Collection()
     private constructor() {
         this.initializeStatsData().then(() => {
             this.setupPeriodicUpdates();
@@ -14,6 +12,10 @@ export class StatsClass {
 
     public static getInstance(): StatsClass {
         return this.instance || (this.instance = new StatsClass());
+    }
+
+    public setLookback(guild: Guild, lookback: number) {
+        this.lookbacks.set(guild.id, lookback)
     }
 
     public add(message: Message) {
@@ -29,6 +31,7 @@ export class StatsClass {
 
         const guildData = this.statsData.get(guildId) ?? new Collection();
         const userData = guildData.get(userId) ?? new Collection();
+        this.lookbacks.get(guildId) ?? this.lookbacks.set(guildId, 7)
 
         userData.set(messageId, `${channelId}-${timestamp}`);
         guildData.set(userId, userData);
@@ -116,6 +119,7 @@ export class StatsClass {
         for (const statsDocument of statsDocuments) {
             const guildId = statsDocument.GuildID;
             const guildCollection: Collection<string, Collection<string, string>> = new Collection();
+            const lookback: number = statsDocument.Lookback
             for (const message of statsDocument.Collection) {
                 const userId = message.UserID;
                 const messageId = message.MessageId;
@@ -125,6 +129,7 @@ export class StatsClass {
                 userCollection.set(messageId, `${channelId}-${timestamp}`);
                 guildCollection.set(userId, userCollection);
             }
+            this.lookbacks.set(guildId, lookback)
             this.statsData.set(guildId, guildCollection);
         }
     }
@@ -133,6 +138,7 @@ export class StatsClass {
         if (!this.statsData.size) return;
         this.statsData.forEach(async (guildCollection, guildId) => {
             const messageDataArray: any[] = [];
+            const lookback = this.lookbacks.get(guildId)
             guildCollection.forEach((userCollection, userId) => {
                 userCollection.forEach((timestampChannel: string, messageId: string) => {
                     const value = timestampChannel.split('-');
@@ -147,7 +153,7 @@ export class StatsClass {
             });
             await StatsSchema.findOneAndUpdate(
                 { GuildID: guildId },
-                { GuildID: guildId, Collection: messageDataArray },
+                { GuildID: guildId, Collection: messageDataArray, Lookback: lookback ?? 7 },
                 { upsert: true, new: true }
             );
         });

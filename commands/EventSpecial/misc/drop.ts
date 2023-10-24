@@ -12,6 +12,10 @@ export default {
     name: "drops",
     description: "Setup and manage Halloween special module, drops!",
     type: CommandType.both,
+    cooldown: {
+        Duration: '10s',
+        CustomCooldownMessage: "CALM THE FUCK DOWN!"
+    },
     options: [
         {
             name: "setup",

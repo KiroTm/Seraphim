@@ -12,9 +12,9 @@ export default {
     permissions: [
         PermissionFlagsBits.KickMembers
     ],
-    // cooldown: {
-    //     Duration: '5s'
-    // },
+    cooldown: {
+        Duration: '1s'
+    },
     args: {
         minArgs: 1,
         maxArgs: -1,

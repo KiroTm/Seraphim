@@ -19,22 +19,23 @@ export class CacheLoader {
     private async bulk_loadcache(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined) {
         const client = instance._client as Client;
         client.guilds.cache.forEach(async (guild: Guild) => {
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Members) && !guild.members.cache.size) {
+            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Members)) {
+                if (guild.members.cache?.size > 30) return;
                 await guild.members.fetch();
             }
 
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Roles) && !guild.roles.cache.size) {
+            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Roles)) {
+                if (guild.members.cache?.size > 30) return;
                 await guild.roles.fetch();
             }
 
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Channels) && !guild.channels.cache.size) {
+            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Channels)) {
+                if (guild.channels.cache?.size > 4) return;
                 await guild.channels.fetch();
             }
 
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Bans) && !guild.bans.cache.size) {
-                try {
-                    await guild.bans.fetch();
-                } catch (er) {}
+            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Bans)) {
+                await guild.bans.fetch();
             }
         });
     }

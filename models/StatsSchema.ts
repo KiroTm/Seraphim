@@ -21,7 +21,7 @@ const StatsSchema = new Schema({
             ChannelId: String
         }
     ],
-    Lookback: { type: String }
+    Lookback: { type: String, default: 7 }
 });
 const name = 'Stats-log';
 export default mongoose.models[name] || mongoose.model<IMessageDocument>(name, StatsSchema);

@@ -102,7 +102,7 @@ export default {
                             },
                             {
                                 name: "<:Monitor:1161484480008175717> **Messages**",
-                                value: messages.map(([timeframe, message_count], index) => `${index == messages.length ? "start-" : "<:branch_tail_curved:1161479147839828018>"} ${timeFrameLabels[timeframe]}: ${message_count.size}`).join("\n")
+                                value: messages.map(([timeframe, message_count], index) => `${index == messages.length ? "start-" : "<:branch_tail_curved:1161479147839828018>"} ${timeFrameLabels[timeframe]}: \`${message_count.size} messages\``).join("\n")
                             }
                         )
                         .setFooter({
@@ -112,7 +112,10 @@ export default {
             })
         } else if (queryType == 'lookback') {
             const days = parseInt(args[1] ?? undefined)
-            if (!days) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time!\nCorrect usage example: ?stats lookback 2 <-- sets lookback 2 days")]})
+            if (!days ) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time!\nCorrect usage example: ?stats lookback 2 <-- sets lookback 2 days")]})
+            if (days < 1 || !Number.isInteger(days)) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time! Make sure the time is is a __whole number__ between 1 - 365")]})
+            statsClass.setLookback(guild, days)
+            return message.channel.send({embeds: [new EmbedBuilder().setColor('Green').setDescription(`Set the lookback to **${days} day${days == 1 ? '' : 's'}**`)]})
         } else {
             return message.channel.send({
                 embeds: [
