@@ -14,6 +14,8 @@ export default {
     },
     callback: async ({ message, member, args, instance, channel }: Callback) => {
         const crateName = args[0]?.toLowerCase() ?? undefined;
+        const amount = parseInt(args[1] ?? undefined)
+        if (!amount) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Please provide the amount of crates to be opened!")]})
         if (!['uncommon', 'common', 'rare', 'mythic'].includes(crateName)) {
             return new ResponseClass().error(instance, message, {embeds: [new EmbedBuilder().setDescription('Crate name must be one of `common, uncommon, rare, mythic`').setColor('Red')]}, {cooldownType: 'perGuildCooldown', commandName: 'open'})
         }
@@ -27,15 +29,14 @@ export default {
         const row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(
             new ButtonBuilder()
-            .setCustomId(`HalloweenCrate1-${crate.name}-${message.author.id}`)
+            .setCustomId(`HalloweenCrateYes-${crate.name}-${message.author.id}-${amount}`)
             .setStyle(ButtonStyle.Primary)
-            .setLabel(`Open 1 ${crate.name} crate`),
+            .setLabel(`Are you sure?`),
 
             new ButtonBuilder()
-            .setCustomId(`HalloweenCrate10-${crate.name}-${message.author.id}`)
-            .setStyle(ButtonStyle.Primary)
-            .setLabel(`Open 10 ${crate.name} crates`)
-            .setDisabled(crate.amount <= 10),
+            .setCustomId(`HalloweenCrateNo-${crate.name}-${message.author.id}-${amount}`)
+            .setStyle(ButtonStyle.Danger)
+            .setLabel(`Cancel`),
         )
         channel.send({
             embeds: [

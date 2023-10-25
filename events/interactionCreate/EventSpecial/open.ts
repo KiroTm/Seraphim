@@ -6,20 +6,17 @@ import { MemberClass } from "../../../classes/misc/member";
 import { items } from "../../../classes/EventSpecial/types";
 const inventoryClass = InventoryClass.getInstance();
 const crateClass = CrateClass.getInstance();
-
-async function handleButtonClick(instance: ConfigInstance, interaction: Interaction) {
+export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isButton()) return;
-
     const customId = interaction.customId;
-    const [amount, crate, userID] = customId.split('-');
-
-    if (!amount.includes('HalloweenCrate')) return;
-
+    const [type, crate, userID, crateAmount] = customId.split('-');
+    if (!type.includes('HalloweenCrate')) return;
+    if (type == 'HalloweenCrateNo') return interaction.editReply({embeds: [new EmbedBuilder().setAuthor({name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}`}).setColor('Red').setDescription("Alrighty! Cancelled your request.")]})
     if (interaction.member?.user.id !== userID) {
         return interaction.reply({ ephemeral: true, content: "You can't use this button!" });
     }
 
-    const Amount = amount === 'HalloweenCrate1' ? 1 : 10;
+    const Amount = parseInt(crateAmount) ?? 1;
 
     await interaction.deferReply({ ephemeral: true });
     interaction.message.delete().catch(() => { });
@@ -36,23 +33,39 @@ async function handleButtonClick(instance: ConfigInstance, interaction: Interact
 
     const open = crateClass.openCrate(inventoryClass.getInventory(member), crate, Amount);
 
-    if (open === 'NoItems' || open === 'CrateNotFound') return interaction.editReply({embeds: [new EmbedBuilder().setColor('Red').setDescription("You don't have this crate!")]})
+    if (open === 'NoItems' || open === 'CrateNotFound') return interaction.editReply({embeds: [new EmbedBuilder().setColor('Red').setDescription("You don't have that many crates!")]})
 
-    inventoryClass.addItemAnimalCrate(member, open.map((value) => {return {name: value.name,amount: 1}}));
+    inventoryClass.addItemAnimalCrate(member, open.map((value) => { return { name:  value.name, amount: 1 } }));
     const add = inventoryClass.removeItemAnimalCrate(member, [{ name: crate, amount: Amount }])
     if (add == 'InventoryError') return interaction.editReply({embeds: [new EmbedBuilder().setColor('Grey').setDescription("You don't have that crate in your inventory!")]})
 
+    const obtainedItemsDescription = getObtainedItemsDescription(open);
+
     await interaction.editReply({
-        embeds: [
-            new EmbedBuilder()
-                .setColor('Grey')
-                .setDescription(`You obtained: \n${getObtainedItemsDescription(open)}`)
-        ]
+        embeds: [new EmbedBuilder().setColor('Grey').setDescription(`You obtained the following items:\n${obtainedItemsDescription}`)]
     });
 }
 
 function getObtainedItemsDescription(items: items[]) {
-    return items.map((value, index) => `**${index + 1}.** **${value.name} ${value.emoji}**`).join("\n");
+    const groupedItems = groupItemsByName(items);
+    return groupedItems.map((item) => `**${item.name}** x${item.amount}`).join("\n");
 }
 
-export default handleButtonClick;
+function groupItemsByName(items: items[]) {
+    const groupedItems = new Map<string, number>();
+
+    for (const item of items) {
+        if (groupedItems.has(item.name)) {
+            groupedItems.set(item.name, groupedItems.get(item.name)! + 1);
+        } else {
+            groupedItems.set(item.name, 1);
+        }
+    }
+
+    const result: { name: string; amount: number }[] = [];
+    for (const [name, amount] of groupedItems) {
+        result.push({ name, amount });
+    }
+
+    return result;
+}
