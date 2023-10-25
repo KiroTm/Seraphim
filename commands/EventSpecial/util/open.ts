@@ -13,6 +13,7 @@ export default {
         Duration: '20s',
     },
     callback: async ({ message, member, args, instance }: Callback) => {
+        message.delete().catch(() => {})
         const crateName = args[0]?.toLowerCase() ?? undefined;
         if (!['uncommon', 'common', 'rare', 'mythic'].includes(crateName)) {
             return new ResponseClass().error(instance, message, {embeds: [new EmbedBuilder().setDescription('Crate name must be one of `common, uncommon, rare, mythic`').setColor('Red')]}, {cooldownType: 'perGuildCooldown', commandName: 'open'})
@@ -27,12 +28,12 @@ export default {
         const row = new ActionRowBuilder<ButtonBuilder>()
         .addComponents(
             new ButtonBuilder()
-            .setCustomId(`HalloweenCrate1-${message.author.id}`)
+            .setCustomId(`HalloweenCrate1-${crate.name}-${message.author.id}`)
             .setStyle(ButtonStyle.Primary)
             .setLabel(`Open 1 ${crate.name} crate`),
 
             new ButtonBuilder()
-            .setCustomId(`HalloweenCrate10-${message.author.id}`)
+            .setCustomId(`HalloweenCrate10-${crate.name}$-{message.author.id}`)
             .setStyle(ButtonStyle.Primary)
             .setLabel(`Open 10 ${crate.name} crates`)
             .setDisabled(crate.amount <= 10),

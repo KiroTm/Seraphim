@@ -2,7 +2,7 @@ import { ActionRowBuilder, Activity, ButtonBuilder, ButtonInteraction, ButtonSty
 import DropSchema from "../../models/Drop-Schema";
 import { client } from "../..";
 import { InventoryClass } from "./inventory";
-import { dropTypes } from "../../events/interactionCreate/EventSpecial/open";
+import { dropTypes } from "../../classes/EventSpecial/crate";
 
 const inventoryInstance = InventoryClass.getInstance();
 
