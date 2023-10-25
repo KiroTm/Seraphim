@@ -52,7 +52,7 @@ async function handleButtonClick(instance: ConfigInstance, interaction: Interact
 }
 
 function getObtainedItemsDescription(items: items[]) {
-    return items.map((value, index) => `**${index}.** **${value.name} ${value.emoji}**`).join("\n");
+    return items.map((value, index) => `**${index + 1}.** **${value.name} ${value.emoji}**`).join("\n");
 }
 
 export default handleButtonClick;

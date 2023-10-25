@@ -28,10 +28,10 @@ export default {
                 .setColor('Blue')
                 .setTitle(`${member.user.username}'s Inventory`)
                 .setDescription(inventory.map((value) => {
-                    const item = AllItems[value.name] || dropTypes[value.name as CrateType] || undefined;
+                    const item = AllItems[Object.entries(AllItems).find((v) => v[1].name == value.name)?.[0]!] || dropTypes[value.name as CrateType] || undefined
                     if (!item) return;
-                    return `${item.emoji} **${item.name || value.name} – ${value.amount}**\n<:branch_90_curved:1161486023814025266>${item.description}\n<:branch_tail_curved:1161479147839828018>${item.info?.type || "Crate"}`
-                }).join("\n") || "Absolutely nothing, as rich as a begger")
+                    return `${item?.emoji} **${item?.name || value?.name} (${item.info?.type || "Crate"}) – ${value?.amount}**\n<:branch_tail_curved:1161479147839828018>${item?.description}`
+                }).join("\n\n") || "Absolutely nothing, as rich as a begger")
             ]
         })
     }
