@@ -15,28 +15,24 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     await interaction.deferReply({ephemeral: true})
     interaction.message.delete().catch(() => {})
     const member = new MemberClass().fetch(interaction.guild as Guild, userID) as GuildMember
-    if (amount == 'HalloweenCrate1') {
-        interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                .setColor('Grey')
-                .setAuthor({name: 'Loading...', iconURL: 'https://media.discordapp.net/attachments/1162785970064740513/1166679422062051428/loadingWeb.gif'})
-            ]
+    interaction.editReply({
+        embeds: [
+            new EmbedBuilder()
+            .setColor('Grey')
+            .setAuthor({name: 'Loading...', iconURL: 'https://media.discordapp.net/attachments/1162785970064740513/1166679422062051428/loadingWeb.gif'})
+        ]
+    })
+    const open = crateClass.openCrate(inventoryClass.getInventory(member), crate, amount == 'HalloweenCrate1' ? 1 : 10)
+    if (open == 'NoItems' || open == 'CrateNotFound') {
+        return interaction.editReply({
+            embeds: [new EmbedBuilder().setColor('Red').setDescription("You don't have this crate!")]
         })
-        const open = crateClass.openCrate(inventoryClass.getInventory(member), crate, 1)
-        if (open == 'NoItems' || open == 'CrateNotFound') {
-            return interaction.editReply({
-                embeds: [new EmbedBuilder().setColor('Red').setDescription("You don't have this crate!")]
-            })
-        }
-        await interaction.editReply({
-            embeds: [
-                new EmbedBuilder()
-                .setColor('Grey')
-                .setDescription(`You got **${open.name + open.emoji}**!`)
-            ]
-        })
-    } else if (amount == 'HalloweenCrate10') {
-        interaction.editReply("Support for this will be provided in the next Halloween Update. Stay tuned!")
     }
+    await interaction.editReply({
+        embeds: [
+            new EmbedBuilder()
+            .setColor('Grey')
+            .setDescription(`You obtained: \n${open.map((value, index) => `> **${value.name} ${value.emoji}**`).join("\n")}`)
+        ]
+    })
 }

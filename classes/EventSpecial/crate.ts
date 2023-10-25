@@ -23,30 +23,34 @@ export class CrateClass {
         return crate;
     }
 
-    public openCrate(inventory: {name: string, amount: number}[], crateName: string, amount = 1): 'CrateNotFound' | 'NoItems' | items {
-        if (this.hasCrate(inventory, crateName) == 'CrateNotFound') return 'CrateNotFound';
-        const crate = this.getMaterialForCrate(crateName)
-        if (!crate) return 'NoItems'
-        const randomItem = this.pickRandomItem(crate);
-        return randomItem!
+    public openCrate(inventory: { name: string, amount: number }[], crateName: string, amount = 1): 'CrateNotFound' | 'NoItems' | items[] {
+        const crate = this.Crates.get(crateName as CrateType);
+        if (!crate) return 'CrateNotFound';
+        const foundCrate = inventory.find((item) => item.name.toLowerCase() === crateName.toLowerCase());
+        if (!foundCrate || foundCrate.amount < amount) return 'CrateNotFound';
+        const itemsToRetrieve: items[] = [];
+        for (let i = 0; i < amount; i++) {
+            const randomItem = this.pickRandomItem([...crate.values()].flat());
+            if (randomItem) {
+                itemsToRetrieve.push(randomItem);
+            }
+        }
+        if (!itemsToRetrieve.length) return 'NoItems';
+        return itemsToRetrieve;
     }
     
-    private pickRandomItem(crate: items[]): items | null {
+
+    private pickRandomItem(itemsInCrate: items[]): items | null {
         const weightedItems: items[] = [];
-    
-        for (const item of crate) {
+
+        for (const item of itemsInCrate) {
             for (let i = 0; i < (item.weight || 1); i++) {
                 weightedItems.push(item);
             }
         }
-    
+
         const randomIndex = Math.floor(Math.random() * weightedItems.length);
         return weightedItems[randomIndex] || null;
-    }
-    
-
-    private getMaterialForCrate(name: string, single?: true) {
-        return this.crates[name as CrateType] || []
     }
 
     private populateCrates(allItems: Record<string, items>): Record<CrateType, items[]> {
@@ -56,12 +60,14 @@ export class CrateClass {
             Rare: [],
             Mythic: [],
         };
-        const coinsAndJunk: items[] = [];
         for (const itemName in allItems) {
             const item = allItems[itemName];
             const { weight, info } = item;
             if (info.type === 'Junk' || info.type === 'Utility') {
-                coinsAndJunk.push(item);
+                crates.Common.push(item);
+                crates.Uncommon.push(item);
+                crates.Rare.push(item);
+                crates.Mythic.push(item);
             } else {
                 if (weight <= 5) {
                     crates.Mythic.push(item);
@@ -74,8 +80,6 @@ export class CrateClass {
                 }
             }
         }
-        crates.Common.push(...coinsAndJunk);
-        crates.Uncommon.push(...coinsAndJunk);
         return crates;
     }
 

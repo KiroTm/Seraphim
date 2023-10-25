@@ -32,7 +32,7 @@ export default {
             .setLabel(`Open 1 ${crate.name} crate`),
 
             new ButtonBuilder()
-            .setCustomId(`HalloweenCrate10-${crate.name}$-{message.author.id}`)
+            .setCustomId(`HalloweenCrate10-${crate.name}-${message.author.id}`)
             .setStyle(ButtonStyle.Primary)
             .setLabel(`Open 10 ${crate.name} crates`)
             .setDisabled(crate.amount <= 10),
