@@ -1,9 +1,8 @@
-import { ButtonStyle, EmbedBuilder } from "discord.js";
+import { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder } from "discord.js";
 import { CrateClass } from "../../../classes/EventSpecial/crate";
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
 import { Command, Callback } from "../../../typings";
-import { dropTypes } from "../../../classes/EventSpecial/drops";
-import { ActionRowBuilder, ButtonBuilder } from "@discordjs/builders";
+import { dropTypes } from "../../../classes/EventSpecial/crate";
 
 const inventoryClass = InventoryClass.getInstance();
 
