@@ -6,6 +6,7 @@ import { CrateType, dropTypes } from "../../../classes/EventSpecial/crate";
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
 import { AllItems } from "../../../classes/EventSpecial/types";
 import { Messagepagination } from "../../../functions/utility/pagination";
+import { RandomedClass } from "../../../classes/EventSpecial/Randomed";
 const memberClass = new MemberClass()
 const Inventory = InventoryClass.getInstance()
 export default {
@@ -35,7 +36,7 @@ export default {
 
                 if (currentEmbed.data.description!.split('\n').length > itemPerPage) {
                     embeds.push(currentEmbed);
-                    currentEmbed = new EmbedBuilder().setColor('Blurple');
+                    currentEmbed = new EmbedBuilder().setColor('Blurple').setAuthor({name: `${member.user.username}'s Inventory!`, iconURL: `${member.user.displayAvatarURL({forceStatic: false})}`}).setFooter({text:`${new RandomedClass().getRandomInventoryReply()}`, iconURL: `${member.guild.members.me?.user.displayAvatarURL()}`})
                 }
             }
 

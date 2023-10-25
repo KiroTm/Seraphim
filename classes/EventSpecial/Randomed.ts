@@ -17,11 +17,6 @@ export class RandomedClass {
     return randomAnimal
   }
 
-
-  public getRandomMaterial() {
-
-  }
-
   public getRandomEconomyReply(outcome: 'success' | 'neutral' | 'fail'): string {
     const successResponses: string[] = [
       `You successfully hunted a {animal}!`,
@@ -44,7 +39,7 @@ export class RandomedClass {
       `You missed the {animal}.`,
       `Better luck next time with the {animal}.`,
       `The {animal} slipped through your fingers.`,
-      `The {animal} evaded capture this time.`,
+      `T  he {animal} evaded capture this time.`,
       `The {animal} proved too quick for you.`
     ];
 
@@ -66,5 +61,18 @@ export class RandomedClass {
     return response;
   }
 
+  public getRandomInventoryReply(): string {
+    const replies = [
+      'Boo, get better',
+      'Ooo, that at that!',
+      'Ups and downs',
+      'How can someone be that poor? I mean..',
+      'Ew',
+      'Looking good!',
+      'Good job',
+      'What a loser'
+    ]
+    return replies[Math.floor( Math.random() * replies.length )]
+  }
 
 }
