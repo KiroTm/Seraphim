@@ -7,7 +7,7 @@ export class ResponseClass {
     public error(instance: ConfigInstance, message: Message, object: MessageReplyOptions | MessageCreateOptions, cooldownOptions?: {cooldownType: CooldownsType, commandName: string}) {
         if (cooldownOptions) {
             const { cooldownType, commandName } = cooldownOptions
-            instance._cooldownsManager?.removeCooldown(cooldownType, message, commandName)
+            instance._cooldownsManager!.removeCooldown(cooldownType, message, commandName)
         }
         'failIfNotExists' in object ? message.channel.send(object) : message.reply(object)
     }    

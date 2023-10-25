@@ -9,12 +9,24 @@ export type items = {
         usage: string,
         usable: boolean,
         type: 'Collectable' | 'PowerUps' | 'Magical Item' | 'Tool' | 'Utility' | 'Junk' | 'Animals' | 'Other'
-        craft?: { usedInCrafting: boolean, canbeCrafted: boolean, recipe?: recipe    }
+        craft?: { usedInCrafting: boolean, canbeCrafted: boolean, recipe?: recipe }
         boosts?: { type: 'levelUp' | 'coinsBoost' | 'xpBoost', amount: number, time?: number}
     },
+    weight: number
 }
 
 const AllItems: Record<string, items> = {
+    grimoire: {
+        name: "Ghoulish Grimoire",
+        description: "Ohh, look at this fancy magical book! I wonder what it does.",
+        emoji: "<a:magical_book:1162824200243912754>",
+        info: {
+            type: 'Magical Item',
+            usable: true,
+            usage: "Use Ghoulish Grimoire to redeem 1 item from the magical shop.",
+        },
+        weight: 1
+    },
     ticket: {
         name: "Lottery Ticket!",
         description: "Nah bro I ain't selling this shit, I'm broke and I need money",
@@ -24,7 +36,8 @@ const AllItems: Record<string, items> = {
             usable: true,
             usage: "Use ticket to participate in the nitro hunt",
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{ itemName: 'ticket_fragments', amount: 5 }] as recipe},
-        }
+        },
+        weight: 2
     },
     ticket_fragments: {
         name: "Ticket Fragments",
@@ -35,17 +48,8 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: "Craft 5 fragments to make a lottery ticket",
             craft: { canbeCrafted: false, usedInCrafting: true }
-        }
-    },
-    grimoire: {
-        name: "Ghoulish Grimoire",
-        description: "Ohh, look at this fancy magical book! I wonder what it does.",
-        emoji: "<a:magical_book:1162824200243912754>",
-        info: {
-            type: 'Magical Item',
-            usable: true,
-            usage: "Use Ghoulish Grimoire to redeem 1 item from the magical shop.",
-        }
+        },
+        weight: 5
     },
     hat: {
         name: "Halloween Hat",
@@ -56,7 +60,8 @@ const AllItems: Record<string, items> = {
             usable: true,
             usage: "Use Halloween Hat to gain 1 level worth of xp!",
             boosts: { type: 'levelUp', amount: 1 }
-        }
+        },
+        weight: 5
     },
     candy_cane: {
         name: "Halloween Candy Cane",
@@ -67,7 +72,8 @@ const AllItems: Record<string, items> = {
             usable: true,
             usage: "Use Halloween Candy Cane to gain 30% coin bonus for 1 minute!",
             boosts: { type: 'coinsBoost', amount: 30, time: 600000 }
-        }
+        },
+        weight: 10
     },
     coins: {
         name: "Shop Coins",
@@ -77,7 +83,8 @@ const AllItems: Record<string, items> = {
             type: 'Utility',
             usable: true,
             usage: "Currency for the shop!"
-        }
+        },
+        weight: 200
     },
     potion_weak: {
         name: "Weak Vampiric Vitality Vile",
@@ -88,7 +95,8 @@ const AllItems: Record<string, items> = {
             usage: "Use this potion to give 30% xp boost for 1 hour. Standard xp cooldowns apply even after consuming this bottle. There's also a chance you die to this drink",
             boosts: { type: 'xpBoost', amount: 30, time: 60 * 60 * 1000 },
             type: 'PowerUps'
-        }
+        },
+        weight: 12
     },
     potion_mild: {
         name: "Mild Vampiric Vitality Vile",
@@ -99,7 +107,8 @@ const AllItems: Record<string, items> = {
             usage: "Use this potion to give 40% xp boost for 1 hour. Standard xp cooldowns apply even after consuming this bottle. There's also a chance you die to this drink x 2",
             boosts: { type: 'xpBoost', amount: 30, time: 60 * 60 * 1000 },
             type: 'PowerUps'
-        }
+        },
+        weight: 9
     },
     potion_strong: {
         name: "Strong Vampiric Vitality Vile",
@@ -110,7 +119,8 @@ const AllItems: Record<string, items> = {
             usage: "Use this potion to give 50% xp boost for 1 hour. Standard xp cooldowns apply even after consuming this bottle. There's also a chance you die to this drink x 3",
             boosts: { type: 'xpBoost', amount: 30, time: 60 * 60 * 1000 },
             type: 'PowerUps'
-        }
+        },
+        weight: 8
     },
     casette: {
         name: "Yuuki's Cassette",
@@ -120,7 +130,8 @@ const AllItems: Record<string, items> = {
             type: 'Collectable',
             usable: false,
             usage: "Collect!"
-        }
+        },
+        weight: 1
     },
     // All the tools:
     hoe: {
@@ -133,7 +144,8 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: 'Having a hoe in your inventory would allow you to farm',
             craft: {canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'stone', amount: 5}] as recipe}
-        }
+        },
+        weight: 10
     },
     shovel: {
         name: "Shovel",
@@ -145,7 +157,8 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: 'Having a shovel in your inventory would allow you to dig through dirt',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 1}, {itemName: 'stone', amount: 3}] as recipe }
-        }
+        },
+        weight: 60
     },
     fishing_rod: {
         name: "Fishing Rod",
@@ -157,7 +170,8 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: 'Having a fishing rod in your inventory would allow you to fish',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
-        }
+        },
+        weight: 60
     },
     rifle: {
         name: "Hunting Rifle",
@@ -169,7 +183,8 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: 'Having a rifle in your inventory would allow you to hunt',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
-        }
+        },
+        weight: 60
     },
     // All the materials:
     metal: {
@@ -180,7 +195,8 @@ const AllItems: Record<string, items> = {
             type: 'Junk',
             usable: false,
             usage: "Most used material throughout crafting, magical or common, makes no exception! Truly the hero"
-        }
+        },
+        weight: 50
     },
     string: {
         name: "Metal String",
@@ -190,7 +206,8 @@ const AllItems: Record<string, items> = {
             type: 'Junk',
             usable: false,
             usage: "Used in crafting items that possess some potential energy."
-        }
+        },
+        weight: 50
     },
     stick: {
         name: "Stick",
@@ -200,7 +217,8 @@ const AllItems: Record<string, items> = {
             type: 'Junk',
             usable: false,
             usage: "Another commonly used material in crafting tools like shovel, hoe, etc."
-        }
+        },
+        weight: 50
     },
     stone: {
         name: "Stone",
@@ -210,7 +228,8 @@ const AllItems: Record<string, items> = {
             type: 'Junk',
             usable: false,
             usage: "Commonly used material in crafting tools like shovel, hoe, etc."
-        }
+        },
+        weight: 50
     }
 } as const
 
