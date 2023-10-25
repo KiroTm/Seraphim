@@ -3,7 +3,7 @@ import { ConfigInstance } from "../../../Main-Handler/ConfigHandler";
 import { CrateClass } from "../../../classes/EventSpecial/crate";
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
 import { MemberClass } from "../../../classes/misc/member";
-import { items } from "../../../classes/EventSpecial/types";
+import { AllItems, items } from "../../../classes/EventSpecial/types";
 const inventoryClass = InventoryClass.getInstance();
 const crateClass = CrateClass.getInstance();
 export default async (instance: ConfigInstance, interaction: Interaction) => {
@@ -11,7 +11,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     const customId = interaction.customId;
     const [type, crate, userID, crateAmount] = customId.split('-');
     if (!type.includes('HalloweenCrate')) return;
-    if (type == 'HalloweenCrateNo') return interaction.editReply({embeds: [new EmbedBuilder().setAuthor({name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}`}).setColor('Red').setDescription("Alrighty! Cancelled your request.")]})
+    if (type == 'HalloweenCrateNo') return interaction.reply({embeds: [new EmbedBuilder().setAuthor({name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}`}).setColor('Red').setDescription("Alrighty! Cancelled your request.")]})
     if (interaction.member?.user.id !== userID) {
         return interaction.reply({ ephemeral: true, content: "You can't use this button!" });
     }
@@ -48,7 +48,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
 function getObtainedItemsDescription(items: items[]) {
     const groupedItems = groupItemsByName(items);
-    return groupedItems.map((item) => `**${item.name}** x${item.amount}`).join("\n");
+    return groupedItems.map((item) => `${Object.entries(AllItems).find((value) => value[1].name.toLowerCase() == item.name.toLowerCase())?.[1].emoji! ?? ''} **${item.name}** x${item.amount}`).join("\n");
 }
 
 function groupItemsByName(items: items[]) {
