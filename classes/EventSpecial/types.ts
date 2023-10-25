@@ -167,7 +167,7 @@ const AllItems: Record<string, items> = {
             usage: 'Having a shovel in your inventory would allow you to dig through dirt',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 1}, {itemName: 'stone', amount: 3}] as recipe }
         },
-        weight: 60
+        weight: 20
     },
     fishing_rod: {
         name: "Fishing Rod",
@@ -183,7 +183,7 @@ const AllItems: Record<string, items> = {
             usage: 'Having a fishing rod in your inventory would allow you to fish',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
         },
-        weight: 60
+        weight: 20
     },
     rifle: {
         name: "Hunting Rifle",
@@ -199,7 +199,7 @@ const AllItems: Record<string, items> = {
             usage: 'Having a rifle in your inventory would allow you to hunt',
             craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
         },
-        weight: 60
+        weight: 20
     },
     // All the materials:
     metal: {
@@ -222,7 +222,7 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: "Used in crafting items that possess some potential energy."
         },
-        weight: 50
+        weight: 70
     },
     stick: {
         name: "Stick",
@@ -233,7 +233,7 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: "Another commonly used material in crafting tools like shovel, hoe, etc."
         },
-        weight: 50
+        weight: 70
     },
     stone: {
         name: "Stone",
@@ -244,7 +244,7 @@ const AllItems: Record<string, items> = {
             usable: false,
             usage: "Commonly used material in crafting tools like shovel, hoe, etc."
         },
-        weight: 50
+        weight: 70
     }
 } as const
 
