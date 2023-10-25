@@ -61,18 +61,4 @@ export class RandomedClass {
     return response;
   }
 
-  public getRandomInventoryReply(): string {
-    const replies = [
-      'Boo, get better',
-      'Ooo, that at that!',
-      'Ups and downs',
-      'How can someone be that poor? I mean..',
-      'Ew',
-      'Looking good!',
-      'Good job',
-      'What a loser'
-    ]
-    return replies[Math.floor( Math.random() * replies.length )]
-  }
-
 }

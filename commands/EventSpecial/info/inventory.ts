@@ -32,11 +32,11 @@ export default {
                 const Amount = item.amount;
                 const itemString = `${Item.emoji ?? ""} **${item.name} – ${Amount}**\n${`> *${Item.description}*` || ''}`
 
-                currentEmbed.setDescription((currentEmbed.data.description ?? '') + itemString + '\n\n');
+                currentEmbed.setDescription((`${currentEmbed.data.description}` ?? '') + itemString + '\n\n');
 
                 if (currentEmbed.data.description!.split('\n').length > itemPerPage) {
                     embeds.push(currentEmbed);
-                    currentEmbed = new EmbedBuilder().setColor('Blurple').setAuthor({name: `${member.user.username}'s Inventory!`, iconURL: `${member.user.displayAvatarURL({forceStatic: false})}`}).setFooter({text:`${new RandomedClass().getRandomInventoryReply()}`, iconURL: `${member.guild.members.me?.user.displayAvatarURL()}`})
+                    currentEmbed = new EmbedBuilder().setColor('Blurple')
                 }
             }
 
