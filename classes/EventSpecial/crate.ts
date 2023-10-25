@@ -17,29 +17,36 @@ export class CrateClass {
         return this.instance || (this.instance = new CrateClass());
     }
 
-    public openCrate(inventory: { name: string, amount: number }[], name: string) {
-        const crate = inventory.find((item) => item.name.toLowerCase() === name);
+    public hasCrate(inventory: { name: string, amount: number }[], name: string) {
+        const crate = inventory.find((item) => item.name.toLowerCase() === name.toLowerCase());
         if (!crate || crate?.amount == 0) return 'CrateNotFound';
         return crate;
     }
 
-    public getCratesWithMaterials() {
-        return Object.entries(dropTypes).map(([name, { description, emoji, image, weight }]) => {
-            return {
-                name: {
-                    description: description,
-                    emoji: emoji ?? "",
-                    image: image,
-                    weight: weight,
-                    items: this.getMaterialForCrate(name)
-                }
-            };
-        });
+    public openCrate(inventory: {name: string, amount: number}[], crateName: string, amount = 1): 'CrateNotFound' | 'NoItems' | items {
+        if (this.hasCrate(inventory, crateName) == 'CrateNotFound') return 'CrateNotFound';
+        const crate = this.getMaterialForCrate(crateName)
+        if (!crate) return 'NoItems'
+        const randomItem = this.pickRandomItem(crate);
+        return randomItem!
     }
+    
+    private pickRandomItem(crate: items[]): items | null {
+        const weightedItems: items[] = [];
+    
+        for (const item of crate) {
+            for (let i = 0; i < (item.weight || 1); i++) {
+                weightedItems.push(item);
+            }
+        }
+    
+        const randomIndex = Math.floor(Math.random() * weightedItems.length);
+        return weightedItems[randomIndex] || null;
+    }
+    
 
-    private getMaterialForCrate(crate: string, single?: true) {
-        const targetCrate = this.crates[crate.toLowerCase() as CrateType];
-        return targetCrate || [];
+    private getMaterialForCrate(name: string, single?: true) {
+        return this.crates[name as CrateType] || []
     }
 
     private populateCrates(allItems: Record<string, items>): Record<CrateType, items[]> {
@@ -69,7 +76,6 @@ export class CrateClass {
         }
         crates.Common.push(...coinsAndJunk);
         crates.Uncommon.push(...coinsAndJunk);
-        crates.Rare.push(...coinsAndJunk)
         return crates;
     }
 

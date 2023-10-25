@@ -59,7 +59,6 @@ export class InventoryClass {
 
     private async initializeInventoryData() {
         try {
-            // Fetch all inventory data from MongoDB
             const inventoryData = await InventorySchema.find();
             for (const entry of inventoryData) {
                 const guildID = entry.GuildID;
@@ -92,10 +91,6 @@ export class InventoryClass {
     private startUp() {
         setInterval(() => {
             this.uploadInventoryDataToMongo();
-        }, 20000);
-    }
-
-    private ValidateItem(item: string) {
-        return new ItemClass().getItem(item)
+        }, 10000);
     }
 }

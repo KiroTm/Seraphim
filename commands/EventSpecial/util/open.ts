@@ -12,14 +12,13 @@ export default {
     cooldown: {
         Duration: '20s',
     },
-    callback: async ({ message, member, args, instance }: Callback) => {
-        message.delete().catch(() => {})
+    callback: async ({ message, member, args, instance, channel }: Callback) => {
         const crateName = args[0]?.toLowerCase() ?? undefined;
         if (!['uncommon', 'common', 'rare', 'mythic'].includes(crateName)) {
             return new ResponseClass().error(instance, message, {embeds: [new EmbedBuilder().setDescription('Crate name must be one of `common, uncommon, rare, mythic`').setColor('Red')]}, {cooldownType: 'perGuildCooldown', commandName: 'open'})
         }
         const inventory = inventoryClass.getInventory(member);
-        const crate = crateClass.openCrate(inventory, crateName)
+        const crate = crateClass.hasCrate(inventory, crateName)
         if (crate == 'CrateNotFound') {
             return new ResponseClass().error(instance, message, {embeds: [new EmbedBuilder().setColor('Blue').setDescription(`You don't have the ${crateName} crate!`)]}, {cooldownType: 'perGuildCooldown', commandName: 'open'})
         }
@@ -38,7 +37,7 @@ export default {
             .setLabel(`Open 10 ${crate.name} crates`)
             .setDisabled(crate.amount <= 10),
         )
-        message.channel.send({
+        channel.send({
             embeds: [
                 new EmbedBuilder()
                 .setTitle(`How many would you like to open?`)
@@ -49,6 +48,7 @@ export default {
             ],
             components: [row]
         }).then((msg) => {
+            message.delete().catch(() => {})
             setTimeout(() => {
                 msg.delete().catch(() => {})
             }, 16000);

@@ -84,7 +84,7 @@ const AllItems: Record<string, items> = {
             usable: true,
             usage: "Currency for the shop!"
         },
-        weight: 200
+        weight: 100
     },
     potion_weak: {
         name: "Weak Vampiric Vitality Vile",
