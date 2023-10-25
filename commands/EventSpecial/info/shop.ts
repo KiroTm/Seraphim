@@ -19,7 +19,7 @@ export default {
             return chunks;
         }
         const max_description = 6
-        const fields = items.map(value => `${value.emoji} ${value.name} - [⏣ ${value.price}](https://youtu.be/ETxmCCsMoD0)\n${value.description}`) as string[]
+        const fields = items.map(value => `${value.emoji} ${value.name} - [⏣ ${value.price?.purchasePrice}](https://youtu.be/ETxmCCsMoD0)\n${value.description}`) as string[]
         const chunks = chunkify(fields, max_description);
         const pages = [] as EmbedBuilder[];
         chunks.forEach((chunk) => {

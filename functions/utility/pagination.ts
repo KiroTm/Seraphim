@@ -4,7 +4,6 @@ export async function Messagepagination(message: Message, pages: EmbedBuilder[],
     // run through a bunch of argument checks
     if (!message) throw new Error("Pass a message, not an interaction")
     if (!Array.isArray(pages)) throw new Error("Provide an array for pages!")
-    if (!pages.length) throw new Error("Provide atleast 2 pages!")
     if (typeof time !== "number") throw new Error("Time must be a number in miliseconds")
     if (time < 9000) throw new Error("Time must be greater than 30 seconds!")
     // if the pages.length === 1 

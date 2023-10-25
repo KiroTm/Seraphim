@@ -1,12 +1,13 @@
-import { EmbedBuilder, GuildMember } from "discord.js";
+import { Collection, EmbedBuilder, GuildMember, parseEmoji } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../../typings";
 import { MemberClass } from "../../../classes/misc/member";
 import { CrateType, dropTypes } from "../../../classes/EventSpecial/crate";
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
 import { AllItems } from "../../../classes/EventSpecial/types";
+import { Messagepagination } from "../../../functions/utility/pagination";
 const memberClass = new MemberClass()
-const Inventory  = InventoryClass.getInstance()
+const Inventory = InventoryClass.getInstance()
 export default {
     name: "inventory",
     description: 'Get your inventory',
@@ -16,23 +17,38 @@ export default {
     },
     aliases: ['inv'],
     callback: async ({ message, args, guild }: Callback) => {
+        let EmbedMap = new Collection()
         const member = memberClass.fetch(guild, args[0] ?? message.author.id, message) as GuildMember
         const inventory = Inventory.getInventory(member)
-        message.channel.send({
-            embeds: [
-                new EmbedBuilder()
-                .setAuthor({
-                    name: `${member.user.username}`,
-                    iconURL: `${member.user.displayAvatarURL()}`
-                })
-                .setColor('Blue')
-                .setTitle(`${member.user.username}'s Inventory`)
-                .setDescription(inventory.map((value) => {
-                    const item = AllItems[Object.entries(AllItems).find((v) => v[1].name == value.name)?.[0]!] || dropTypes[value.name as CrateType] || undefined
-                    if (!item) return;
-                    return `${item?.emoji} **${item?.name || value?.name} (${item.info?.type || "Crate"}) – ${value?.amount}**\n<:branch_tail_curved:1161479147839828018>${item?.description}`
-                }).join("\n\n") || "Absolutely nothing, as rich as a begger")
-            ]
-        })
+        if (!inventory.length) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription("Honestly, I would leave the server if I had nothing in my inventory.")] })
+        const GenerateEmbeds = (items: { name: string; amount: number }[]) => {
+            const itemPerPage = 10;
+            const embeds = [];
+            let currentEmbed = new EmbedBuilder().setColor('Blurple');
+
+            for (const item of items) {
+                const Item = (Object.entries(AllItems).find((v) => v![1]?.name.toLowerCase() === item.name.toLowerCase()))?.[1]! || dropTypes[item.name as CrateType];
+                const Amount = item.amount;
+                const itemString = `${Item.emoji ?? ""} **${item.name} – ${Amount}**\n${`> *${Item.description}*` || ''}`
+
+                currentEmbed.setDescription((currentEmbed.data.description ?? '') + itemString + '\n\n');
+
+                if (currentEmbed.data.description!.split('\n').length > itemPerPage) {
+                    embeds.push(currentEmbed);
+                    currentEmbed = new EmbedBuilder().setColor('Blurple');
+                }
+            }
+
+            if (currentEmbed.data.description) {
+                embeds.push(currentEmbed);
+            }
+
+            return embeds;
+        };
+
+        const InventoryMap = GenerateEmbeds(inventory);
+
+        Messagepagination(message, InventoryMap, 90 * 1000);
+
     }
 } as Command

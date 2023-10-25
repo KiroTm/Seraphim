@@ -66,8 +66,6 @@ export class CrateClass {
             if (info.type === 'Junk' || info.type === 'Utility') {
                 crates.Common.push(item);
                 crates.Uncommon.push(item);
-                crates.Rare.push(item);
-                crates.Mythic.push(item);
             } else {
                 if (weight <= 5) {
                     crates.Mythic.push(item);

@@ -17,14 +17,13 @@ export class InventoryClass {
     }
 
     public getInventory(member: GuildMember) {
-        return this.inventoryCollection.get(member.guild.id)?.get(member.id) || [];
+        return this.inventoryCollection.get(member.guild.id)?.get(member.user.id) || [];
     }
 
     public addItemAnimalCrate(member: GuildMember, itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number }[]) {
         const guildId = member.guild.id;
         const userId = member.id;
         const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
-
         if (!inventoryData) {
             this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>().set(userId, this.itemsOrAnimalsAsArray(itemsOrAnimals)));
         } else {

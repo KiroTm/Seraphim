@@ -5,7 +5,7 @@ const ShopItemsCollection: Collection<string, items> = new Collection<string, it
 export class ItemClass {
     public async generate(message: Message, item?: string) {
         const createEmbed = (item: items) => {
-            const { name, description, emoji, info } = item
+            const { name, description, emoji, info, price } = item
             const { usage, boosts, type, craft } = info || { type: 'Other' }
             const { recipe } = craft || { usedInCrafting: false, canbeCrafted: false, recipe: null }
 
@@ -13,7 +13,7 @@ export class ItemClass {
                 .setColor('Blurple')
                 .setTitle(name)
                 .setThumbnail(emoji ? `https://cdn.discordapp.com/emojis/${parseEmoji(emoji)!.id! + (parseEmoji(emoji)!.animated ? '.gif' : '.png')}` : null)
-                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${type ? `\n\n${type}` : ''}`);
+                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${price ? `\n\nPrice Info:\nPurchase in: ${price.purchasePrice} <:coin:1164253043991253116> | Sell in: ${price.sellPrice} <:coin:1164253043991253116>`: ''}${type ? `\n\n${type}` : ''}`);
         };
 
         if (item) {

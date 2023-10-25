@@ -4,7 +4,10 @@ export type items = {
     name: string
     description: string
     emoji?: string
-    price?: number 
+    price?: {
+        purchasePrice: number,
+        sellPrice: number
+    } 
     info: {
         usage: string,
         usable: boolean,
@@ -138,7 +141,10 @@ const AllItems: Record<string, items> = {
         name: "Hoe",
         description: "I ain't never missing with these hoes again!",
         emoji: "<:hoe:1164261165833138216>",
-        price: 20000,
+        price: {
+            purchasePrice: 20000,
+            sellPrice: 1000
+        },
         info: {
             type: 'Tool',
             usable: false,
@@ -151,7 +157,10 @@ const AllItems: Record<string, items> = {
         name: "Shovel",
         description: "Lanny you are not being smart, bringing a shovel to the beach wont help you find a tresure here!",
         emoji: "<:shovel:1164260707634794556>",
-        price: 15000,
+        price: {
+            purchasePrice: 15000,
+            sellPrice: 1200
+        },
         info: {
             type: 'Tool',
             usable: false,
@@ -162,7 +171,10 @@ const AllItems: Record<string, items> = {
     },
     fishing_rod: {
         name: "Fishing Rod",
-        price: 30000,
+        price: {
+            purchasePrice: 30000,
+            sellPrice: 1500
+        },
         description: "I hope I get some bitches tonight.",
         emoji: "<:fishing_rod:1164260873297211492>",
         info: {
@@ -175,7 +187,10 @@ const AllItems: Record<string, items> = {
     },
     rifle: {
         name: "Hunting Rifle",
-        price: 40000,
+        price: {
+            purchasePrice: 40000,
+            sellPrice: 1600
+        },
         description: "GET HERE SHAWN, ONE STEP CLOSER AND YOU DIE!",
         emoji: "<:rifle:1165170154167091280>",
         info: {
