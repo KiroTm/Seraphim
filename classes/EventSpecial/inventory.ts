@@ -48,6 +48,25 @@ export class InventoryClass {
         }
     }
 
+    public removeItemAnimalCrate(member: GuildMember, itemsOrAnimals: { name: string, amount: number }[]): 'InventoryError' | void {
+        const guildId = member.guild.id;
+        const userId = member.id;
+        const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
+        if (!inventoryData) return 'InventoryError';
+        for (const itemOrAnimal of itemsOrAnimals) {
+            const itemIndex = inventoryData.findIndex((item) => item.name === itemOrAnimal.name);
+            if (itemIndex !== -1) {
+                const currentItem = inventoryData[itemIndex];
+                if (currentItem.amount <= itemOrAnimal.amount) {
+                    inventoryData.splice(itemIndex, 1);
+                } else {
+                    currentItem.amount -= itemOrAnimal.amount;
+                }
+            }
+        }
+    }
+    
+
     private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {
         if (Array.isArray(itemsOrAnimals)) {
             return itemsOrAnimals.map((itemOrAnimal) => ({ name: itemOrAnimal.name, amount: itemOrAnimal.amount }));
