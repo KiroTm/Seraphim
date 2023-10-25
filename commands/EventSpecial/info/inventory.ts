@@ -30,9 +30,9 @@ export default {
             for (const item of items) {
                 const Item = (Object.entries(AllItems).find((v) => v![1]?.name.toLowerCase() === item.name.toLowerCase()))?.[1]! || dropTypes[item.name as CrateType];
                 const Amount = item.amount;
-                const itemString = `${Item.emoji ?? ""} **${item.name} – ${Amount}**\n${`> *${Item.description}*` || ''}`
+                const itemString = `${Item?.emoji ?? ''} **${item?.name} – ${Amount ?? 0}**\n${`> *${Item?.description}*` || ''}`
 
-                currentEmbed.setDescription((`${currentEmbed.data.description}` ?? '') + itemString + '\n\n');
+                currentEmbed.setDescription((`${currentEmbed?.data?.description ?? ''}`) + itemString + '\n\n');
 
                 if (currentEmbed.data.description!.split('\n').length > itemPerPage) {
                     embeds.push(currentEmbed);
