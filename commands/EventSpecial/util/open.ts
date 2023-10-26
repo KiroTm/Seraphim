@@ -32,17 +32,17 @@ export default {
             new ButtonBuilder()
             .setCustomId(`HalloweenCrateYes-${crate.name}-${message.author.id}-${amount}`)
             .setStyle(ButtonStyle.Primary)
-            .setLabel(`Are you sure?`),
+            .setLabel("Open"),
 
             new ButtonBuilder()
             .setCustomId(`HalloweenCrateNo-${crate.name}-${message.author.id}-${amount}`)
             .setStyle(ButtonStyle.Danger)
-            .setLabel(`Cancel`),
+            .setLabel("Cancel"),
         )
         channel.send({
             embeds: [
                 new EmbedBuilder()
-                .setTitle(`How many would you like to open?`)
+                .setTitle(`Are you sure you want to open ${amount} ${crateName} crates?`)
                 .setColor('#2fe5ff')
                 .setDescription(`You have: **${crate.amount ?? 0}**`)
                 .setImage(dropTypes[crate.name as CrateType].image)

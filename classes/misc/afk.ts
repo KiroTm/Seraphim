@@ -82,6 +82,6 @@ export class AfkClass {
         this.uploadAfkDataToMongoose();
         setInterval(() => {
             this.uploadAfkDataToMongoose();
-        }, 20 * 1000);
+        }, 10 * 1000);
     }
 }

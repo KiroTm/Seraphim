@@ -47,7 +47,6 @@ export class CommandHandler {
                     name,
                     description,
                     options,
-                    defaultMemberPermissions: commandObject.permissions
                 })
                 console.log(_chalk.yellowBright(`Creating  global slash command: ${name}.`))
             }
