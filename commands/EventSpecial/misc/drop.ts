@@ -12,10 +12,6 @@ export default {
     name: "drops",
     description: "Setup and manage Halloween special module, drops!",
     type: CommandType.both,
-    cooldown: {
-        Duration: '10s',
-        CustomCooldownMessage: "CALM THE FUCK DOWN!"
-    },
     options: [
         {
             name: "setup",
@@ -36,7 +32,7 @@ export default {
         maxArgs: -1,
         CustomErrorMessage: "{PREFIX}drop remove/grant user amount"
     },
-    permissions: [PermissionFlagsBits.ManageRoles],
+    ownersOnly: true,
     callback: async ({ message, interaction, args, guild }: Callback) => {
         if (message) {
             const member = new MemberClass().fetch(guild, args[1], message) as GuildMember;

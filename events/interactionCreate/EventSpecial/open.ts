@@ -11,16 +11,17 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     const customId = interaction.customId;
     const [type, crate, userID, crateAmount] = customId.split('-');
     if (!type.includes('HalloweenCrate')) return;
-    if (type == 'HalloweenCrateNo') return interaction.reply({embeds: [new EmbedBuilder().setAuthor({name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}`}).setColor('Red').setDescription("Alrighty! Cancelled your request.")]})
+    if (type == 'HalloweenCrateNo') {
+        interaction.message.delete(). catch(() => {})
+        return interaction.reply({embeds: [new EmbedBuilder().setAuthor({name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}`}).setColor('Red').setDescription("Alrighty! Cancelled your request.")], ephemeral: true})
+    }
     if (interaction.member?.user.id !== userID) {
         return interaction.reply({ ephemeral: true, content: "You can't use this button!" });
     }
 
     const Amount = parseInt(crateAmount) ?? 1;
 
-    await interaction.deferReply({ ephemeral: true });
-    interaction.message.delete().catch(() => { });
-
+    await interaction.deferReply({ ephemeral: true })
     const member = new MemberClass().fetch(interaction.guild as Guild, userID) as GuildMember;
 
     await interaction.editReply({
@@ -30,6 +31,8 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 .setAuthor({ name: 'Loading...', iconURL: 'https://media.discordapp.net/attachments/1162785970064740513/1166679422062051428/loadingWeb.gif' })
         ]
     });
+
+    await interaction.message.delete().catch(() => { });
 
     const open = crateClass.openCrate(inventoryClass.getInventory(member), crate, Amount);
 

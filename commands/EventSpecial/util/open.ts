@@ -10,12 +10,13 @@ export default {
     name: 'open',
     description: 'Open crates.',
     cooldown: {
-        Duration: '20s',
+        Duration: '2s',
     },
     callback: async ({ message, member, args, instance, channel }: Callback) => {
         const crateName = args[0]?.toLowerCase() ?? undefined;
         const amount = parseInt(args[1] ?? undefined)
         if (!amount) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Please provide the amount of crates to be opened!")]})
+        if (amount > 999999) return message.channel.send("😭 Stop burning my pc")
         if (!['uncommon', 'common', 'rare', 'mythic'].includes(crateName)) {
             return new ResponseClass().error(instance, message, {embeds: [new EmbedBuilder().setDescription('Crate name must be one of `common, uncommon, rare, mythic`').setColor('Red')]}, {cooldownType: 'perGuildCooldown', commandName: 'open'})
         }

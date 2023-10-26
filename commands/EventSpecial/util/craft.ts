@@ -13,7 +13,8 @@ export default {
         CustomErrorMessage: "{PREFIX}{COMMAND} item-name"
     },
     callback: async ({ message, args, client }: Callback) => {
-        const item = new ItemClass().getItem(args[0])?.name!
+        let item = args[0]
+        if (!item) return message.channel.send("Invalid item")
         const ItemRecipe = new CraftingClass().getMaterials(item)
         const member = message.member as GuildMember
         if (ItemRecipe == 'Invalid Item') return message.channel.send(`${message.author} Invalid Item!`)

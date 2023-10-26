@@ -61,7 +61,7 @@ export class CraftingClass {
         const Remove = inventoryClass.removeItemAnimalCrate(member, itemsToRemove)
         if (Remove == 'InventoryError') return 'Insufficient Materials'
         
-        inventoryClass.addItemAnimalCrate(member, [{name: itemName, amount: 1}]);
+        inventoryClass.addItemAnimalCrate(member, [{name: item.name, amount: 1}]);
         return AllItems[itemName]
     }
 }
