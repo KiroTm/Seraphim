@@ -1,6 +1,7 @@
 import { Collection, GuildMember } from "discord.js";
 import InventorySchema from "../../models/InventorySchema";
 import { ItemClass } from "./item";
+import { AllItems } from "./types";
 
 export class InventoryClass {
     private static instance: InventoryClass;
@@ -53,7 +54,7 @@ export class InventoryClass {
         const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
         if (!inventoryData) return 'InventoryError';
         for (const itemOrAnimal of itemsOrAnimals) {
-            const itemIndex = inventoryData.findIndex((item) => item.name === itemOrAnimal.name);
+            const itemIndex = inventoryData.findIndex((value) => value.name.toLowerCase() === AllItems[itemOrAnimal.name].name.toLowerCase())
             if (itemIndex !== -1) {
                 const currentItem = inventoryData[itemIndex];
                 if (currentItem.amount <= itemOrAnimal.amount) {
@@ -64,6 +65,7 @@ export class InventoryClass {
             }
         }
     }
+    
     
 
     private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {
