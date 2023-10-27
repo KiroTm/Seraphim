@@ -54,7 +54,7 @@ export class InventoryClass {
         const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
         if (!inventoryData) return 'InventoryError';
         for (const itemOrAnimal of itemsOrAnimals) {
-            const itemIndex = inventoryData.findIndex((value) => value.name.toLowerCase() === AllItems[itemOrAnimal.name].name.toLowerCase())
+            const itemIndex = inventoryData.findIndex((value) => value.name.toLowerCase() === AllItems[itemOrAnimal.name]?.name.toLowerCase() || itemOrAnimal.name || undefined)
             if (itemIndex !== -1) {
                 const currentItem = inventoryData[itemIndex];
                 if (currentItem.amount <= itemOrAnimal.amount) {
