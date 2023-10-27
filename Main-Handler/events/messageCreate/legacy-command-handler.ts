@@ -43,7 +43,5 @@ export default async (instance: ConfigInstance, message: Message) => {
     }
     Cooldowns.set(guild.id, member, command, (command.cooldown.Type || 'perGuildCooldown'))
     }
-  await commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix}).catch(() => {
-    message.channel.send("There was as error running this command, please make sure the bot has valid permissions!")
-  })
+  await commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix})
 };

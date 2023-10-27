@@ -1,7 +1,7 @@
 import { Collection, GuildMember } from "discord.js";
 import InventorySchema from "../../models/InventorySchema";
 import { ItemClass } from "./item";
-import { AllItems } from "./types";
+import { AllItems, items } from "./types";
 
 export class InventoryClass {
     private static instance: InventoryClass;
@@ -66,7 +66,9 @@ export class InventoryClass {
         }
     }
     
-    
+    public purchaseItemFromShop(member: GuildMember, inventory: {name: string, amount: number}[], item: items): void | 'InsufficientCoins' {
+        return 'InsufficientCoins'
+    }
 
     private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {
         if (Array.isArray(itemsOrAnimals)) {

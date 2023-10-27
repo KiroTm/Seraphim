@@ -3,7 +3,7 @@ import {AllItems, items } from './types'
 import { Message, Collection, EmbedBuilder, parseEmoji } from "discord.js"
 const ShopItemsCollection: Collection<string, items> = new Collection<string, items>(Object.entries(AllItems))
 export class ItemClass {
-    public async generate(message: Message, item?: string) {
+    public generate(message: Message, item?: string, embedOnly?: boolean): any {
         const createEmbed = (item: items) => {
             const { name, description, emoji, info, price } = item
             const { usage, boosts, type, craft } = info || { type: 'Other' }
@@ -19,7 +19,9 @@ export class ItemClass {
         if (item) {
             const Item = this.getItem(item)
             if (!Item) return message.channel.send("Invalid Item!");
-            message.channel.send({ embeds: [createEmbed(Item)] });
+            const embed = createEmbed(Item)
+            if (embedOnly) return embed
+            message.channel.send({ embeds: [embed] });
         } else {
             const ShopItems = ShopItemsCollection.filter((a) => a.info.type !== 'Junk').map((value) => createEmbed(value));
             Messagepagination(message, ShopItems, 1000 * 90);
