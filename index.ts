@@ -1,4 +1,4 @@
-import { IntentsBitField, Client, Partials, ActivityType } from "discord.js";
+import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "discord.js";
   import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
   import path from "path";
   const { Message, Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
@@ -48,7 +48,7 @@ import { IntentsBitField, Client, Partials, ActivityType } from "discord.js";
 	  },
 	});
   });
-  
+
   client.login(process.env.TOKEN);
   
   process.on('uncaughtException', (err) => {

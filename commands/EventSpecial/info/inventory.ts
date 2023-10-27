@@ -1,4 +1,4 @@
-import { Collection, EmbedBuilder, GuildMember, parseEmoji } from "discord.js";
+import { EmbedBuilder, GuildMember } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../../typings";
 import { MemberClass } from "../../../classes/misc/member";
@@ -6,7 +6,6 @@ import { CrateType, dropTypes } from "../../../classes/EventSpecial/crate";
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
 import { AllItems } from "../../../classes/EventSpecial/types";
 import { Messagepagination } from "../../../functions/utility/pagination";
-import { RandomedClass } from "../../../classes/EventSpecial/Randomed";
 const memberClass = new MemberClass()
 const Inventory = InventoryClass.getInstance()
 export default {
@@ -14,18 +13,17 @@ export default {
     description: 'Get your inventory',
     type: CommandType.legacy,
     cooldowns: {
-        Duration: '5s'
+        Duration: '15s'
     },
     aliases: ['inv'],
     callback: async ({ message, args, guild }: Callback) => {
-        let EmbedMap = new Collection()
         const member = memberClass.fetch(guild, args[0] ?? message.author.id, message) as GuildMember
         const inventory = Inventory.getInventory(member)
         if (!inventory.length) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription("Honestly, I would leave the server if I had nothing in my inventory.")] })
         const GenerateEmbeds = (items: { name: string; amount: number }[]) => {
             const itemPerPage = 10;
             const embeds = [];
-            let currentEmbed = new EmbedBuilder().setColor('Blurple');
+            let currentEmbed = new EmbedBuilder().setColor('Blurple').setAuthor({name: `${member.user.username}'s Inventory`, iconURL: `${member.user.displayAvatarURL({forceStatic: false})}`}).setFields({name: '⚠️ Caution', value: `This data might not be up to date, and any changes in your inventory made after executing this command will be considered during the next command run.\nCommand was ran: <t:${Math.floor(Date.now()/1000)}:R>`})
 
             for (const item of items) {
                 const Item = (Object.entries(AllItems).find((v) => v![1]?.name.toLowerCase() === item.name.toLowerCase()))?.[1]! || dropTypes[item.name as CrateType];
