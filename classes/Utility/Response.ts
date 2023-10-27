@@ -4,11 +4,11 @@ import { CooldownsType } from "../../Main-Handler/handlers/Cooldowns";
 import { Command } from "../../typings";
 
 export class ResponseClass {
-    public error(instance: ConfigInstance, message: Message, object: MessageReplyOptions | MessageCreateOptions, cooldownOptions?: {cooldownType: CooldownsType, commandName: string}) {
+    public error(instance: ConfigInstance, message: Message, object: MessageReplyOptions | MessageCreateOptions, cooldownOptions?: {cooldownType: CooldownsType, commandName: string}, type?: 'MessageCreate' | 'MessageReply') {
         if (cooldownOptions) {
             const { cooldownType, commandName } = cooldownOptions
             instance._cooldownsManager!.removeCooldown(cooldownType, message, commandName)
         }
-        'failIfNotExists' in object ? message.channel.send(object) : message.reply(object)
+        type === 'MessageCreate' ? message.channel.send(object) : message.reply(object)
     }    
 }
