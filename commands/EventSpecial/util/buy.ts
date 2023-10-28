@@ -42,17 +42,17 @@ export default {
             await interaction.reply({embeds: [new EmbedBuilder().setColor('Blue').setDescription("Initiating your purchase... <a:loading:1166992405199859733>")], ephemeral: true})
             const { customId } = interaction
             if (customId == `${message.id}2`) {
-                response.edit({content: `${message.author} Alright! I've cancelled your request!` , embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Red')], components: []}).catch(() => {})
+                response.edit({content: `${message.author} Alright! I've cancelled your request!` , embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Red').setFooter(null)], components: []}).catch(() => {})
                 await interaction.editReply({embeds: [new EmbedBuilder().setColor('Red').setAuthor({iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}`}).setDescription(`<:fail:1146683470114996274> You cancelled the purchase!`)]})
                 return;
             } else if (customId == `${message.id}1`) {
                 const reply = inventoryClass.purchaseItemFromShop(member, inventory, item, amount)
                 if (reply == 'InsufficientCoins') {
-                    response.edit({content: `${message.author} Purchase failed!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Red')], components: []}).catch(() => {})
+                    response.edit({content: `${message.author} Purchase failed!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Red').setFooter(null)], components: []}).catch(() => {})
                     interaction.editReply({embeds: [new EmbedBuilder().setColor('Red').setAuthor({iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}`}).setDescription(`<:fail:1146683470114996274> You don't have ${item.price?.purchasePrice ? item.price?.purchasePrice * amount : "that many"} coins!`)]})
                     return;
                 };
-                response.edit({content: `${message.author} Purchase Complete!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green')], components: []}).catch(() => {})
+                response.edit({content: `${message.author} Purchase Complete!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green').setFields({name: 'You have', value: `**${inventory.find((value) => value.name.toLowerCase() == item.name.toLowerCase())?.amount ?? 1}**`}).setFooter(null)], components: []}).catch(() => {})
                 await interaction.editReply({embeds: [new EmbedBuilder().setColor('Green').setAuthor({iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}`}).setDescription(`<:success:1146683498766291024> You bought ${item.name} \`x${amount}\``)]})
             }
         })

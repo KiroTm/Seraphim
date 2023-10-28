@@ -1,12 +1,13 @@
-import { Collection } from "discord.js";
+import { Collection, GuildMember } from "discord.js";
 import { AllItems, items } from "./types";
-
+import { InventoryClass } from "./inventory";
 export type CrateObject = { image: string, description: string, weight: number, emoji: string };
 export type CrateType = 'Common' | 'Uncommon' | 'Rare' | 'Mythic';
+const inventoryClass = InventoryClass.getInstance()
 
 export class CrateClass {
     private static instance: CrateClass;
-    public readonly Crates: Collection<CrateType, Collection<string, items[]>> = new Collection();
+    public readonly Crates: Collection<CrateType, Collection<string, items>> = new Collection();
     private crates: Record<CrateType, items[]> = this.populateCrates(AllItems);
 
     private constructor() {
@@ -23,8 +24,8 @@ export class CrateClass {
         return crate;
     }
 
-    public openCrate(inventory: { name: string, amount: number }[], crateName: string, amount = 1): 'CrateNotFound' | 'NoItems' | items[] {
-        const crate = this.Crates.get(crateName as CrateType);
+    public openCrate(member: GuildMember, inventory: { name: string, amount: number }[], crateName: string, amount: number): 'CrateNotFound' | 'NoItems' | Array<{name: string, emoji: string, amount: number}> {
+        const crate = this.Crates.find((_, key) => key.toLowerCase() == crateName.toLowerCase())
         if (!crate) return 'CrateNotFound';
         const foundCrate = inventory.find((item) => item.name.toLowerCase() === crateName.toLowerCase());
         if (!foundCrate || foundCrate.amount < amount) return 'CrateNotFound';
@@ -36,9 +37,12 @@ export class CrateClass {
             }
         }
         if (!itemsToRetrieve.length) return 'NoItems';
-        return itemsToRetrieve;
+        const itemsObtained = this.getFormattedItems(itemsToRetrieve)
+        inventoryClass.removeItemAnimalCrate(member, [{name: crateName, amount}])
+        inventoryClass.addItemAnimalCrate(member, itemsObtained.map((value) => { return { name: value.name, amount: value.amount } }))
+        return itemsObtained
     }
-    
+
 
     private pickRandomItem(itemsInCrate: items[]): items | null {
         const weightedItems: items[] = [];
@@ -83,16 +87,47 @@ export class CrateClass {
 
     private startUp() {
         for (const crateName in dropTypes) {
-            this.Crates.set(crateName as CrateType, new Collection<string, items[]>());
+            this.Crates.set(crateName as CrateType, new Collection<string, items>());
         }
 
         for (const crateName in dropTypes) {
             const itemsInCrate = this.crates[crateName as CrateType];
             if (itemsInCrate) {
                 for (const item of itemsInCrate) {
-                    this.Crates.get(crateName as CrateType)?.set(item.name, [item]);
+                    this.Crates.get(crateName as CrateType)?.set(item.name, item);
                 }
             }
+        }
+    }
+
+    private getFormattedItems(items: items[]) {
+        const groupedItems = groupItemsByName(items);
+        return groupedItems.map((item) => {
+            const AllItem = Object.entries(AllItems);
+            return {
+                emoji: AllItem.find((value) => value[1].name.toLowerCase() == item?.name?.toLowerCase())?.[1]?.emoji ?? '',
+                name: item?.name ?? 'unknown',
+                amount: item?.amount ?? 0
+            }
+        })
+
+        function groupItemsByName(items: items[]) {
+            const groupedItems = new Map<string, number>();
+
+            for (const item of items) {
+                if (groupedItems.has(item.name)) {
+                    groupedItems.set(item.name, groupedItems.get(item.name)! + 1);
+                } else {
+                    groupedItems.set(item.name, 1);
+                }
+            }
+
+            const result: { name: string; amount: number }[] = [];
+            for (const [name, amount] of groupedItems) {
+                result.push({ name, amount });
+            }
+
+            return result;
         }
     }
 }

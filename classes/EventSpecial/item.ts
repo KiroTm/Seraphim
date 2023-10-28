@@ -16,7 +16,10 @@ export class ItemClass {
                 .setColor('Blurple')
                 .setTitle(name)
                 .setThumbnail(emoji ? `https://cdn.discordapp.com/emojis/${parseEmoji(emoji)!.id! + (parseEmoji(emoji)!.animated ? '.gif' : '.png')}` : null)
-                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${inventory ? `\n\nYou have: **${inventory.find((value) => value.name.toLowerCase().includes(item.name.toLowerCase()))?.amount ?? 0}**` : null}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${price ? `\n\nPrice Info:\nPurchase in: ${price.purchasePrice} <:coin:1164253043991253116> | Sell in: ${price.sellPrice} <:coin:1164253043991253116>`: ''}${type ? `\n\n${type}` : ''}`);
+                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${price ? `\n\nPrice Info:\nPurchase in: ${price.purchasePrice} <:coin:1164253043991253116> | Sell in: ${price.sellPrice} <:coin:1164253043991253116>`: ''}${type ? `\n\n${type}` : ''}`)
+                .setFields(
+                    {name: `You have:`, value: `**${inventory.find((value) => value.name.toLowerCase().includes(item.name.toLowerCase()))?.amount ?? 0}**` , inline: false}
+                );
         };
 
         if (item) {

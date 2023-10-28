@@ -19,6 +19,6 @@ export default {
         const messages = await channel.messages.fetch({ limit: 100 });
         const MessagesToDelete = messages.filter(msg => msg.author.id === bot.id || (msg.content.startsWith(prefix)));
         await channel.bulkDelete(MessagesToDelete).catch(() => {});
-        message.channel.send(`Attempted to delete ${MessagesToDelete.size - 1} messages`);
+        message.channel.send(`Attempted to delete ${MessagesToDelete.size - 1} messages`).then((msg) => setTimeout(() => { msg.delete() }, 5000))
     }
 } as Command;
