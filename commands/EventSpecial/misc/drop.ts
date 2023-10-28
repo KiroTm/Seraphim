@@ -25,6 +25,11 @@ export default {
                     required: true
                 }
             ]
+        },
+        {
+            name: "send",
+            description: "Sends the drop in the channel setup",
+            type: ApplicationCommandOptionType.Subcommand
         }
     ],
     args: {
@@ -47,10 +52,10 @@ export default {
                 const crate_name = args[2];
                 const amount = parseInt(args[3]);
                 if (!amount) return message.channel.send("Invalid amount");
-                
+
                 // Use the InventoryClass to add crates to a user's inventory
                 inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: amount }]);
-                
+
                 message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription(`Granted ${amount} ${crate_name} crates to ${member.user.username}`)] });
             } else if (args[0] === 'remove') {
                 // Add code for removing crates from the inventory if needed.
@@ -59,24 +64,34 @@ export default {
             }
 
         } else if (interaction) {
-            await interaction.deferReply({ ephemeral: true })
-            const channel = interaction.options.getChannel('channel') as Channel
-            if (!channel || (channel && !channel.isTextBased())) {
-                return interaction.editReply({ embeds: [new EmbedBuilder().setDescription("Provide a TextChannel").setColor('Red')] });
+            const Subcommand = interaction.options.getSubcommand()
+            if (Subcommand == 'setup') {
+                await interaction.deferReply({ ephemeral: true })
+                const channel = interaction.options.getChannel('channel') as Channel
+                if (!channel || (channel && !channel.isTextBased())) {
+                    return interaction.editReply({ embeds: [new EmbedBuilder().setDescription("Provide a TextChannel").setColor('Red')] });
+                }
+                await DropSchema.findOneAndUpdate({
+                    GuildID: interaction.guildId
+                },
+                    {
+                        GuildID: interaction.guildId,
+                        ChannelID: channel.id
+                    },
+                    {
+                        upsert: true,
+                        new: true
+                    });
+                interaction.editReply("Set!");
+                dropClass.DropsSetupData.set(`${interaction.guildId}`, channel.id);
+            } else if (Subcommand == 'send') {
+                await interaction.deferReply({ephemeral: true})
+                const channelId = dropClass.DropsSetupData.get(interaction.guildId!) as string
+                const channel = interaction.guild?.channels.cache.get(channelId ?? undefined)
+                if (!channel) return interaction.editReply("Drops not setup!")
+                dropClass.trigger(false)
+                interaction.editReply("Drops sent!")
             }
-            await DropSchema.findOneAndUpdate({
-                GuildID: interaction.guildId
-            },
-            {
-                GuildID: interaction.guildId,
-                ChannelID: channel.id
-            },
-            {
-                upsert: true,
-                new: true
-            });
-            interaction.editReply("Set!");
-            dropClass.DropsSetupData.set(`${interaction.guildId}`, channel.id);
         }
     }
 } as Command;

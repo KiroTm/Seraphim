@@ -23,29 +23,38 @@ export class InventoryClass {
     public addItemAnimalCrate(member: GuildMember, itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number }[]) {
         const guildId = member.guild.id;
         const userId = member.id;
-        const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
-        if (!inventoryData) {
-            this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>().set(userId, this.itemsOrAnimalsAsArray(itemsOrAnimals)));
-        } else {
-            if (Array.isArray(itemsOrAnimals)) {
-                itemsOrAnimals.forEach((itemOrAnimal) => {
-                    const existing = inventoryData.find((entry) => entry.name === itemOrAnimal.name);
-                    if (existing) {
-                        existing.amount += itemOrAnimal.amount;
-                    } else {
-                        inventoryData.push({ name: itemOrAnimal.name, amount: itemOrAnimal.amount });
-                    }
-                });
-            } else {
-                const existing = inventoryData.find((entry) => entry.name === itemsOrAnimals.name);
+
+        if (!this.inventoryCollection.has(guildId)) {
+            this.inventoryCollection.set(guildId, new Collection<string, { name: string, amount: number }[]>());
+        }
+
+        const guildCollection = this.inventoryCollection.get(guildId)!;
+
+        if (!guildCollection.has(userId)) {
+            guildCollection.set(userId, []);
+        }
+
+        const inventoryData = guildCollection.get(userId)!;
+
+        if (Array.isArray(itemsOrAnimals)) {
+            itemsOrAnimals.forEach((itemOrAnimal) => {
+                const existing = inventoryData.find((entry) => entry.name === itemOrAnimal.name);
                 if (existing) {
-                    existing.amount += itemsOrAnimals.amount;
+                    existing.amount += itemOrAnimal.amount;
                 } else {
-                    inventoryData.push({ name: itemsOrAnimals.name, amount: itemsOrAnimals.amount });
+                    inventoryData.push({ name: itemOrAnimal.name, amount: itemOrAnimal.amount });
                 }
+            });
+        } else {
+            const existing = inventoryData.find((entry) => entry.name === itemsOrAnimals.name);
+            if (existing) {
+                existing.amount += itemsOrAnimals.amount;
+            } else {
+                inventoryData.push({ name: itemsOrAnimals.name, amount: itemsOrAnimals.amount });
             }
         }
     }
+
 
     public removeItemAnimalCrate(member: GuildMember, itemsOrAnimals: { name: string, amount: number }[]): 'InventoryError' | void {
         const guildId = member.guild.id;
@@ -64,22 +73,13 @@ export class InventoryClass {
             }
         }
     }
-    
-    public purchaseItemFromShop(member: GuildMember, inventory: {name: string, amount: number}[], item: items, amount: number): void | 'InsufficientCoins' {
+
+    public purchaseItemFromShop(member: GuildMember, inventory: { name: string, amount: number }[], item: items, amount: number): void | 'InsufficientCoins' {
         const TotalPrice = item.price?.purchasePrice! * amount
         if (!inventory || !item || inventory.find((value) => value.name.toLowerCase().includes('coin'))?.amount! < TotalPrice) return 'InsufficientCoins'
-        this.addItemAnimalCrate(member, { name: item.name, amount})
+        this.addItemAnimalCrate(member, { name: item.name, amount })
         this.removeItemAnimalCrate(member, [{ name: 'coin', amount: TotalPrice }])
     }
-
-    private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {
-        if (Array.isArray(itemsOrAnimals)) {
-            return itemsOrAnimals.map((itemOrAnimal) => ({ name: itemOrAnimal.name, amount: itemOrAnimal.amount }));
-        } else {
-            return [{ name: itemsOrAnimals.name, amount: itemsOrAnimals.amount }];
-        }
-    }
-
 
     private async initializeInventoryData() {
 
@@ -101,7 +101,7 @@ export class InventoryClass {
     private async uploadInventoryDataToMongo() {
         try {
             const bulkOps = [];
-            
+
             for (const [guildID, users] of this.inventoryCollection) {
                 for (const [userID, items] of users) {
                     bulkOps.push({
@@ -113,7 +113,7 @@ export class InventoryClass {
                     });
                 }
             }
-    
+
             if (bulkOps.length > 0) {
                 InventorySchema.bulkWrite(bulkOps);
             }
@@ -121,17 +121,10 @@ export class InventoryClass {
             console.log("Couldn't upload data to mongo for inventory!")
         }
     }
-    
-    private infoLogger() {
-        console.log("\n\n\n")
-        console.log(this.inventoryCollection.get('519734247519420438')?.map((value, key) => `${key} –– ${value.map((item) => `${item.name + item.amount}`).join(", ")}`))
-        console.log("\n\n\n")
-    }
 
     private startUp() {
-        this.uploadInventoryDataToMongo();  
+        this.uploadInventoryDataToMongo();
         setInterval(() => {
-            this.infoLogger()
             this.uploadInventoryDataToMongo();
         }, 10000);
     }
