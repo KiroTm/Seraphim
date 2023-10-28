@@ -9,7 +9,6 @@ const inventoryInstance = InventoryClass.getInstance();
 export class DropClass {
     private static instance: DropClass;
     public DropsSetupData: Collection<string, string> = new Collection();
-    public isBlackListed: Set<string> = new Set();
 
     private constructor() {
         this.initializeDropsData().then(() => {
@@ -63,11 +62,10 @@ export class DropClass {
             });
 
             const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, max: 1, maxUsers: 2, time: 10000 });
-
-            collector.on('collect', async (int: ButtonInteraction) => {
-                int.deferUpdate();
-            });
-
+            collector.on('collect', async (int) => {
+                int.deferUpdate()
+                response.edit({ components: [] })
+            })
             collector.on('end', async (int, reason) => {
                 if (reason == 'time') {
                     response.edit({ embeds: [Embed.setColor('Red').addFields({ name: "Collectors:", value: "None", inline: false })], components: [] });
@@ -76,26 +74,23 @@ export class DropClass {
                         return;
                     }, 1000 * 5);
                 }
-                if (int.size) {
-                    const interaction = int.values().next().value as ButtonInteraction;
-                    const [guildId, channelId] = interaction.customId.split('-');
-                    const crate_name = this.pickRandomDrop();
-                    const crate = dropTypes[crate_name];
-                    const collection = this.DropsSetupData.get(guildId);
-                    if (!collection || collection !== channelId) return;
-                    const member = interaction.member as GuildMember;
-                    if (this.isBlackListed.has(member.id)) return;
-                    const field = { name: "Collectors", value: `${Embed.data.fields ? `${Embed.data.fields.map((value) => `${value.value}`).join()}\n` : ""}  ${member}`, inline: false };
-                    interaction.message.edit({
-                        embeds: [Embed.setFields(field).setImage(crate.image).setDescription(`The mystery drop was: ${crate_name}`)],
-                        components: []
-                    });
+                const interaction = int.values().next().value as ButtonInteraction;
+                const [guildId, channelId] = interaction.customId.split('-');
+                const crate_name = this.pickRandomDrop();
+                const crate = dropTypes[crate_name];
+                const collection = this.DropsSetupData.get(guildId);
+                if (!collection || collection !== channelId) return;
+                const member = interaction.member as GuildMember;
+                inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: 1 }]);
+                const field = { name: "Collectors", value: `${Embed.data.fields ? `${Embed.data.fields.map((value) => `${value.value}`).join()}\n` : ""}  ${member}`, inline: false };
+                interaction.message.edit({
+                    embeds: [Embed.setFields(field).setImage(crate.image).setDescription(`The mystery drop was: ${crate_name.toUpperCase()}`)],
+                    components: []
+                });
 
-                    inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: 1 }]);
-                    setTimeout(() => {
-                        interaction.message.delete().catch(() => { });
-                    }, 1000 * 6);
-                }
+                setTimeout(() => {
+                    interaction.message.delete().catch(() => { });
+                }, 1000 * 6);
             });
         });
     }
