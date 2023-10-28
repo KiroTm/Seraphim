@@ -1,6 +1,5 @@
 import { Collection, GuildMember } from "discord.js";
 import InventorySchema from "../../models/InventorySchema";
-import { ItemClass } from "./item";
 import { AllItems, items } from "./types";
 
 export class InventoryClass {
@@ -83,6 +82,7 @@ export class InventoryClass {
 
 
     private async initializeInventoryData() {
+
         try {
             const inventoryData = await InventorySchema.find();
             for (const entry of inventoryData) {
@@ -100,21 +100,38 @@ export class InventoryClass {
 
     private async uploadInventoryDataToMongo() {
         try {
+            const bulkOps = [];
+            
             for (const [guildID, users] of this.inventoryCollection) {
                 for (const [userID, items] of users) {
-                    await InventorySchema.updateOne(
-                        { GuildID: guildID, UserID: userID },
-                        { Items: items },
-                        { upsert: true }
-                    );
+                    bulkOps.push({
+                        updateOne: {
+                            filter: { GuildID: guildID, UserID: userID },
+                            update: { $set: { Items: items } },
+                            upsert: true,
+                        },
+                    });
                 }
             }
+    
+            if (bulkOps.length > 0) {
+                InventorySchema.bulkWrite(bulkOps);
+            }
         } catch (error) {
+            console.log("Couldn't upload data to mongo for inventory!")
         }
+    }
+    
+    private infoLogger() {
+        console.log("\n\n\n")
+        console.log(this.inventoryCollection.get('519734247519420438')?.map((value, key) => `${key} –– ${value.map((item) => `${item.name + item.amount}`).join(", ")}`))
+        console.log("\n\n\n")
     }
 
     private startUp() {
+        this.uploadInventoryDataToMongo();  
         setInterval(() => {
+            this.infoLogger()
             this.uploadInventoryDataToMongo();
         }, 10000);
     }

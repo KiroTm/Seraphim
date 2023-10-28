@@ -15,7 +15,7 @@ import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "di
 	],
 	partials: [Message, Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember],
 	rest: {
-	  globalRequestsPerSecond: Infinity,
+	  globalRequestsPerSecond: 9999,
 	},
 	presence: {
 	  activities: [

@@ -19,7 +19,7 @@ export default {
     callback: async ({ message, args, guild }: Callback) => {
         const member = (memberClass.fetch(guild, args[0] ?? message.author.id, message) || message.member) as GuildMember
         const inventory = Inventory.getInventory(member)
-        if (!inventory.length) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription("Honestly, I would leave the server if I had nothing in my inventory.")] })
+        if (!inventory.length) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription("There's absolutely nothing in your inventory!")] })
         const GenerateEmbeds = (items: { name: string; amount: number }[]) => {
             const itemPerPage = 10;
             const embeds = [];

@@ -73,6 +73,7 @@ export class DropClass {
                         response.delete().catch(() => { });
                         return;
                     }, 1000 * 5);
+                    return;
                 }
                 const interaction = int.values().next().value as ButtonInteraction;
                 const [guildId, channelId] = interaction.customId.split('-');
@@ -123,15 +124,10 @@ export class DropClass {
         this.sendDrops(checkActivity ?? true);
     }
 
-    private uploadDropsDataToMongoDbAndIdkIWantToMakeThisLongAsFuck() {
-
-    }
-
     private startUp() {
         this.sendDrops(true);
         setInterval(() => {
             this.sendDrops(true);
-            this.uploadDropsDataToMongoDbAndIdkIWantToMakeThisLongAsFuck();
         }, 60000);
     }
 }

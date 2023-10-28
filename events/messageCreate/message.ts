@@ -4,5 +4,5 @@ import { StatsClass } from "../../classes/misc/Message";
 const statsClass = StatsClass.getInstance()
 export default (instance: ConfigInstance, message: Message) => {
     if (message.author.bot || !message.channel.isTextBased()) return;
-    statsClass.add(message)
+    // statsClass.add(message)
 }
