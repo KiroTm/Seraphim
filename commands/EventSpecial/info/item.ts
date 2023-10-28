@@ -3,6 +3,9 @@ import { Callback, Command } from "../../../typings";
 export default {
     name: "item",
     description: "Get information about an item!",
+    cooldown: {
+        Duration: '10s'
+    },
     callback: async ({message, args}: Callback) => {
         new ItemClass().generate(message, args[0])
     }

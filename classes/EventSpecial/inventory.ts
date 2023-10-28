@@ -54,7 +54,7 @@ export class InventoryClass {
         const inventoryData = this.inventoryCollection.get(guildId)?.get(userId);
         if (!inventoryData) return 'InventoryError';
         for (const itemOrAnimal of itemsOrAnimals) {
-            const itemIndex = inventoryData.findIndex((value) => value.name.toLowerCase() === AllItems[itemOrAnimal.name]?.name.toLowerCase() || itemOrAnimal.name || undefined)
+            const itemIndex = inventoryData.findIndex((value) => value.name.toLowerCase().includes(itemOrAnimal.name.toLowerCase()) || value.name.toLowerCase().includes(AllItems[itemOrAnimal.name]?.name?.toLowerCase()))
             if (itemIndex !== -1) {
                 const currentItem = inventoryData[itemIndex];
                 if (currentItem.amount <= itemOrAnimal.amount) {
@@ -66,8 +66,11 @@ export class InventoryClass {
         }
     }
     
-    public purchaseItemFromShop(member: GuildMember, inventory: {name: string, amount: number}[], item: items): void | 'InsufficientCoins' {
-        return 'InsufficientCoins'
+    public purchaseItemFromShop(member: GuildMember, inventory: {name: string, amount: number}[], item: items, amount: number): void | 'InsufficientCoins' {
+        const TotalPrice = item.price?.purchasePrice! * amount
+        if (!inventory || !item || inventory.find((value) => value.name.toLowerCase().includes('coin'))?.amount! < TotalPrice) return 'InsufficientCoins'
+        this.addItemAnimalCrate(member, { name: item.name, amount})
+        this.removeItemAnimalCrate(member, [{ name: 'coin', amount: TotalPrice }])
     }
 
     private itemsOrAnimalsAsArray(itemsOrAnimals: { name: string; amount: number } | { name: string, amount: number } | { name: string, amount: number }[]) {

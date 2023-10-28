@@ -1,19 +1,22 @@
 import { Messagepagination } from '../../functions/utility/pagination';
+import { InventoryClass } from './inventory';
 import {AllItems, items } from './types'
-import { Message, Collection, EmbedBuilder, parseEmoji } from "discord.js"
+import { Message, Collection, EmbedBuilder, parseEmoji, GuildMember } from "discord.js"
+const inventoryClass = InventoryClass.getInstance()
 const ShopItemsCollection: Collection<string, items> = new Collection<string, items>(Object.entries(AllItems))
 export class ItemClass {
     public generate(message: Message, item?: string, embedOnly?: boolean): any {
+        const inventory = inventoryClass.getInventory(message.member as GuildMember)
         const createEmbed = (item: items) => {
             const { name, description, emoji, info, price } = item
-            const { usage, boosts, type, craft } = info || { type: 'Other' }
+            const { usage, type, craft } = info || { type: 'Other' }
             const { recipe } = craft || { usedInCrafting: false, canbeCrafted: false, recipe: null }
 
             return new EmbedBuilder()
                 .setColor('Blurple')
                 .setTitle(name)
                 .setThumbnail(emoji ? `https://cdn.discordapp.com/emojis/${parseEmoji(emoji)!.id! + (parseEmoji(emoji)!.animated ? '.gif' : '.png')}` : null)
-                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${price ? `\n\nPrice Info:\nPurchase in: ${price.purchasePrice} <:coin:1164253043991253116> | Sell in: ${price.sellPrice} <:coin:1164253043991253116>`: ''}${type ? `\n\n${type}` : ''}`);
+                .setDescription(`${`> *${description}*` || ''}${usage ? `\n\n${usage}` : ''}${inventory ? `\n\nYou have: **${inventory.find((value) => value.name.toLowerCase().includes(item.name.toLowerCase()))?.amount ?? 0}**` : null}${recipe ? `\n\n**Recipe**:\n${recipe.map((value) => `<:branch_tail_curved:1161479147839828018>${AllItems[value.itemName]?.emoji ?? ''} **${value.itemName} \`x${value.amount}\`**`).join("\n")}` : ''}${price ? `\n\nPrice Info:\nPurchase in: ${price.purchasePrice} <:coin:1164253043991253116> | Sell in: ${price.sellPrice} <:coin:1164253043991253116>`: ''}${type ? `\n\n${type}` : ''}`);
         };
 
         if (item) {
@@ -29,7 +32,7 @@ export class ItemClass {
     }
 
     public getItem(itemName: string): items | undefined {
-        const Item = ShopItemsCollection.find((_, key) => key.toLowerCase().includes(itemName.toLowerCase()));
+        const Item = ShopItemsCollection.find((value, key) => key.toLowerCase().includes(itemName.toLowerCase()) || value.name.toLowerCase().includes(itemName.toLowerCase())) || undefined
         return Item || undefined
     }
 

@@ -149,7 +149,7 @@ const AllItems: Record<string, items> = {
             type: 'Tool',
             usable: false,
             usage: 'Having a hoe in your inventory would allow you to farm',
-            craft: {canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'stone', amount: 5}] as recipe}
+            craft: {canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'scrap', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'stone', amount: 5}] as recipe}
         },
         weight: 10
     },
@@ -165,7 +165,7 @@ const AllItems: Record<string, items> = {
             type: 'Tool',
             usable: false,
             usage: 'Having a shovel in your inventory would allow you to dig through dirt',
-            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 1}, {itemName: 'stone', amount: 3}] as recipe }
+            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'scrap', amount: 10}, {itemName: 'stick', amount: 1}, {itemName: 'stone', amount: 3}] as recipe }
         },
         weight: 20
     },
@@ -181,7 +181,7 @@ const AllItems: Record<string, items> = {
             type: 'Tool',
             usable: false,
             usage: 'Having a fishing rod in your inventory would allow you to fish',
-            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
+            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'scrap', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'string', amount: 5}] as recipe }
         },
         weight: 20
     },
@@ -197,13 +197,13 @@ const AllItems: Record<string, items> = {
             type: 'Tool',
             usable: false,
             usage: 'Having a rifle in your inventory would allow you to hunt',
-            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'metal', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
+            craft: { canbeCrafted: true, usedInCrafting: false, recipe: [{itemName: 'scrap', amount: 10}, {itemName: 'stick', amount: 2}, {itemName: 'gunpowder', amount: 50}] as recipe }
         },
         weight: 20
     },
     // All the materials:
-    metal: {
-        name: "Metal Scrap",
+    scrap: {
+        name: "Scrap",
         description: "Like plug is to socket, metal is to junkyard",
         emoji: "<:scrap:1164264273187455047>",
         info: {
@@ -214,7 +214,7 @@ const AllItems: Record<string, items> = {
         weight: 50
     },
     string: {
-        name: "Metal String",
+        name: "String",
         description: "What do you mean the guillotine was stolen? WHAT?! Gary stole it? He's a maniac he'll use it to behead people.",
         emoji: "<:string:1164266391663296534>",
         info: {
