@@ -41,8 +41,8 @@ export default {
                     interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription("You don't have that many crates!")] })
                     return;
                 }
-                response.edit({ content: `${message.author} Opening successful!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green').setFields({name: `You have:`, value: `**${inventory.find((value) => value.name.toLowerCase().includes(crateName.toLowerCase()))?.amount ?? 0}**`, inline: false}).setFooter(null)], components: [] }).catch(() => { })
                 await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Green').setAuthor({ iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}` }).setDescription(`** <:success:1146683498766291024> You've obtained the following items:**\n${open.map((value) => `${value.emoji} ${value.name} – ${value.amount}`).join("\n")}`)] })
+                response.edit({ content: `${message.author} Opening successful!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green').setFields({name: `You have:`, value: `**${inventory.find((value) => value.name.toLowerCase().includes(crateName.toLowerCase()))?.amount ?? 0}**`, inline: false}).setFooter(null)], components: [] }).catch(() => { })
             }
         })
     }

@@ -2,7 +2,7 @@ import { ActionRowBuilder, Activity, ButtonBuilder, ButtonInteraction, ButtonSty
 import DropSchema from "../../models/Drop-Schema";
 import { client } from "../..";
 import { InventoryClass } from "./inventory";
-import { dropTypes } from "../../classes/EventSpecial/crate";
+import { CrateType, dropTypes } from "../../classes/EventSpecial/crate";
 
 const inventoryInstance = InventoryClass.getInstance();
 
@@ -28,26 +28,24 @@ export class DropClass {
         return recentMessagesWithinTimeFrame.size >= 5;
     }
 
-    private async sendDrops(checkActivity?: boolean) {
+    private async sendDrops(checkActivity = false) {
         if (!this.DropsSetupData) return;
-        const check = checkActivity || false;
 
-        this.DropsSetupData.forEach(async (drop_value, drop_key) => {
-            const guild = client.guilds.cache.get(drop_key) as Guild | undefined;
+        for (const [guildId, channelId] of this.DropsSetupData) {
+            const guild = client.guilds.cache.get(guildId) as Guild | undefined;
 
-            if (!guild) return;
+            if (!guild) continue;
 
-            const channel = client.channels.cache.get(drop_value);
+            const channel = client.channels.cache.get(channelId) as TextChannel
 
-            if (!channel || !channel.isTextBased()) return;
+            if (!channel) return;
 
-            if (check && !this.shouldSendDrop(channel as TextChannel)) return;
+            if (checkActivity && !this.shouldSendDrop(channel as TextChannel)) continue;
 
-            const Embed = new EmbedBuilder()
-                .setColor('#2b2d32')
-                .setDescription(`A mystery drop appeared!`)
-                .setImage(`https://i.imgur.com/BLtdF0M.png`)
-                .setTitle("Halloween Drops");
+            let crate_name: string = '';
+
+            crate_name = this.pickRandomDrop();
+            const crate = dropTypes[crate_name as CrateType];
 
             const row = new ActionRowBuilder<ButtonBuilder>()
                 .addComponents(
@@ -56,45 +54,55 @@ export class DropClass {
                         .setLabel('Collect')
                         .setStyle(ButtonStyle.Success)
                 );
+
             const response = await channel.send({
-                embeds: [Embed],
+                content: `A mystery drop has appeared!`,
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Blue')
+                        .setTitle('Unknown Crate')
+                        .setDescription("This holds a monster behind! (that's what she said)")
+                        .setThumbnail("https://media.discordapp.net/attachments/1162785970064740513/1163745740833706094/image.png")
+                ],
                 components: [row]
             });
 
-            const collector = response.createMessageComponentCollector({ componentType: ComponentType.Button, max: 1, maxUsers: 2, time: 10000 });
+            const collector = response.createMessageComponentCollector({
+                componentType: ComponentType.Button,
+                max: 2,
+                maxUsers: 2,
+                time: 12 * 1000
+            });
+
+            let description: string = '';
+
             collector.on('collect', async (int) => {
-                int.deferUpdate()
-                response.edit({ components: [] })
-            })
-            collector.on('end', async (int, reason) => {
-                if (reason == 'time') {
-                    response.edit({ embeds: [Embed.setColor('Red').addFields({ name: "Collectors:", value: "None", inline: false })], components: [] });
-                    setTimeout(async () => {
-                        response.delete().catch(() => { });
-                        return;
-                    }, 1000 * 5);
-                    return;
-                }
-                const interaction = int.values().next().value as ButtonInteraction;
-                const [guildId, channelId] = interaction.customId.split('-');
-                const crate_name = this.pickRandomDrop();
-                const crate = dropTypes[crate_name];
-                const collection = this.DropsSetupData.get(guildId);
-                if (!collection || collection !== channelId) return;
+                const interaction = int as ButtonInteraction;
+                const [interactionGuildId, interactionChannelId] = interaction.customId.split('-');
+                if (guildId !== interactionGuildId || channelId !== interactionChannelId) return;
+                interaction.reply({ content: 'Your click was registered', ephemeral: true })
                 const member = interaction.member as GuildMember;
                 inventoryInstance.addItemAnimalCrate(member, [{ name: crate_name, amount: 1 }]);
-                const field = { name: "Collectors", value: `${Embed.data.fields ? `${Embed.data.fields.map((value) => `${value.value}`).join()}\n` : ""}  ${member}`, inline: false };
-                interaction.message.edit({
-                    embeds: [Embed.setFields(field).setImage(crate.image).setDescription(`The mystery drop was: ${crate_name.toUpperCase()}`)],
-                    components: []
-                });
-
-                setTimeout(() => {
-                    interaction.message.delete().catch(() => { });
-                }, 1000 * 6);
+                description += `\n${member.nickname ?? member.user.globalName ?? member.user.username}`
             });
-        });
+
+            collector.on('end', async (collected, reason) => {
+                if (reason == 'time' && collected.size == 0) {
+                    await response.edit({embeds: [], components: [], content: "No one claimed. Sad"})
+                    return;
+                }
+                crate_name = crate_name.charAt(0).toUpperCase() + crate_name.slice(1)
+                const CollectedEmbed = new EmbedBuilder().setColor('Blue').setThumbnail(crate.image).setTitle(`${crate_name} Crate`).setDescription(crate.description ?? 'Unknown').setFields({ name: "Collectors:", value: description ?? 'None', inline: false })
+                const CollectedObject = { content: `The Crate was **${crate_name}** ${crate.emoji}`, embeds: [CollectedEmbed], components: [] }
+                response.edit(CollectedObject)
+                setTimeout(() => {
+                    response.delete().catch(() => { })
+                }, 5000);
+                return;
+            })
+        }
     }
+
 
     private pickRandomDrop(): keyof typeof dropTypes {
         const weightedRarities: (keyof typeof dropTypes)[] = [];
