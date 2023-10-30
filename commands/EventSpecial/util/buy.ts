@@ -3,7 +3,6 @@ import { ItemClass } from "../../../classes/EventSpecial/item";
 import { ResponseClass } from "../../../classes/Utility/Response";
 import { Callback, Command } from "../../../typings"
 import { InventoryClass } from "../../../classes/EventSpecial/inventory";
-import { EmojiClass } from "../../../classes/misc/emoji";
 const itemClass = new ItemClass()
 const responseClass = new ResponseClass()
 const inventoryClass = InventoryClass.getInstance()
@@ -25,9 +24,11 @@ export default {
         const item = itemClass.getItem(args[0] ?? undefined)
         const amount = (parseInt(args[1])) as number
         const inventory = inventoryClass.getInventory(member)
-        if (!item) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription('Invalid item! Please make sure the item name is valid!')]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageCreate')
-        if (!amount || !Number.isInteger(amount) || amount > 1000 || amount < 1) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription('Invalid Amount! Please make sure the amount is a whole numnber between 1 - 1000')]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageCreate')
-        if (!item.price?.purchasePrice) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription(`${item.name} cannot bought!`)]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageCreate')
+        if (!item) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription('Invalid item! Please make sure the item name is valid!')]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageReply')
+        if (!amount || !Number.isInteger(amount) || amount < 1) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription('Amount should be greater than 1')]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageReply')
+        if (!item.price?.purchasePrice) return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription(`${item.name} cannot be bought!`)]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageReply')
+        const itemInInventory = inventory.find((value) => value.name.toLowerCase().includes(item.name.toLowerCase()))
+        if (!itemInInventory || itemInInventory.amount < amount)  return responseClass.error(instance, message, { embeds: [new EmbedBuilder().setColor('Red').setDescription(`You don't have that many ${item.name}!`)]}, { commandName: 'buy', cooldownType: 'perGuildCooldown' }, 'MessageReply')
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setCustomId(`${message.id}1`).setStyle(ButtonStyle.Primary).setLabel("Buy"), new ButtonBuilder().setCustomId(`${message.id}2`).setStyle(ButtonStyle.Danger).setLabel("Cancel"))
         const itemEmbed = await itemClass.generate(message, item.name, true) as Message | EmbedBuilder
         if ('content' in itemEmbed) return;

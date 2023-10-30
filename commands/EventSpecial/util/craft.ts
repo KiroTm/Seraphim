@@ -42,7 +42,7 @@ export default {
                     await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setAuthor({ iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}` }).setDescription(`<:fail:1146683470114996274> You don't have enough materials to craft this item!`)] })
                     return;
                 }
-                response.edit({ content: `${message.author} Craft successful!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green').setFields({name: "You have", value: `**${inventory.find((value) => value.name.toLowerCase().includes(item.toLowerCase()))?.amount ?? 1}**`, inline: false}).setFooter(null)], components: [] }).catch(() => { })
+                response.edit({ content: `${message.author} Craft successful!`, embeds: [new EmbedBuilder(response.embeds[0].data).setColor('Green').setFields({name: "You have", value: `**${inventory.find((value) => value.name.toLowerCase().includes(item.toLowerCase()))?.amount ?? 0}**`, inline: false}).setFooter(null)], components: [] }).catch(() => { })
                 await interaction.editReply({ embeds: [new EmbedBuilder().setColor('Green').setAuthor({ iconURL: `${interaction.client.user.displayAvatarURL()}`, name: `${interaction.client.user.username}` }).setDescription(`<:success:1146683498766291024> You've crafted ${craft.emoji ?? ""} ${craft.name} \`x1\``)] })
             }
 
