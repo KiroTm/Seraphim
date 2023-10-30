@@ -39,7 +39,7 @@ export class RandomedClass {
       `You missed the {animal}.`,
       `Better luck next time with the {animal}.`,
       `The {animal} slipped through your fingers.`,
-      `T  he {animal} evaded capture this time.`,
+      `The {animal} evaded capture this time.`,
       `The {animal} proved too quick for you.`
     ];
 
