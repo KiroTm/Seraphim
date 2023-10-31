@@ -1,31 +1,33 @@
 import { EmbedBuilder, GuildMember } from "discord.js";
-import { InventoryClass } from "../../../classes/EventSpecial/inventory";
-import { MemberClass } from "../../../classes/misc/member";
 import { Command, Callback } from "../../../typings";
-import { RandomedClass } from "../../../classes/EventSpecial/Randomed";
+import { EconomyClass } from "../../../classes/EventSpecial/economy";
+import { InventoryClass } from "../../../classes/EventSpecial/inventory";
+const economyClass = new EconomyClass()
 const inventoryClass = InventoryClass.getInstance()
-const randomedClass = new RandomedClass()
 export default {
     name: 'hunt',
     description: 'Hunt for animals and earn rewards!',
+    cooldown: {
+        Duration: '5s',
+        Type: 'perUserCooldown'
+    },
     callback: async ({ message, }: Callback) => {
+        type outcome = 'fail' | 'success'
         const member = message.member as GuildMember
-        const animal = randomedClass.getRandomAnimal()
-        const result = ['success', 'fail', 'neutral'];
-        const outcome = result[Math.floor(Math.random() * result.length)];
-        let reply;
-        if (outcome == 'success') {
-            reply = randomedClass.getRandomEconomyReply('success')
-        } else if (outcome == 'fail') {
-            reply = randomedClass.getRandomEconomyReply('fail')
+        const animal = economyClass.getRandomAnimal()
+        const result = ['success', 'fail'];
+        const outcome = result[Math.floor(Math.random() * result.length)] as outcome
+        const reply = economyClass.getRandomEconomyReply(outcome)
+        if (outcome == 'fail') {
+            
         } else {
-            reply = randomedClass.getRandomEconomyReply('neutral')
+            inventoryClass.addItemAnimalCrate(member, { name: animal?.name!, amount: 1 })
         }
-        message.channel.send({
+        await message.channel.send({
             embeds: [
                 new EmbedBuilder()
-                .setColor(outcome == 'success' ? 'Green' : outcome == 'fail' ? 'Red' : 'Yellow')
-                .setDescription(`${reply.replace("{animal}", `${animal?.name}${animal?.emoji}`)}`)
+                    .setColor(outcome == 'success' ? 'Green' : outcome == 'fail' ? 'Red' : 'Yellow')
+                    .setDescription(`${reply.replace(/{animal}/g, `${animal?.name}${animal?.emoji}`)}`)
             ]
         })
     }

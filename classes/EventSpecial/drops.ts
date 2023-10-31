@@ -8,6 +8,7 @@ const inventoryInstance = InventoryClass.getInstance();
 
 export class DropClass {
     private static instance: DropClass;
+    private weightBasedCrates: Array<keyof typeof dropTypes> = []
     public DropsSetupData: Collection<string, string> = new Collection();
 
     private constructor() {
@@ -44,7 +45,7 @@ export class DropClass {
 
             let crate_name: string = '';
 
-            crate_name = this.pickRandomDrop();
+            crate_name = this.pickRandomDrop()
             const crate = dropTypes[crate_name as CrateType];
 
             const row = new ActionRowBuilder<ButtonBuilder>()
@@ -104,19 +105,18 @@ export class DropClass {
     }
 
 
-    private pickRandomDrop(): keyof typeof dropTypes {
-        const weightedRarities: (keyof typeof dropTypes)[] = [];
+    private pickRandomDrop(): string {
+        return this.weightBasedCrates[Math.floor(Math.random() * this.weightBasedCrates.length)]
+    }
 
+    private setWeightBasedCrates(){
         for (const rarity in dropTypes) {
             if (Object.prototype.hasOwnProperty.call(dropTypes, rarity)) {
                 for (let i = 0; i < dropTypes[rarity as keyof typeof dropTypes].weight; i++) {
-                    weightedRarities.push(rarity as keyof typeof dropTypes);
+                    this.weightBasedCrates.push(rarity as keyof typeof dropTypes);
                 }
             }
         }
-
-        const randomIndex = Math.floor(Math.random() * weightedRarities.length);
-        return weightedRarities[randomIndex];
     }
 
     private async initializeDropsData() {
@@ -133,6 +133,7 @@ export class DropClass {
     }
 
     private startUp() {
+        this.setWeightBasedCrates()
         this.sendDrops(true);
         setInterval(() => {
             this.sendDrops(true);
