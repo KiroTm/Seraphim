@@ -17,7 +17,7 @@ export default {
     },
     callback: ({ message, args, guild }: Callback) => {
         const roleclass = new RoleClass()
-        const role = roleclass.fetch(guild, args[0], message) as Role
+        const role = roleclass.fetch(guild, args.join(' '), message) as Role
         if (!role) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid Role!")]})
         const tags = roleclass.flags(role)
         message.channel.send({

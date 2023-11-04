@@ -30,7 +30,7 @@ export default {
     callback: async ({ args, message, interaction, guild, client }: Callback) => {
         interaction ? await interaction.deferReply() : message
         const sendEmbed = (embed: EmbedBuilder) => message ? message.channel.send({ embeds: [embed] }) : interaction.editReply({ embeds: [embed] });
-        const target: GuildMember | User | undefined = message ? (memberClass.fetch(guild, args[0], message) as GuildMember ?? (await userClass.fetch(client, args[0], message) as User || undefined)) : (interaction.options.getUser('user') as User || interaction.member)
+        const target: GuildMember | User | undefined = message ? (memberClass.fetch(guild, args.join(' '), message) as GuildMember ?? (await userClass.fetch(client, args.join(' '), message) as User || undefined)) : (interaction.options.getUser('user') as User || interaction.member)
         if (typeof target == 'undefined') {
             return (message ? message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Couldn't fetch that user! Most likely the user doesn't exists")] }) : interaction.editReply({ embeds: [new EmbedBuilder().setColor('Red').setDescription('Invalid User/Member')] }))
         }
