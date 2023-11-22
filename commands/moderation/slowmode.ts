@@ -13,7 +13,7 @@ export default {
   permissions: [PermissionFlagsBits.ManageChannels],
   callback: async ({ message, args, guild }: Callback) => {
     const a = ms(args[0]) as number;
-    const c = (C.fetchChannel(guild, `${args[1]}`) || message.channel) as TextChannel;
+    const c = (C.fetchChannel(guild, `${args[1]}`, message) || message.channel) as TextChannel;
     if (!c || !a || a < 1e3 || a > 21.6e6) return message.channel.send({ embeds: [new EmbedBuilder().setColor("Red").setDescription(!c ? "Cannot find the specified channel." : "Invalid time provided, make sure the time is between 1s to 6hrs.")] });
     C.setSlowmode(c, a / 1e3);
     message.channel.send({ embeds: [new EmbedBuilder().setColor("Blue").setDescription(`**Slowmode of ${ms(a, {shortFormat: false})} has been set for ${c.name}**`)] });

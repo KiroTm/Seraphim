@@ -71,7 +71,7 @@ export class DropClass {
             const collector = response.createMessageComponentCollector({
                 componentType: ComponentType.Button,
                 max: 2,
-                maxUsers: 2,
+                maxUsers: 3,
                 time: 12 * 1000
             });
 
@@ -129,7 +129,7 @@ export class DropClass {
     }
 
     public trigger(checkActivity: boolean) {
-        this.sendDrops(checkActivity ?? true);
+        // this.sendDrops(checkActivity ?? true);
     }
 
     private startUp() {

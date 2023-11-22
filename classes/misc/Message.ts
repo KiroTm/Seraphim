@@ -161,7 +161,6 @@ export class StatsClass {
 
     private setupPeriodicUpdates() {
         this.uploadStatsDataToMongoose();
-        console.log(`Downloaded Stats Data!\n↳Loaded for ${this.statsData.size} guilds`);
         setInterval(() => {
             this.uploadStatsDataToMongoose();
         }, 20 * 1000);
