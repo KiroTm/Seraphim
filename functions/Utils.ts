@@ -255,7 +255,7 @@ export class Utils {
     ): boolean {
         const permissions = command.permissions || [];
         const member = (message ? message.member : interaction?.member) as GuildMember;
-        const text = `You're missing the follwoing permissions:\n${permissions.join(", ")}`
+        const text = `You can't use this command, use the help command to know more..`
         if (permissions.length > 0 && permissions.some(permission => !member.permissions.has(permission))) {
             if (interaction) interaction.reply({ content: text, ephemeral: true })
             return false;

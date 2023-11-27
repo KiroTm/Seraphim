@@ -110,7 +110,7 @@ export class MemberClass {
         return flags
             .join(", ")
             .replace("ActiveDeveloper", "<:VerifiedDev:1158844569178353745>")
-            .replace("BotHTTPInteractions", "BHI")
+            .replace("BotHTTPInteractions", "")
             .replace("BugHunterLevel1", "<:BugHunterBase:1158844802297766038>")
             .replace("BugHunterLevel2", "<:BugHunterGolden:1158844844031098891>")
             .replace("CertifiedModerator", "<:DiscordMod:1158844887999987732>")
