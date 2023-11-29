@@ -46,7 +46,8 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     .setAuthor({name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
                     .setColor('Blue')
                     .setDescription(`Added the following words to banned words for type **${title}**:\n${word.join(",")}`)
-                ]
+                ],
+                components: []
             })
         }
         break;

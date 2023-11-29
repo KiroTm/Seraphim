@@ -3,7 +3,6 @@ import { ConfigInstance } from "../../ConfigHandler";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../../typings";
 import { CooldownManager } from "../../handlers/Cooldowns";
-import ms from "ms";
 import { CommandHandler } from "../../handlers/CommandHandler";
 
 const localCommands = getLocalCommands();
