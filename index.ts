@@ -24,6 +24,9 @@ import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "di
 	  ],
 	  status: 'idle',
 	},
+	allowedMentions: {
+		roles: []
+	}
   });
   
   client.on('ready', async (cli) => {

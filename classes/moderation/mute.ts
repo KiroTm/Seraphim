@@ -21,8 +21,8 @@ export class MuteClass {
     public async mute(message: Message, member: GuildMember, mutedrole: Role, reason: string, time?: number | null): Promise<any> {
         const roles = Array.from(member.roles.cache.keys())
         muteSchema.create({ GuildID: member.guild.id, UserID: member.user.id, Reason: reason, roles, expiresAt: time })
-        const filteredroles = member.roles.cache.filter((r) => r.tags)
-        member.roles.set([...filteredroles.values(), mutedrole]).catch((error) => console.error("Error adding muted role:", error));
+        const filteredroles = member.roles.cache.filter((r) => r.tags?.botId || r.tags?.availableForPurchase || r.tags?.subscriptionListingId || r.tags?.premiumSubscriberRole || r.tags?.guildConnections).keys()
+        member.roles.set([...filteredroles, mutedrole]).catch((error) => console.error("Error adding muted role:", error));
         Modlog.create(member, message.member as GuildMember, ModlogType.Mute, reason)
         return true;
     }

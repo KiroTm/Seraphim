@@ -1,4 +1,4 @@
-import { ChannelType, Guild, GuildMember, Message, TextChannel } from "discord.js";
+import { ChannelType, Embed, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
 import { ConfigInstance } from "../../ConfigHandler";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../../typings";
@@ -34,7 +34,7 @@ export default async (instance: ConfigInstance, message: Message) => {
   ) as Command;
   if (!command) return;
   const { channel, author, member, guild } = message;
-  
+
   if (command.cooldown) {
     if (Cooldowns.onCooldown(guild?.id!, member?.id!, author.id, command.name)) {
       Cooldowns.reply(message, author.id, command.name, command);
@@ -42,6 +42,6 @@ export default async (instance: ConfigInstance, message: Message) => {
       return;
     }
     Cooldowns.set(guild.id, member, command, (command.cooldown.Type || 'perGuildCooldown'))
-    }
-  await commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix})
+  }
+  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix });
 };
