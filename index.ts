@@ -25,6 +25,7 @@ import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "di
 	  status: 'idle',
 	},
 	allowedMentions: {
+		repliedUser: true,
 		roles: []
 	}
   });
