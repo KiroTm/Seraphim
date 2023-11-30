@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, EmbedBuilder, ModalSubmitInteraction, StringSelectMenuBuilder, StringSelectMenuInteraction } from "discord.js";
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, EmbedBuilder, ModalSubmitInteraction, StringSelectMenuBuilder } from "discord.js";
 import { client } from "../..";
 
 export enum automodtype {
@@ -9,30 +9,57 @@ export enum automodtype {
 }
 
 export interface AutomodSetupInterface {
-    type: automodtype,
-    query?: string,
-    enabled?: boolean,
-    customResponse?: string
+    type: automodtype;
+    query?: string;
+    enabled?: boolean;
+    customResponse?: string;
 }
 
 export class AutomodClass {
     private static instance: AutomodClass;
-    public AutomodCollection: Collection<string, Array<AutomodSetupInterface>> = new Collection()
+    public AutomodCollection: Collection<string, Collection<automodtype, AutomodSetupInterface>> = new Collection();
+
     private constructor() {
-        this.startUp()
+        this.startUp();
     }
 
     public static getInstance(): AutomodClass {
         return this.instance || (this.instance = new AutomodClass());
     }
 
-
     private async initializeData() {
-
+        // Implement initialization logic here
     }
 
     private async uploadData() {
+        // Implement upload logic here
+    }
 
+    public addOrUpdateRuleType(type: automodtype, data: AutomodSetupInterface) {
+        const existingRules = this.AutomodCollection.get(type) || new Collection<automodtype, AutomodSetupInterface>();
+        
+        if (existingRules.has(type)) {
+            existingRules.set(type, { ...existingRules.get(type), ...data, type })  
+        } else {
+            const newRule = { ...data, type };
+            existingRules.set(type, newRule);
+        }
+        
+        this.AutomodCollection.set(type, existingRules);
+    }
+    
+
+    public removeRuleType(type: automodtype) {
+        this.AutomodCollection.delete(type);
+    }
+    
+
+    private startUp() {
+        this.initializeData().then(() => {
+            setInterval(() => {
+                this.uploadData();
+            }, 1000 * 10);
+        });
     }
 
     public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction) {
@@ -51,8 +78,8 @@ export class AutomodClass {
                                 .addComponents(
                                     new ButtonBuilder()
                                         .setStyle(ButtonStyle.Primary)
-                                        .setLabel("Start the setup")
-                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`)
+                                        .setLabel("Enable Anti Banned Words")
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Enable`)
                                 )
                         ]
                     },
@@ -70,22 +97,10 @@ export class AutomodClass {
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_TypeSelectMenu`)
                                         .setPlaceholder("Select Banned Words filter type.")
                                         .setOptions([
-                                            {
-                                                label: "Match",
-                                                value: "match"
-                                            },
-                                            {
-                                                label: "Exact",
-                                                value: "exact"
-                                            },
-                                            {
-                                                label: "Includes",
-                                                value: "includes"
-                                            },
-                                            {
-                                                label: "Wildcard",
-                                                value: "wildcard"
-                                            }
+                                            { label: "Match", value: "match" },
+                                            { label: "Exact", value: "exact" },
+                                            { label: "Includes", value: "includes" },
+                                            { label: "Wildcard", value: "wildcard" }
                                         ])
                                 )
                         ]
@@ -175,15 +190,6 @@ export class AutomodClass {
                     }
                 }
             }
-        }
+        };
     }
-
-    private startUp() {
-        this.initializeData().then(() => {
-            setInterval(() => {
-                this.uploadData()
-            }, 1000 * 10);
-        })
-    }
-
 }

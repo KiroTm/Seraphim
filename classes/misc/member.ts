@@ -6,7 +6,9 @@ export class MemberClass {
     public fetch(guild: Guild, query: string, message?: Message): GuildMember | undefined {
         return message?.mentions?.members?.first() 
         || guild.members.cache.get(query) 
-        || guild.members.cache.find((member) => member.user.username.toLowerCase() == query?.toLowerCase()) 
+        || guild.members.cache.find((member) => member.nickname?.toLowerCase() == query.toLowerCase())
+        || guild.members.cache.find((member) => member.user.globalName?.toLowerCase() == query.toLowerCase())
+        || guild.members.cache.find((member) => member.user.username.toLowerCase() == query.toLowerCase()) 
         || guild.members.cache.find((member) => member.user.username.toLowerCase().includes(query.toLowerCase())) 
         || undefined
       }
@@ -110,7 +112,7 @@ export class MemberClass {
         return flags
             .join(", ")
             .replace("ActiveDeveloper", "<:VerifiedDev:1158844569178353745>")
-            .replace("BotHTTPInteractions", "")
+            .replace("BotHTTPInteractions", "BHI")
             .replace("BugHunterLevel1", "<:BugHunterBase:1158844802297766038>")
             .replace("BugHunterLevel2", "<:BugHunterGolden:1158844844031098891>")
             .replace("CertifiedModerator", "<:DiscordMod:1158844887999987732>")
