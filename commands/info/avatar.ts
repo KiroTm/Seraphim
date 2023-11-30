@@ -12,17 +12,13 @@ export default {
     cooldown: {
         Duration: '5s'
     },
-    args: {
-        minArgs: 1,
-        maxArgs: -1,
-        CustomErrorMessage: "{PREFIX}avatar @user/id/username"
-    },
     type: CommandType.legacy,
     callback: async ({ interaction, message, args, guild, client }: Callback) => {
         message ?? await interaction.deferReply()
         const target: GuildMember | User | undefined = (memberClass.fetch(guild, args[0], message) as GuildMember ?? (await userClass.fetch(client, args[0], message) as User || message.author))
+        const type = args[1]
         if (typeof target == 'undefined') return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Couldn't fetch that user! Most likely the user doesn't exists")] })
-        if (typeof target == 'object' && ('username' in target && 'bot' in target)) {
+        if (typeof target == 'object' && ('username' in target && 'globalName' in target)) {
             const replyObject = {
                 embeds: [
                     new EmbedBuilder()
@@ -40,13 +36,13 @@ export default {
             const replyObject = {
                 embeds: [
                     new EmbedBuilder()
-                    .setTitle(`${target.user.username}'s member avatar`)
+                    .setTitle(`${target.user.username}'s ${type && type === 'u' ? 'user' : 'member'} avatar`)
                     .setColor('Blurple')
                     .setAuthor({
                         name: `${target.user.username}`,
-                        iconURL: `${target.displayAvatarURL({ forceStatic: false })}`
+                        iconURL: `${(type && type === 'u' ? target.user : target).displayAvatarURL({ forceStatic: false })}`
                     })
-                    .setImage(`${target.displayAvatarURL({ forceStatic: false,  size: 4096})}`)
+                    .setImage(`${(type && type === 'u' ? target.user : target).displayAvatarURL({ forceStatic: false,  size: 4096})}`)
                 ]
             }
             message.channel.send(replyObject)

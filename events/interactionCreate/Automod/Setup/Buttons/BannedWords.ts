@@ -1,4 +1,4 @@
-import { ActionRowBuilder, Client, EmbedBuilder, Interaction, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, Interaction, ModalBuilder, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance()
@@ -10,7 +10,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!customId.startsWith(`${interaction.guildId}Automod_Setup_BannedWords`)) return;
     
     switch (customId) {
-        case `${interaction.guildId}Automod_Setup_BannedWords_Enable`: {
+        case `${interaction.guildId}Automod_Setup_BannedWords_Setup`: {
             await interaction.update(automodClass.utils(interaction).constants.BannedWords.Type)
         }
         break;
@@ -39,7 +39,6 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             const embed = interaction.message.embeds[0]
             const { title, fields } = embed
             const word = automodClass.utils(interaction).functions.BannedWords.EvaluateWords(fields[0].value)
-            automodClass.AutomodCollection.set(`${interaction.guildId}`, { type: `${title}`, query: word })
             await interaction.update({
                 embeds: [
                     new EmbedBuilder()
@@ -47,8 +46,21 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     .setColor('Blue')
                     .setDescription(`Added the following words to banned words for type **${title}**:\n${word.join(",")}`)
                 ],
-                components: []
+                components: [
+                    new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                        new ButtonBuilder()
+                        .setLabel("Enable Banned Words")
+                        .setStyle(ButtonStyle.Primary)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`)
+                    )
+                ]
             })
+        }
+        break;
+
+        case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`: {
+
         }
         break;
 

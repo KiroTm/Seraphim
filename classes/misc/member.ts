@@ -6,7 +6,7 @@ export class MemberClass {
     public fetch(guild: Guild, query: string, message?: Message): GuildMember | undefined {
         return message?.mentions?.members?.first() 
         || guild.members.cache.get(query) 
-        || guild.members.cache.find((member) => member.user.username.toLowerCase() == query.toLowerCase()) 
+        || guild.members.cache.find((member) => member.user.username.toLowerCase() == query?.toLowerCase()) 
         || guild.members.cache.find((member) => member.user.username.toLowerCase().includes(query.toLowerCase())) 
         || undefined
       }

@@ -10,13 +10,14 @@ export enum automodtype {
 
 export interface AutomodSetupInterface {
     type: automodtype,
-    enabled: boolean,
-    query?: string
+    query?: string,
+    enabled?: boolean,
+    customResponse?: string
 }
 
 export class AutomodClass {
     private static instance: AutomodClass;
-    public AutomodCollection: Collection<string, { type: string, query: string[] }> = new Collection()
+    public AutomodCollection: Collection<string, Array<AutomodSetupInterface>> = new Collection()
     private constructor() {
         this.startUp()
     }
@@ -50,8 +51,8 @@ export class AutomodClass {
                                 .addComponents(
                                     new ButtonBuilder()
                                         .setStyle(ButtonStyle.Primary)
-                                        .setLabel("Enable Anti Banned Words")
-                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Enable`)
+                                        .setLabel("Start the setup")
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`)
                                 )
                         ]
                     },
