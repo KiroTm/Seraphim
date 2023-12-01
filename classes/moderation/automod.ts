@@ -28,30 +28,15 @@ export class AutomodClass {
     }
 
     private async initializeData() {
-        // Implement initialization logic here
+
     }
 
     private async uploadData() {
-        // Implement upload logic here
+
     }
 
-    public addOrUpdateRuleType(type: automodtype, data: AutomodSetupInterface) {
-        const existingRules = this.AutomodCollection.get(type) || new Collection<automodtype, AutomodSetupInterface>();
-        
-        if (existingRules.has(type)) {
-            existingRules.set(type, { ...existingRules.get(type), ...data, type })  
-        } else {
-            const newRule = { ...data, type };
-            existingRules.set(type, newRule);
-        }
-        
-        this.AutomodCollection.set(type, existingRules);
-    }
     
-
-    public removeRuleType(type: automodtype) {
-        this.AutomodCollection.delete(type);
-    }
+    
     
 
     private startUp() {
