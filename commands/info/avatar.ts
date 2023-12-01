@@ -27,13 +27,13 @@ export default {
         const replyObject = {
             embeds: [
                 new EmbedBuilder()
-                    .setTitle(`${isUser ? target.username : target.user.username}'s ${isUser || type === 'u' ? 'user' : 'member'} avatar`)
+                    .setTitle(`${isUser ? target.username : target.user.username}'s ${isUser || type === 'm' ? 'member' : 'user'} avatar`)
                     .setColor('Blurple')
-                    .setAuthor({
+                    .setAuthor({    
                         name: `${isUser ? target.username : target.user.username}`,
-                        iconURL: `${(isUser || type === 'u' ? target : target.user).displayAvatarURL({ forceStatic: false })}`
+                        iconURL: `${(isUser || type === 'm' ? target : target.user).displayAvatarURL({ forceStatic: false })}`
                     })
-                    .setImage(`${(isUser || type === 'u' ? target : target.user).displayAvatarURL({ forceStatic: false, size: 4096 })}`)
+                    .setImage(`${(isUser || type === 'm' ? target : target.user).displayAvatarURL({ forceStatic: false, size: 4096 })}`)
             ]
         };
 
