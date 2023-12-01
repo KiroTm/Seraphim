@@ -10,14 +10,15 @@ export enum automodtype {
 
 export interface AutomodSetupInterface {
     type: automodtype;
-    query?: string;
     enabled?: boolean;
+    filterType?: string;
     customResponse?: string;
+    query?: Array<string>;
 }
 
 export class AutomodClass {
     private static instance: AutomodClass;
-    public AutomodCollection: Collection<string, Collection<automodtype, AutomodSetupInterface>> = new Collection();
+    public AutomodCollection: Collection<string, AutomodSetupInterface[]> = new Collection();
 
     private constructor() {
         this.startUp();
@@ -28,16 +29,56 @@ export class AutomodClass {
     }
 
     private async initializeData() {
-
+        // Implement initialization logic here
     }
 
     private async uploadData() {
-
+        // Implement upload logic here
     }
 
-    
-    
-    
+    private getOrCreateRuleTypeCollection(type: automodtype): AutomodSetupInterface[] {
+        const existingRules = this.AutomodCollection.get(type);
+        if (existingRules) {
+            return existingRules;
+        } else {
+            const newRules: AutomodSetupInterface[] = [];
+            this.AutomodCollection.set(type, newRules);
+            return newRules;
+        }
+    }
+
+    public addOrUpdateRuleType(data: AutomodSetupInterface) {
+        const existingRules = this.getOrCreateRuleTypeCollection(data.type);
+        const index = existingRules.findIndex(rule => rule.query === data.query);
+
+        if (index !== -1) {
+            existingRules[index] = { ...existingRules[index], ...data };
+        } else {
+            existingRules.push(data);
+        }
+
+        this.AutomodCollection.set(data.type, existingRules);
+    }
+
+    public removeRuleType(type: automodtype, query: string) {
+        const existingRules = this.getOrCreateRuleTypeCollection(type);
+        const index = existingRules.findIndex(rule => rule.query && rule.query.includes(query));
+
+        if (index !== -1) {
+            existingRules.splice(index, 1);
+            this.AutomodCollection.set(type, existingRules);
+        }
+    }
+
+    public enableRuleType(type: automodtype, query: string) {
+        const existingRules = this.getOrCreateRuleTypeCollection(type);
+        const index = existingRules.findIndex(rule => rule.query && rule.query.includes(query));
+
+        if (index !== -1) {
+            existingRules[index].enabled = true;
+            this.AutomodCollection.set(type, existingRules);
+        }
+    }
 
     private startUp() {
         this.initializeData().then(() => {
@@ -173,6 +214,11 @@ export class AutomodClass {
                         return Array.from(new Set(inputString.split(',')))
                             .map(word => word.trim()).filter(word => word !== '');
                     }
+                },
+                General: {
+                    EnableRule: (type: automodtype, query: string) => {
+                        this.enableRuleType(type, query);
+                    },
                 }
             }
         };

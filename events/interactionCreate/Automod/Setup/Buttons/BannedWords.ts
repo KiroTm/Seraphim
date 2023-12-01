@@ -53,14 +53,22 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                         .setLabel("Enable Banned Words")
                         .setStyle(ButtonStyle.Primary)
                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`)
-                    )
+                    ),
+                    new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                        new ButtonBuilder()
+                        .setLabel("Maybe later")
+                        .setStyle(ButtonStyle.Secondary)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_DontEnable`)
+                    ),
                 ]
             })
-        }
-        break;
-
-        case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`: {
-
+            automodClass.addOrUpdateRuleType({
+                type: automodtype.BannedWords,
+                enabled: false, 
+                query: word,
+                filterType: title as string
+            })
         }
         break;
 
@@ -68,5 +76,16 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             await interaction.update(automodClass.utils(interaction).constants.BannedWords.AddWord)
         }
         break;
+
+        case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_DontEnable`: {
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                    .setAuthor({name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
+                    .setColor('Blue')
+                    .setDescription("Sure thing! Your input has been saved and can be retrieved at any time. Keep in mind, though, this rule won't take effect until it's activated. Feel free to enable it whenever you're ready!")
+                ]
+            })
+        }
     }
 }
