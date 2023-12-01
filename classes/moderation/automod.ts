@@ -78,8 +78,8 @@ export class AutomodClass {
                                 .addComponents(
                                     new ButtonBuilder()
                                         .setStyle(ButtonStyle.Primary)
-                                        .setLabel("Enable Anti Banned Words")
-                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Enable`)
+                                        .setLabel("Setup Anti Banned Words")
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`)
                                 )
                         ]
                     },

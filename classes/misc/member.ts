@@ -7,6 +7,7 @@ export class MemberClass {
         return message?.mentions?.members?.first() 
         || guild.members.cache.get(query) 
         || guild.members.cache.find((member) => member.nickname?.toLowerCase() == query.toLowerCase())
+        || guild.members.cache.find((member) => member.nickname?.toLowerCase().includes(query.toLowerCase()))
         || guild.members.cache.find((member) => member.user.globalName?.toLowerCase() == query.toLowerCase())
         || guild.members.cache.find((member) => member.user.username.toLowerCase() == query.toLowerCase()) 
         || guild.members.cache.find((member) => member.user.username.toLowerCase().includes(query.toLowerCase())) 
