@@ -18,75 +18,70 @@ export interface AutomodSetupInterface {
 
 export class AutomodClass {
     private static instance: AutomodClass;
-    public AutomodCollection: Collection<string, AutomodSetupInterface[]> = new Collection();
+    public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface[]>> = new Collection();
 
     private constructor() {
-        this.startUp();
     }
 
     public static getInstance(): AutomodClass {
         return this.instance || (this.instance = new AutomodClass());
     }
 
-    private async initializeData() {
-        // Implement initialization logic here
+    private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface[]> {
+        const existingGuildCollection = this.AutomodCollection.get(guildId);
+
+        if (existingGuildCollection) {
+            return existingGuildCollection;
+        } else {
+            const newGuildCollection = new Collection<string, AutomodSetupInterface[]>();
+            this.AutomodCollection.set(guildId, newGuildCollection);
+            return newGuildCollection;
+        }
     }
 
-    private async uploadData() {
-        // Implement upload logic here
-    }
+    private getOrCreateRuleTypeCollection(guildId: string, type: automodtype): AutomodSetupInterface[] {
+        const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
+        const existingRules = existingGuildCollection.get(type);
 
-    private getOrCreateRuleTypeCollection(type: automodtype): AutomodSetupInterface[] {
-        const existingRules = this.AutomodCollection.get(type);
         if (existingRules) {
             return existingRules;
         } else {
             const newRules: AutomodSetupInterface[] = [];
-            this.AutomodCollection.set(type, newRules);
+            existingGuildCollection.set(type, newRules);
             return newRules;
         }
     }
 
-    public addOrUpdateRuleType(data: AutomodSetupInterface) {
-        const existingRules = this.getOrCreateRuleTypeCollection(data.type);
-        const index = existingRules.findIndex(rule => rule.query === data.query);
+    public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
+        const existingRules = this.getOrCreateRuleTypeCollection(guildId, data.type);
+        const existingRuleIndex = existingRules.findIndex(rule => rule.query && rule.query.join() === data.query?.join());
 
-        if (index !== -1) {
-            existingRules[index] = { ...existingRules[index], ...data };
+        if (existingRuleIndex !== -1) {
+            const existingRule = existingRules[existingRuleIndex];
+            Object.assign(existingRule, data);
         } else {
             existingRules.push(data);
         }
 
-        this.AutomodCollection.set(data.type, existingRules);
+        const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
+        existingGuildCollection.set(data.type, existingRules);
+        this.AutomodCollection.set(guildId, existingGuildCollection);
     }
 
-    public removeRuleType(type: automodtype, query: string) {
-        const existingRules = this.getOrCreateRuleTypeCollection(type);
-        const index = existingRules.findIndex(rule => rule.query && rule.query.includes(query));
 
-        if (index !== -1) {
-            existingRules.splice(index, 1);
-            this.AutomodCollection.set(type, existingRules);
-        }
-    }
-
-    public enableRuleType(type: automodtype, query: string) {
-        const existingRules = this.getOrCreateRuleTypeCollection(type);
-        const index = existingRules.findIndex(rule => rule.query && rule.query.includes(query));
+    public enableRuleType(guildId: string, type: automodtype, query: string) {
+        const existingRules = this.getOrCreateRuleTypeCollection(guildId, type);
+        const index = existingRules.findIndex(rule => rule.query && rule.query.join() === query);
 
         if (index !== -1) {
             existingRules[index].enabled = true;
-            this.AutomodCollection.set(type, existingRules);
+
+            const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
+            existingGuildCollection.set(type, existingRules);
+            this.AutomodCollection.set(guildId, existingGuildCollection);
         }
     }
 
-    private startUp() {
-        this.initializeData().then(() => {
-            setInterval(() => {
-                this.uploadData();
-            }, 1000 * 10);
-        });
-    }
 
     public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction) {
         return {
@@ -217,10 +212,12 @@ export class AutomodClass {
                 },
                 General: {
                     EnableRule: (type: automodtype, query: string) => {
-                        this.enableRuleType(type, query);
+                        this.enableRuleType(interaction.guildId as string, type, query)
                     },
                 }
             }
         };
     }
+
 }
+
