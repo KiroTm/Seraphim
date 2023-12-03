@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, EmbedBuilder, ModalSubmitInteraction, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Collection, EmbedBuilder, ModalSubmitInteraction, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
 import { client } from "../..";
 
 export enum automodtype {
@@ -83,9 +83,26 @@ export class AutomodClass {
     }
 
 
-    public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction) {
+    public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
         return {
             constants: {
+                Main: {
+                    embeds: [
+                        new EmbedBuilder()
+                        .setColor('Blue')
+                        .setAuthor({name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}`})
+                        .setDescription(`**🌟 Welcome to AutoMod Configuration!**\nElevate your server's moderation game with AutoMod by ${client.user?.username}! 🤖✨\n\n**Getting Started:**\n\n1. **Rule Selection:**\n   - Choose the type of rule you want to configure from a variety of options.\n\n2. **Fine-Tune Settings:**\n   - Customize each rule to suit your server's unique needs.\n\n3. **Instant Moderation:**\n   - Enjoy swift moderation actions for rule violations.\n\n4. **Rule Combos:**\n   - Explore the possibilities of combining rules for comprehensive moderation.\n\nEmpower your server with the advanced moderation features of AutoMod. Follow these steps and ensure a safer and more enjoyable community experience!`)
+                    ],
+                    components: [
+                        new ActionRowBuilder<StringSelectMenuBuilder>()
+                        .addComponents(
+                            new StringSelectMenuBuilder()
+                            .setPlaceholder("Select automod rule type")
+                            .setCustomId(`${interaction.guildId}Automod_Setup_RuleType_SelectMenu`)
+                            .addOptions(Object.keys(automodtype).map(key => ({ label: key.replace(/([a-z])([A-Z])/g, '$1 $2'), value: automodtype[key as keyof typeof automodtype] })) as SelectMenuComponentOptionData[])
+                        )
+                    ]
+                },
                 BannedWords: {
                     Main: {
                         embeds: [
@@ -95,8 +112,8 @@ export class AutomodClass {
                                 .setDescription("**🚫 Banned Words System Setup!**\nElevate your server's content moderation with the Banned Words system, a robust feature of AutoMod by ${client.user?.username}. 🌟🔍\n\n**Quick Setup Guide:**\n\n1. **Define Banned Words:**\n   - Compile a list of words you want to restrict or filter within your server.\n\n2. **Enable Banned Words System:**\n   - Activate the Banned Words module to automatically detect and take action against prohibited language\n\nSet up the list of prohibited words for this server and choose the desired filtering method:\n\n- **Match**: Matches the entire word (case insensitive).\n- **Exact**: Matches the exact word (case sensitive).\n- **Include**: Filters out any message containing the specified word.\n- **Wildcard**: Allows for more flexible filtering using wildcards for partial matches.\n\nChoose the method that best aligns with your moderation preferences and server policies.")
                         ],
                         components: [
-                            new ActionRowBuilder<StringSelectMenuBuilder>()
-                                .addComponents(
+                            new ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>()
+                                .addComponents(   
                                     new StringSelectMenuBuilder()
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_TypeSelectMenu`)
                                         .setPlaceholder("Select Banned Words filter type.")
@@ -105,7 +122,16 @@ export class AutomodClass {
                                             { label: "Exact", value: "exact" },
                                             { label: "Includes", value: "includes" },
                                             { label: "Wildcard", value: "wildcard" }
-                                        ]),
+                                        ])
+                            ),
+
+                            new ActionRowBuilder<ButtonBuilder>()
+                                .addComponents(
+                                    new ButtonBuilder()
+                                        .setLabel("Back")
+                                        .setEmoji("<:back:1159470407527694367>")
+                                        .setStyle(ButtonStyle.Secondary)
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_Main`)
                                 )
                         ]
                     },
