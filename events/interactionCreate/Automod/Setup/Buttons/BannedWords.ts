@@ -10,11 +10,6 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!customId.startsWith(`${interaction.guildId}Automod_Setup_BannedWords`)) return;
     
     switch (customId) {
-        case `${interaction.guildId}Automod_Setup_BannedWords_Setup`: {
-            await interaction.update(automodClass.utils(interaction).constants.BannedWords.Type)
-        }
-        break;
-        
         case `${interaction.guildId}Automod_Setup_BannedWords_AddWord`: {
             const modal = new ModalBuilder()
             .setTitle("Banned Words")
@@ -24,10 +19,10 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 .addComponents(
                     new TextInputBuilder()
                     .setCustomId(`${interaction.guildId}Modal_Word`)
-                    .setStyle(TextInputStyle.Short)
+                    .setStyle(TextInputStyle.Paragraph)
                     .setPlaceholder("frick")
-                    .setValue("frick")
                     .setRequired(true)
+                    .setMaxLength(4000)
                     .setLabel("Banned Word(s)")
                 )
             )
@@ -36,9 +31,10 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         break;
 
         case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_Confirm`: {
-            const embed = interaction.message.embeds[0]
-            const { title, fields } = embed
-            const word = automodClass.utils(interaction).functions.BannedWords.EvaluateWords(fields[0].value)
+            const [embed1, embed2] = interaction.message.embeds
+            const title = embed1.title as string
+            const fields = embed2.description as string
+            const word = automodClass.utils(interaction).functions.BannedWords.EvaluateWords(fields)
             await interaction.update({
                 embeds: [
                     new EmbedBuilder()
@@ -59,7 +55,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                         new ButtonBuilder()
                         .setLabel("Maybe later")
                         .setStyle(ButtonStyle.Secondary)
-                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_DontEnable`)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_EnableNot`)
                     ),
                 ]
             })
@@ -77,14 +73,15 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         }
         break;
 
-        case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_DontEnable`: {
-            await interaction.editReply({
+        case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_EnableNot`: {
+            await interaction.update({
                 embeds: [
                     new EmbedBuilder()
                     .setAuthor({name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
                     .setColor('Blue')
                     .setDescription("Sure thing! Your input has been saved and can be retrieved at any time. Keep in mind, though, this rule won't take effect until it's activated. Feel free to enable it whenever you're ready!")
-                ]
+                ],
+                components: []
             })
         }
     }

@@ -9,8 +9,6 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
     if (!customId.startsWith(`${interaction.guildId}Automod_Setup`)) return;
 
-    const client = interaction.client as Client
-
     switch (customId) {
 
         case `${interaction.guildId}Automod_Setup_RuleType_SelectMenu`: {

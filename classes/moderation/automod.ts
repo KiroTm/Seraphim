@@ -92,24 +92,7 @@ export class AutomodClass {
                             new EmbedBuilder()
                                 .setAuthor({ name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}` })
                                 .setColor('Blue')
-                                .setDescription(`**🚫 Banned Words System Setup!**\nElevate your server's content moderation with the Banned Words system, a robust feature of AutoMod by ${client.user?.username}. 🌟🔍\n\n**Quick Setup Guide:**\n\n1. **Define Banned Words:**\n   - Compile a list of words you want to restrict or filter within your server.\n\n2. **Enable Banned Words System:**\n   - Activate the Banned Words module to automatically detect and take action against prohibited language.\n\n3. **Customized Moderation:**\n   - Specify the moderation actions for users who violate the Banned Words policy.\n\nEnable the Banned Words system now and maintain a welcoming environment by curbing undesirable language`)
-                        ],
-                        components: [
-                            new ActionRowBuilder<ButtonBuilder>()
-                                .addComponents(
-                                    new ButtonBuilder()
-                                        .setStyle(ButtonStyle.Primary)
-                                        .setLabel("Setup Anti Banned Words")
-                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`)
-                                )
-                        ]
-                    },
-                    Type: {
-                        embeds: [
-                            new EmbedBuilder()
-                                .setAuthor({ name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}` })
-                                .setColor('Blue')
-                                .setDescription("**Configure Banned Words for this Server**\n\nSet up the list of prohibited words for this server and choose the desired filtering method:\n\n- **Match**: Matches the entire word (case insensitive).\n- **Exact**: Matches the exact word (case sensitive).\n- **Include**: Filters out any message containing the specified word.\n- **Wildcard**: Allows for more flexible filtering using wildcards for partial matches.\n\nChoose the method that best aligns with your moderation preferences and server policies.")
+                                .setDescription("**🚫 Banned Words System Setup!**\nElevate your server's content moderation with the Banned Words system, a robust feature of AutoMod by ${client.user?.username}. 🌟🔍\n\n**Quick Setup Guide:**\n\n1. **Define Banned Words:**\n   - Compile a list of words you want to restrict or filter within your server.\n\n2. **Enable Banned Words System:**\n   - Activate the Banned Words module to automatically detect and take action against prohibited language\n\nSet up the list of prohibited words for this server and choose the desired filtering method:\n\n- **Match**: Matches the entire word (case insensitive).\n- **Exact**: Matches the exact word (case sensitive).\n- **Include**: Filters out any message containing the specified word.\n- **Wildcard**: Allows for more flexible filtering using wildcards for partial matches.\n\nChoose the method that best aligns with your moderation preferences and server policies.")
                         ],
                         components: [
                             new ActionRowBuilder<StringSelectMenuBuilder>()
@@ -122,7 +105,7 @@ export class AutomodClass {
                                             { label: "Exact", value: "exact" },
                                             { label: "Includes", value: "includes" },
                                             { label: "Wildcard", value: "wildcard" }
-                                        ])
+                                        ]),
                                 )
                         ]
                     },
@@ -137,9 +120,15 @@ export class AutomodClass {
                             new ActionRowBuilder<ButtonBuilder>()
                                 .addComponents(
                                     new ButtonBuilder()
+                                    .setLabel("Back")
+                                    .setEmoji("<:back:1159470407527694367>")
+                                    .setStyle(ButtonStyle.Secondary)
+                                    .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`),
+
+                                    new ButtonBuilder()
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord`)
                                         .setStyle(ButtonStyle.Primary)
-                                        .setLabel("Add word(s)")
+                                        .setLabel("Add word(s)"),
                                 )
                         ]
                     }
