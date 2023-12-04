@@ -22,7 +22,6 @@ function checkBannedWords(message: Message, rules: any[]) {
     const args = content.split(/\s+/)
     const slursFound = rules.some(rule => {
         const { query, filterType } = rule;
-
         return query.some((word: any) => {
             if (filterType === 'match') {
                 return (args.some((arg) => arg.toLowerCase() === word.toLowerCase()))

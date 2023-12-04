@@ -10,6 +10,12 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!customId.startsWith(`${interaction.guildId}Automod_Setup_BannedWords`)) return;
     
     switch (customId) {
+
+        case `${interaction.guildId}Automod_Setup_BannedWords_Main`: {
+            await interaction.update(automodClass.utils(interaction).constants.BannedWords.Main)
+        }
+        break;
+
         case `${interaction.guildId}Automod_Setup_BannedWords_AddWord`: {
             const modal = new ModalBuilder()
             .setTitle("Banned Words")
@@ -40,7 +46,11 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     new EmbedBuilder()
                     .setAuthor({name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
                     .setColor('Blue')
-                    .setDescription(`Added the following words to banned words for type **${title}**:\n${word.join(",")}`)
+                    .setDescription(`Added the following words to banned words for type **${title}**:\n${word.join(",")}`),
+                    
+                    new EmbedBuilder()
+                    .setColor('Blue')
+                    .setDescription(`You can also run the Advanced Settings wizard for this rule to setup exceptions, if you're interested in setting those, please click on "Advanced Settings". Otherwise, you can select either 'Enable' or 'Maybe later' based on your preference`)
                 ],
                 components: [
                     new ActionRowBuilder<ButtonBuilder>()
@@ -48,15 +58,21 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                         new ButtonBuilder()
                         .setLabel("Enable Banned Words")
                         .setStyle(ButtonStyle.Primary)
-                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`)
-                    ),
-                    new ActionRowBuilder<ButtonBuilder>()
-                    .addComponents(
+                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_Enable`),
+
                         new ButtonBuilder()
                         .setLabel("Maybe later")
                         .setStyle(ButtonStyle.Secondary)
-                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_EnableNot`)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord_EnableNot`),
                     ),
+
+                    new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                        new ButtonBuilder()
+                        .setLabel("Advanced Settings")
+                        .setStyle(ButtonStyle.Danger)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting`)
+                    )
                 ]
             })
             automodClass.addOrUpdateRuleType(interaction.guildId as string, {

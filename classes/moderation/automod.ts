@@ -139,6 +139,7 @@ export class AutomodClass {
                         embeds: [
                             new EmbedBuilder()
                                 .setColor('Blue')
+                                .setTitle(interaction.isButton() && interaction.message?.embeds[0]?.title && ['match', 'includes', 'exact', 'wildcard'].includes(interaction.message.embeds[0].title) ? interaction.message.embeds[0].title : null)
                                 .setAuthor({ name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}` })
                                 .setDescription(`**🔍 Word Addition Setup!**\nEnhance content control by adding single or multiple words to your watchlist. 🌐🤖\n\n1. **Single Word:**\n   - Input a term (frick).\n\n2. **Multiple Words:**\n   - Use commas for multiple entries. (frick,heck)`)
                         ],
@@ -149,11 +150,12 @@ export class AutomodClass {
                                     .setLabel("Back")
                                     .setEmoji("<:back:1159470407527694367>")
                                     .setStyle(ButtonStyle.Secondary)
-                                    .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Setup`),
+                                    .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Main`),
 
                                     new ButtonBuilder()
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord`)
                                         .setStyle(ButtonStyle.Primary)
+                                        .setEmoji("<:plus:1180907179172167862>")
                                         .setLabel("Add word(s)"),
                                 )
                         ]

@@ -14,13 +14,17 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     .setAuthor({ name: `${client.user.username}`, iconURL: `${client.user.displayAvatarURL()}` })
                     .setDescription(`<:success:1146683498766291024> Enabled ${ruletype} Automod Rule!`)
             ],
-            components: []
-        })
-        interaction.reply({
-            ephemeral: true,
-            content: `${ruletype} should be functional in a minute`
+            components: [] 
         })
     } else if (interaction.customId === `${interaction.guildId}Automod_Setup_Main`) {
         interaction.update(automodClass.utils(interaction).constants.Main)
+    } else if (interaction.customId.includes(`${interaction.guildId}Automod_Setup`) && interaction.customId.endsWith("Info")) {
+        interaction.update({
+            embeds: [
+                new EmbedBuilder()
+                .setAuthor({name: interaction.client.user?.username as string, iconURL: `${interaction.client.user?.displayAvatarURL()}`})
+                .setColor('Blue')
+            ]
+        })
     }
 }

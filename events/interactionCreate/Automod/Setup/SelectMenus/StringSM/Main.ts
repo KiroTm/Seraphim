@@ -20,7 +20,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     break;
 
                 case "phishinglinks": {
-                    interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
+                    await interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
                 }
                     break;
 
