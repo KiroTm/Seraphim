@@ -50,6 +50,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     
                     new EmbedBuilder()
                     .setColor('Blue')
+                    .setTitle('BannedWords')
                     .setDescription(`You can also run the Advanced Settings wizard for this rule to setup exceptions, if you're interested in setting those, please click on "Advanced Settings". Otherwise, you can select either 'Enable' or 'Maybe later' based on your preference`)
                 ],
                 components: [
@@ -71,7 +72,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                         new ButtonBuilder()
                         .setLabel("Advanced Settings")
                         .setStyle(ButtonStyle.Danger)
-                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting`)
+                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`)
                     )
                 ]
             })

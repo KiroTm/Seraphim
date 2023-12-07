@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChatInputCommandInteraction, Collection, EmbedBuilder, ModalSubmitInteraction, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
 import { client } from "../..";
 
 export enum automodtype {
@@ -89,18 +89,18 @@ export class AutomodClass {
                 Main: {
                     embeds: [
                         new EmbedBuilder()
-                        .setColor('Blue')
-                        .setAuthor({name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}`})
-                        .setDescription(`**🌟 Welcome to AutoMod Configuration!**\nElevate your server's moderation game with AutoMod by ${client.user?.username}! 🤖✨\n\n**Getting Started:**\n\n1. **Rule Selection:**\n   - Choose the type of rule you want to configure from a variety of options.\n\n2. **Fine-Tune Settings:**\n   - Customize each rule to suit your server's unique needs.\n\n3. **Instant Moderation:**\n   - Enjoy swift moderation actions for rule violations.\n\n4. **Rule Combos:**\n   - Explore the possibilities of combining rules for comprehensive moderation.\n\nEmpower your server with the advanced moderation features of AutoMod. Follow these steps and ensure a safer and more enjoyable community experience!`)
+                            .setColor('Blue')
+                            .setAuthor({ name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}` })
+                            .setDescription(`**🌟 Welcome to AutoMod Configuration!**\nElevate your server's moderation game with AutoMod by ${client.user?.username}! 🤖✨\n\n**Getting Started:**\n\n1. **Rule Selection:**\n   - Choose the type of rule you want to configure from a variety of options.\n\n2. **Fine-Tune Settings:**\n   - Customize each rule to suit your server's unique needs.\n\n3. **Instant Moderation:**\n   - Enjoy swift moderation actions for rule violations.\n\n4. **Rule Combos:**\n   - Explore the possibilities of combining rules for comprehensive moderation.\n\nEmpower your server with the advanced moderation features of AutoMod. Follow these steps and ensure a safer and more enjoyable community experience!`)
                     ],
                     components: [
                         new ActionRowBuilder<StringSelectMenuBuilder>()
-                        .addComponents(
-                            new StringSelectMenuBuilder()
-                            .setPlaceholder("Select automod rule type")
-                            .setCustomId(`${interaction.guildId}Automod_Setup_RuleType_SelectMenu`)
-                            .addOptions(Object.keys(automodtype).map(key => ({ label: key.replace(/([a-z])([A-Z])/g, '$1 $2'), value: automodtype[key as keyof typeof automodtype] })) as SelectMenuComponentOptionData[])
-                        )
+                            .addComponents(
+                                new StringSelectMenuBuilder()
+                                    .setPlaceholder("Select automod rule type")
+                                    .setCustomId(`${interaction.guildId}Automod_Setup_RuleType_SelectMenu`)
+                                    .addOptions(Object.keys(automodtype).map(key => ({ label: key.replace(/([a-z])([A-Z])/g, '$1 $2'), value: automodtype[key as keyof typeof automodtype] })) as SelectMenuComponentOptionData[])
+                            )
                     ]
                 },
                 BannedWords: {
@@ -113,7 +113,7 @@ export class AutomodClass {
                         ],
                         components: [
                             new ActionRowBuilder<StringSelectMenuBuilder | ButtonBuilder>()
-                                .addComponents(   
+                                .addComponents(
                                     new StringSelectMenuBuilder()
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_TypeSelectMenu`)
                                         .setPlaceholder("Select Banned Words filter type.")
@@ -123,7 +123,7 @@ export class AutomodClass {
                                             { label: "Includes", value: "includes" },
                                             { label: "Wildcard", value: "wildcard" }
                                         ])
-                            ),
+                                ),
 
                             new ActionRowBuilder<ButtonBuilder>()
                                 .addComponents(
@@ -147,10 +147,10 @@ export class AutomodClass {
                             new ActionRowBuilder<ButtonBuilder>()
                                 .addComponents(
                                     new ButtonBuilder()
-                                    .setLabel("Back")
-                                    .setEmoji("<:back:1159470407527694367>")
-                                    .setStyle(ButtonStyle.Secondary)
-                                    .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Main`),
+                                        .setLabel("Back")
+                                        .setEmoji("<:back:1159470407527694367>")
+                                        .setStyle(ButtonStyle.Secondary)
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_Main`),
 
                                     new ButtonBuilder()
                                         .setCustomId(`${interaction.guildId}Automod_Setup_BannedWords_AddWord`)
@@ -217,6 +217,83 @@ export class AutomodClass {
                                         .setLabel("Enable Anti Server Invite")
                                 )
                         ]
+                    }
+                },
+                AdvancedSettings: {
+                    Main: {
+                        embeds: [
+                            new EmbedBuilder()
+                                .setColor('Blue')
+                                .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
+                                .setDescription(`**🌟 Dive into AutoMod's Advanced Settings Wizard!**\nWelcome to the world of enhanced moderation with AutoMod, courtesy of ${interaction.client.user?.username}! 🤖✨\n\n**Unlock the Power:**\n1. **Rule Selection:** - Choose from a variety of rule types to tailor moderation to your server's unique atmosphere.\n\n2. **Instant Moderation:** - Swiftly enforce rules with instant moderation actions, ensuring a responsive and secure environment.\n\n3. **Ignored Channels and Roles:** - Configure exemptions for certain channels and roles, allowing flexibility in rule application.\n\n4. **Custom Actions:** - Implement personalized actions for handling rule violations, giving your community a distinct touch.\n\nElevate your server's moderation game with AutoMod's advanced features. Follow these steps for a more secure and enjoyable community experience!`)
+                        ],
+                        components: [
+                            new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(
+                                new ButtonBuilder()
+                                .setStyle(ButtonStyle.Primary)
+                                .setLabel("Setup Advanced Settings")
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`)
+                            )
+                        ]
+                    },
+                    IgnoredRoles: {
+                        embeds: [
+                            new EmbedBuilder()
+                            .setColor('Blue')
+                            .setTitle(interaction.isButton() && interaction?.message?.embeds[0]?.title && Object.keys(automodtype).includes(interaction.message.embeds[0].title) ? interaction.message.embeds[0].title : null)
+                            .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
+                            .setDescription(`**🌟 Ignored Roles Configuration:**\nExclude specific roles with Ignored Roles for enhanced control and a better community experience! 🤖✨`)
+                        ],
+                        components: [
+                            new ActionRowBuilder<RoleSelectMenuBuilder>()
+                            .addComponents(
+                                new RoleSelectMenuBuilder()
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRole_SelectMenu`)
+                                .setPlaceholder("Select roles to ignore")
+                                .setMaxValues(10)
+                                .setMinValues(1)
+                            ),
+                            new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(
+                                new ButtonBuilder()
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction`)
+                                .setLabel("Skip")
+                                .setEmoji("<:track_forward:1159470397612380171>")
+                                .setStyle(ButtonStyle.Secondary)
+                            )
+                        ]
+                    },
+                    IgnoredChannels: {
+                        embeds: [
+                            new EmbedBuilder()
+                            .setColor('Blue')
+                            .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0].title ?? interaction.message.embeds[1].title ?? null : null)
+                            .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}`})
+                            .setDescription(`**Ignored Channels Configuration:**\nExclude specific channels from rule enforcement to accommodate different content and discussions, by configuring Ignored Channels, you ensure that certain areas of your server remain unaffected by specific rules, fostering a more tailored moderation experience.`)
+                        ],
+                        components: [
+                            new ActionRowBuilder<ChannelSelectMenuBuilder>()
+                            .addComponents(
+                                new ChannelSelectMenuBuilder()
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_SelectMenu`)
+                                .setChannelTypes([ChannelType.GuildText])
+                                .setMaxValues(10)
+                                .setMinValues(1)
+                                .setPlaceholder('Select Channels to ignore')
+                            ),
+                            new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(
+                                new ButtonBuilder()
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`)
+                                .setLabel("Skip")
+                                .setEmoji("<:track_forward:1159470397612380171>")
+                                .setStyle(ButtonStyle.Secondary)
+                            )
+                        ]
+                    },
+                    CustomAction: {
+
                     }
                 }
             },

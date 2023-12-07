@@ -1,7 +1,7 @@
-import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "discord.js";
+import { IntentsBitField, Client, Partials, ActivityType, Message } from "discord.js";
   import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
   import path from "path";
-  const { Message, Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
+  const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
   require("dotenv/config");
 
   export const client = new Client({
@@ -13,7 +13,7 @@ import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "di
 	  IntentsBitField.Flags.DirectMessages,
 	  IntentsBitField.Flags.GuildMessageReactions,
 	],
-	partials: [Message, Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember],
+	partials: [Partials.Message, Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember],
 	rest: {
 	  globalRequestsPerSecond: 9999,
 	},
@@ -28,10 +28,11 @@ import { IntentsBitField, Client, Partials, ActivityType, TextChannel } from "di
 		repliedUser: true,
 		roles: []
 	}
-  });
+	  });
   
-  client.on('ready', async (cli) => {
-	new ConfigHandler({
+  client.prependOnceListener('ready', async (cli) => {
+	client.setMaxListeners(Infinity)
+		new ConfigHandler({
 	  client: cli,
 	  botOwners: ["919568881939517460"],
 	  commandsDir: path.join(__dirname, './', "commands"),
