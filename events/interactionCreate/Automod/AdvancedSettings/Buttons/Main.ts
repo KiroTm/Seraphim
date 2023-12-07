@@ -7,15 +7,6 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_AdvancedSetting`)) return;
 
     switch(interaction.customId) {
-        case `${interaction.guildId}Automod_Setup_AdvancedSetting`: {
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Main)
-        }
-        break;
-
-        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`: {
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
-        }
-
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Confirm` : {
             const object = automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles
             const embeds = object.embeds as any[]
@@ -27,8 +18,23 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         }
         break;
 
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting`: {
+            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Main)
+        }
+        break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`: {
+            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
+        }
+        break;
+
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Cancel`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
+        }
+        break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`: {
+            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles)
         }
         break;
     }

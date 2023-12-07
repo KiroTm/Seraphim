@@ -14,7 +14,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     new EmbedBuilder()
                     .setColor('Blue')
                     .setTitle("Info:")
-                    .setFields({name: "Channels", value: `${interaction.channels.map((c) => c).join(",")}`})
+                    .setFields({name: "Channel(s)", value: `${interaction.channels.map((c) => c).join(",")}`})
                 ],  
                 components: [
                     new ActionRowBuilder<ButtonBuilder>()
