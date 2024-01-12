@@ -133,10 +133,6 @@ export class DropClass {
     }
 
     private startUp() {
-        this.setWeightBasedCrates()
-        this.sendDrops(true);
-        setInterval(() => {
-            this.sendDrops(true);
-        }, 60000);
+        
     }
 }
