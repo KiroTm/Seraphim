@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildMember, Interaction, Message, PermissionFlagsBits } from "discord.js";
-import { Callback, Command } from "../../../typings";
-import { CraftingClass } from "../../../classes/EventSpecial/crafting"
-import { ItemClass } from "../../../classes/EventSpecial/item";
-import { InventoryClass } from "../../../classes/EventSpecial/inventory";
+import { Callback, Command } from "../../../../../typings";
+import { CraftingClass } from "../../Classes/crafting"
+import { ItemClass } from "../../Classes/item";
+import { InventoryClass } from "../../Classes/inventory";
 const craftingClass = new CraftingClass()
 const itemClass = new ItemClass()
 const inventoryClass = InventoryClass.getInstance()

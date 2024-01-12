@@ -1,5 +1,5 @@
-import { DropClass } from "../../../classes/EventSpecial/drops";
-import { Callback, Command } from "../../../typings";
+import { DropClass } from "../../Classes/drops";
+import { Callback, Command } from "../../../../../typings";
 const dropsClass = DropClass.getInstance()
 export default {
     name: "trigger",

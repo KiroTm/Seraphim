@@ -1,7 +1,7 @@
 import { EmbedBuilder, GuildMember } from "discord.js";
-import { Command, Callback } from "../../../typings";
-import { EconomyClass } from "../../../classes/EventSpecial/economy";
-import { InventoryClass } from "../../../classes/EventSpecial/inventory";
+import { Command, Callback } from "../../../../../typings";
+import { EconomyClass } from "../../Classes/economy";
+import { InventoryClass } from "../../Classes/inventory";
 const economyClass = new EconomyClass()
 const inventoryClass = InventoryClass.getInstance()
 export default {
