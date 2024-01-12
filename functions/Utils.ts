@@ -262,4 +262,93 @@ export class Utils {
         }
         return true;
     }
+
+    static generateBar(value: number, maxValue: number, size: number) {
+        const ProgressBar = {
+            StartEmpty: `<:PB1E:1164479248271159306>`,
+            StartHalfFull: `<:PB1HF:1164479266361200712>`,
+            StartFull: `<:PB1C:1164479305947033600>`,
+            MiddleEmpty: `<:PB2E:1164479915048050709>`,
+            MiddleHalfFull: `<:PB2HF:1164479708021403698>`,
+            MiddleFull: `<:PB2F:1164479717202743296>`,
+            MiddleContinue: `<:PB2C:1164479713578852402>`,
+            EndEmpty: `<:PB3E:1164479719316652076>`,
+            EndHalfFull: `<:PB3HF:1164479711573983272>`,
+            EndFull: `<:PB3F:1164479723225763892>`
+        }
+
+        return progressBar(
+            ProgressBar.StartEmpty,
+            ProgressBar.StartHalfFull,
+            ProgressBar.StartFull,
+            ProgressBar.MiddleEmpty,
+            ProgressBar.MiddleHalfFull,
+            ProgressBar.MiddleFull,
+            ProgressBar.MiddleContinue,
+            ProgressBar.EndEmpty,
+            ProgressBar.EndHalfFull,
+            ProgressBar.EndFull,
+            value,
+            maxValue,
+            size,
+            false
+        );
+
+        function progressBar(
+            Bar1empty: string, Bar1mid: string, Bar1full: string,
+            Bar2empty: string, Bar2mid: string, Bar2high: string, Bar2full: string,
+            Bar3empty: string, Bar3mid: string, Bar3full: string,
+            value: number, maxValue: number, size: number, percents: boolean
+        ) {
+            if (isNaN(value) || isNaN(maxValue)) throw new Error('maxValue or value is not a number');
+            size = Math.max(3, Math.trunc(size));
+            const percent = value > maxValue ? 100 : ((value / maxValue) * 100).toFixed(1);
+
+            const full = Math.min(size, Math.floor(size * (value / maxValue)));
+            const full_decimal = Math.max(0, full - Math.trunc(full)).toFixed(2);
+            const empty = size - full;
+
+            const barArray: string[] = [
+                ...Array.from({ length: full }, () => Bar2full),
+                ...Array.from({ length: empty }, () => Bar2empty),
+            ];
+
+            if (value < maxValue) {
+                if (0.2 < parseFloat(full_decimal) && parseFloat(full_decimal) <= 0.8) barArray[full - 1] = Bar2mid;
+                else if (parseFloat(full_decimal) <= 0.2 && full < 2) barArray[full - 1] = Bar2high;
+                else if (parseFloat(full_decimal) <= 0.2) barArray[full - 1] = Bar2high;
+                else if (parseFloat(full_decimal) > 0.8 && full < size - 1) barArray[full] = Bar2high;
+                else if (parseFloat(full_decimal) > 0.8) barArray[full - 1] = Bar2high;
+            }
+
+            switch (barArray[0]) {
+                case Bar2full:
+                case Bar2high:
+                    barArray[0] = Bar1full;
+                    break;
+                case Bar2mid:
+                    barArray[0] = Bar1mid;
+                    break;
+                default:
+                    barArray[0] = Bar1empty;
+            }
+
+            switch (barArray[barArray.length - 1]) {
+                case Bar2full:
+                case Bar2high:
+                    barArray[barArray.length - 1] = Bar3full;
+                    break;
+                case Bar2mid:
+                    barArray[barArray.length - 1] = Bar3mid;
+                    break;
+                default:
+                    barArray[barArray.length - 1] = Bar3empty;
+            }
+
+            return percents
+                ? { barString: barArray.join(''), percent: `${barArray.join('')} ${percent}` }
+                : barArray.join('');
+        }
+
+    }
 }

@@ -9,7 +9,7 @@ export default {
         if (message) {
             const user = await (new UserClass().fetch(client, args[0] ?? message.author.id, message)) || message.author
             message.channel.send({
-                content: `# Gay rate machine 🏳️‍🌈\n${user?.username}'s is estimate to be ${Math.floor(Math.random() * 100) + 1 + '%'} gay`,
+                content: `# Gay rate machine 🏳️‍🌈\n${user} is estimated to be ${Math.floor(Math.random() * 100) + 1 + '%'} gay`,
                 allowedMentions: {
                     roles: [],
                     users: []

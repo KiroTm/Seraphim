@@ -46,7 +46,7 @@ export default {
         }
 
         message.channel.send({
-            content: `# PP Generator 🎯\n${Target.username}'s PP Size is estimated to be: \n> 8${result}D`,
+            content: `# PP Generator 🎯\n${Target}'s PP Size is estimated to be: \n> 8${result}D`,
             allowedMentions: {
                 roles: [],
                 users: []
