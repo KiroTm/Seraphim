@@ -20,9 +20,10 @@ export default {
     },
     callback: async ({message, args, guild }: Callback) => {
         const member = new MemberClass().fetch(guild, args[0], message) as GuildMember
+        const author = message.member as GuildMember
         const reason = args.splice(1).join(' ') || "No reason given"
         if (!member) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid member!")]})
-        if (!member.bannable) return message.channel.send({embeds: [new EmbedBuilder().setDescription(`I can't ban ${member.user.username}`).setColor('Red')]})
+        if (author.roles.highest.position >= member.roles.highest.position || !member.bannable) return message.channel.send({embeds: [new EmbedBuilder().setDescription(`I can't ban ${member.user.username}`).setColor('Red')]})
         await member.user.send({embeds: [new EmbedBuilder().setColor('Blue').setDescription(`**You were banned in ${member.guild.name} | ${reason}**\nModerator: ${message.author.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp/1000))}:R>`)]}).catch((r) => {})
         member.ban()
         return message.channel.send({embeds: [new EmbedBuilder().setColor('Green').setDescription(`${member.user.username} was banned | ${reason}`)]})

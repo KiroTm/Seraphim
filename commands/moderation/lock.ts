@@ -5,7 +5,7 @@ const channelClass = new ChannelClass()
 export default {
     name: 'lock',
     description: 'Locks the channel',
-    permissions: [PermissionFlagsBits.ManageChannels],
+    permissions: [PermissionFlagsBits.ManageMessages],
     callback: async ({ message, args }: Callback) => {
         if (message) {
             const channel = message.mentions.channels.first() || channelClass.fetchChannel(message.guild as Guild, args[0] ?? message.channel.id) || message.channel

@@ -62,7 +62,7 @@ export class CooldownManager {
 			const SendWarning: boolean =
 				command.cooldown?.SendWarningMessage !== false && this.CooldownConfig.SendWarningMessage !== false;
 			if (SendWarning) {
-				const msg = message.reply(this.CooldownConfig.CustomErrorMessage || "A little too quick there!");
+				const msg = message.reply(command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there!");
 				setTimeout(() => msg.then((m) => m.delete().catch((er) => { })), 8000);
 			}
 		}
