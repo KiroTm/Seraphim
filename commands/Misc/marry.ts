@@ -1,9 +1,41 @@
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, EmbedBuilder, GuildMember, Interaction, Message, TextChannel } from "discord.js";
 import { Callback, Command } from "../../typings";
+async function Proposal(a: GuildMember, b: GuildMember, message: Message) {
+    const collector = message.createMessageComponentCollector({ filter: (i: ButtonInteraction) => i.user.id === b.id, time: 10000, componentType: ComponentType.Button });
 
+    return new Promise<boolean>((resolve) => {
+        collector.on('collect', (i: ButtonInteraction) => {
+            i.deferUpdate()
+            resolve(i.customId === 'accept')
+        });
+
+        collector.on('end', (collected, reason) => {
+            message.edit({ components: [] }).catch(() => null);
+            if (reason === 'time') return resolve(false)
+        })
+    })
+}
 export default {
     name: 'marry',
     description: 'Marry a person.',
     callback: async ({ client, message, args }: Callback) => {
+        const p = (message.mentions.members?.first() || message.guild?.members.cache.get(args[0] ?? undefined) || undefined)
+        const a = message.member || undefined
+        if (!p || !a) return message.channel.send("Invalid member!")
+        if (p.user.bot) return message.channel.send("Bots cannot participate in marriages")
+        if (p.id === a.id) return message.channel.send("You cannot do that!")
+        const r = new ActionRowBuilder<ButtonBuilder>().addComponents(new ButtonBuilder().setLabel('Accept').setCustomId(`accept`).setStyle(ButtonStyle.Primary), new ButtonBuilder().setLabel('Reject').setStyle(ButtonStyle.Danger).setCustomId('reject'))
+        const e = new EmbedBuilder().setTitle('💍 Marriage Proposal 💍').setDescription(`${a} has proposed to ${p}!\n\nDo you accept the proposal?`).setColor('Blue');
+        const m = await message.channel.send({ embeds: [e], components: [r] });
+        const confirmation = await Proposal(a, p, m)
+        await m.reply({
+            embeds: [
+                new EmbedBuilder()
+                .setColor(confirmation ? 'Green' : 'Red')
+                .setDescription(confirmation ? `${a} and ${p} are now married!` : `${a}'s proposal  has been rejected by ${p}!`)
+            ]
+        })
+        m.delete()
     }
 } as Command
 
@@ -14,22 +46,6 @@ export default {
 
 // import { Callback, Command } from "../../typings";
 // import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, EmbedData, GuildMember, Interaction, TextChannel } from 'discord.js';
-
-// function calculateLovePercentage(name1: string, name2: string): number {
-//     const hash1 = hash(name1);
-//     const hash2 = hash(name2);
-//     return Math.abs((hash1 + hash2) % 101);
-// }
-
-// function hash(s: string): number {
-//     let h = 0;
-//     for (let i = 0; i < s.length; i++) {
-//         const char = s.charCodeAt(i);
-//         h = (h << 5) - h + char;
-//         h = h & h;
-//     }
-//     return h;
-// }
 
 // async function createConfirmationModal(proposer: GuildMember, target: GuildMember, channel: TextChannel): Promise<boolean> {
 //     const row = new ActionRowBuilder<ButtonBuilder>()
