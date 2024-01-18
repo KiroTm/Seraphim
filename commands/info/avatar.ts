@@ -13,10 +13,10 @@ export default {
     aliases: ['av'],
     cooldown: { Duration: '5s' },
     type: CommandType.legacy,
-    callback: async ({ interaction, message, args, guild, client }: Callback) => {
-        message ?? await interaction.deferReply();
-        const target = memberClass.fetch(guild, args[0], message) as GuildMember
-            ?? await userClass.fetch(client, args[0], message) as User
+    callback: async ({ message, args, guild, client }: Callback) => {
+        let member = args[0] ?? message.member?.id
+        const target = memberClass.fetch(guild, member, message) as GuildMember
+            ?? await userClass.fetch(client, member, message) as User
             ?? message.author;
         const type = args[1];
 
