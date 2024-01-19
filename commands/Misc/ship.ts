@@ -1,7 +1,7 @@
 import { Callback, Command } from "../../typings";
 import { EmbedBuilder, GuildMember, Message } from 'discord.js';
 import { MarriageClass } from "../../classes/misc/marriage";
-const marriageClass = new MarriageClass()
+const marriageClass = MarriageClass.getInstance()
 
 export default {
     name: 'ship',
@@ -17,13 +17,13 @@ export default {
         else [f, s] = [message.mentions.members?.first() as GuildMember || args[0], Array.from(message.mentions.members!)[1]?.[1] as GuildMember || args[1]];
 
         const fa = typeof f === 'object' ? f.nickname ?? f.user.globalName ?? f.user.username : f;
-        const sa = typeof s === 'object' ? s.nickname ?? s.user.globalName ?? f.user.username : s;
+        const sa = typeof s === 'object' ? s.nickname ?? s.user.globalName ?? s.user.username : s;
 
         const Ship = marriageClass.Ship(fa, sa);
 
         message.channel.send({
             content: `**💝Matchmaking💝**\n🔺\`${fa}\`\n🔻\`${sa}\``,
-            embeds: [new EmbedBuilder().setColor('#FFC0CB').setDescription(`**🔀 ${Ship.name}**\n[${Ship.bar}]${Ship.percent}%`)],
+            embeds: [new EmbedBuilder().setColor('#FFC0CB').setDescription(`**🔀 ${Ship.name}**\n${Ship.bar}${Ship.percent}%`)],
             allowedMentions: { roles: [], users: [] }
         });
     }
