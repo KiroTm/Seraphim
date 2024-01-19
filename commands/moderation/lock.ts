@@ -10,6 +10,12 @@ export default {
         if (message) {
             const channel = message.mentions.channels.first() || channelClass.fetchChannel(message.guild as Guild, args[0] ?? message.channel.id) || message.channel
             if (channel.type !== ChannelType.GuildText) return message.channel.send({embeds: [new EmbedBuilder().setColor('Green').setDescription('Channel must be a text type')]})
+
+            const permissions = channel.permissionsFor(message.guildId as string);
+            if (!permissions?.has(PermissionFlagsBits.SendMessages)) {
+                return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription('Channel is already locked')] });
+            }
+
             channel.permissionOverwrites.edit(message.guildId as string, {
                 SendMessages: false
             })  
