@@ -3,10 +3,11 @@ import { Callback, Command } from "../../../typings";
 import { EmbedBuilder } from "discord.js";
 
 export default {
-    name: 'truth',
-    description: 'Truth',
+    name: 'nhie',
+    description: 'Never have i ever',
+    aliases: ['neverhaveiever'],
     callback: async ({ message }: Callback) => {
-        const url = `https://api.truthordarebot.xyz/api/truth`;
+        const url = `https://api.truthordarebot.xyz/api/nhie`;
         let response1, data1;
         response1 = await axios.get(url);
         data1 = response1.data;

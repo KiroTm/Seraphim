@@ -12,10 +12,7 @@ async function divorce(a: GuildMember, b: GuildMember, message: Message): Promis
 
     return new Promise<{ description: string, color: ColorResolvable }>((resolve) => {
         collector.on("collect", (i: ButtonInteraction) => {
-            if ([a.user.id, b.user.id].includes(i.user.id)) {
-                collector.stop(i.customId)
-
-            }
+            if ([a.user.id, b.user.id].includes(i.user.id)) return collector.stop(i.customId)
         });
         collector.on("end", (_, reason) => {
             message.edit({ components: [] }).catch(() => null);
