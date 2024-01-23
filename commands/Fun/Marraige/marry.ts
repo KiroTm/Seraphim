@@ -1,8 +1,8 @@
-import { Callback, Command } from "../../typings";
-import { MarriageClass } from "../../classes/misc/marriage";
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ColorResolvable, ComponentType, EmbedBuilder, GuildMember, Message } from "discord.js";
+import { Callback, Command } from "../../../typings";
+import { MarriageClass } from "../../../classes/misc/marriage";
 const marriageClass = MarriageClass.getInstance();
-async function divorce(a: GuildMember, b: GuildMember, message: Message): Promise<{description: string, color: ColorResolvable}> {
+async function proposal(a: GuildMember, b: GuildMember, message: Message): Promise<{description: string, color: ColorResolvable}> {
     const collector = message.createMessageComponentCollector({
         filter: (i: ButtonInteraction) => i.user.id === b.id,
         time: 10000,
@@ -17,29 +17,35 @@ async function divorce(a: GuildMember, b: GuildMember, message: Message): Promis
         collector.on("end", (collected, reason) => {
             message.edit({ components: [] }).catch(() => null);
             return resolve(
-                reason === 'accept' ? {description: `${a} and ${b} are now divorced 💔!`, color: 'Green'} :
-                reason === 'reject' ? {description: `${b} rejected ${a}'s proposal.. 💝`, color: 'Red'} :
-                reason === 'time' ? { description: `${b} didn't respond in time! ⏰`, color: 'Red' } :
+                reason === 'accept' ? {description: `${a} and ${b} are now married!`, color: 'Green'} :
+                reason === 'reject' ? {description: `${b} rejected ${a}'s proposal..`, color: 'Red'} :
+                reason === 'time' ? { description: `${b} didn't respond in time!`, color: 'Red' } :
                 { description: 'Error, something went wrong.', color: 'Red' }
                 )
         });
     });
 }
 
-
 export default {
-    name: 'divorce',
-    description: 'Divorce',
+    name: "marry",
+    description: "Marry a person.",
     cooldown: {
         Duration: '15s',
         Type: 'perUserCooldown'
     },
     callback: async ({ message, args }: Callback) => {
-        const partner = message.mentions.members?.first() || message.guild?.members.cache.get(args[0]) || undefined
-        const divorcer = message.member || undefined
-        if (!divorcer || !partner || partner.user.bot || partner.user.id === divorcer.user.id) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription('You cannot divorce them.')]})
-        const canDivorce = marriageClass.canDivorce(divorcer, partner)
-        if (typeof canDivorce === 'string') return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription(`${canDivorce}`)]})
+        const partner = message.mentions.members?.first() || message.guild?.members.cache.get(args[0] as string) || undefined
+        const proposer = message.member || undefined
+
+        if (!proposer || !partner || proposer.user.bot || proposer.id === partner.id) {
+            return message.channel.send({embeds: [new EmbedBuilder().setColor('Blue').setDescription('You cannot marry them!')]})
+        }
+
+        const result = marriageClass.canMarry(proposer, partner);
+
+        if (typeof result === "string") {
+            return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription(`${result}`)]});
+        }
 
         const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
             new ButtonBuilder().setLabel("Accept").setCustomId("accept").setStyle(ButtonStyle.Primary),
@@ -47,16 +53,15 @@ export default {
         );
 
         const embed = new EmbedBuilder()
-        .setTitle("💔 Marriage Divorce 💔")
-        .setDescription(`${divorcer} has proposed a divoce to ${partner}!\n\nAre you sure?`)
+        .setTitle("💍 Marriage Proposal 💍")
+        .setDescription(`${proposer} has proposed to ${partner}!\n\nDo you accept the proposal?`)
         .setFooter({text: 'You have 10 seconds to respond'});
 
         const m = await message.channel.send({ embeds: [embed], components: [row] });
-
-        const confirmation = await divorce(divorcer, partner, m)
-
+        const confirmation = await proposal(proposer, partner, m);
+        
         if (confirmation.color === 'Green') {
-            const marriage = marriageClass.divorce(divorcer, partner) 
+            const marriage = marriageClass.marry(proposer, partner) 
             if (typeof marriage === 'string') {
                 return message.channel.send(marriage)
             }
@@ -71,6 +76,5 @@ export default {
         });
 
         m && m.deletable ? m.delete() : null;
-        
-    }
-} as Command
+    },
+} as Command;

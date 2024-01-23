@@ -1,6 +1,6 @@
-import { Callback, Command } from "../../typings";
+import { Callback, Command } from "../../../typings";
 import { EmbedBuilder, GuildMember, Message } from 'discord.js';
-import { MarriageClass } from "../../classes/misc/marriage";
+import { MarriageClass } from "../../../classes/misc/marriage";
 const marriageClass = MarriageClass.getInstance()
 
 export default {
