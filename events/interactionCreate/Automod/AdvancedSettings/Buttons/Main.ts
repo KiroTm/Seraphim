@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction } from "discord.js";
+import { APIEmbed, APIEmbedField, ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, JSONEncodable } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance()
@@ -32,6 +32,16 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
         }
         break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Cancel`: {
+            const [mainEmbed, infoEmbed] = interaction.message.embeds as Embed[];
+            let fields = infoEmbed.data?.fields as APIEmbedField[]
+            const updatedInfoEmbed = fields[0].name === 'Channel(s)' 
+                ? new EmbedBuilder(infoEmbed.data).setFields(fields[0] ?? undefined).toJSON()
+                : undefined;
+            const embeds = [new EmbedBuilder(mainEmbed.data).toJSON(), updatedInfoEmbed].filter(Boolean) as (APIEmbed | JSONEncodable<APIEmbed>)[];
+            interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
+        }
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles)

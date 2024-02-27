@@ -10,7 +10,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         case `${interaction.guildId}Automod_Setup_BannedWords_TypeSelectMenu`: {
             const type = interaction.values[0]
             const {embeds, components} = automodClass.utils(interaction).constants.BannedWords.AddWord
-            await interaction.update({
+            interaction.update({
                 embeds: [embeds[0].setTitle(`${type}`)],
                 components
             })

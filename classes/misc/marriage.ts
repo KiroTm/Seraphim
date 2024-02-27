@@ -58,7 +58,7 @@ export class MarriageClass {
 
     private async startUp() {
         await this.initializeData();
-        setInterval(() => {this.uploadDataToMongoose(); console.log(this.MarriageCollection)}, 30000);
+        setInterval(() => {this.uploadDataToMongoose()}, 30000);
     }
 
     private async initializeData() {

@@ -15,22 +15,22 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
             switch (interaction.values[0]) {
                 case "bannedwords": {
-                    await interaction.update(automodClass.utils(interaction).constants.BannedWords.Main)
+                    interaction.update(automodClass.utils(interaction).constants.BannedWords.Main)
                 }
                     break;
 
                 case "phishinglinks": {
-                    await interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
+                    interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
                 }
                     break;
 
                 case "massmention": {
-                    await interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
+                    interaction.update(automodClass.utils(interaction).constants.PhishingLinks.Main)
                 }
                     break;
 
                 case "serverinvites": {
-                    await interaction.update(automodClass.utils(interaction).constants.ServerLinks.Main)
+                    interaction.update(automodClass.utils(interaction).constants.ServerLinks.Main)
                 }
                     break;
 
