@@ -42,9 +42,32 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             const embeds = [new EmbedBuilder(mainEmbed.data).toJSON(), updatedInfoEmbed].filter(Boolean) as (APIEmbed | JSONEncodable<APIEmbed>)[];
             interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
         }
+        break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles)
+        }
+        break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Cancel`: {
+            const [main, info] = interaction.message.embeds;
+            const fields = info?.fields?.filter(val => val.name !== "Action") ?? [];
+            const embeds = [new EmbedBuilder(main?.data)];
+        
+            if (fields.length > 0) {
+                embeds.push(new EmbedBuilder(info.data).setFields(fields));
+            }
+        
+            interaction.update({
+                embeds: embeds,
+                components: automodClass.utils(interaction).constants.AdvancedSettings.CustomAction.components
+            });
+            break;
+        }
+        
+        
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Confirm`: {
+
         }
         break;
     }

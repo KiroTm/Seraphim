@@ -326,7 +326,6 @@ export class AutomodClass {
                                 .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
                                 .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
                                 .setDescription(`**Custom Action Configuration:**\nCustomize specific actions like mute, ban, kick, or ignore to enforce tailored moderation policies in your server.\nThese actions will only trigger once the threshold criteria is met; which will be setup shortly.\n\nFor the sake of simplicity ${client.user?.username} Automod only offers 1 global action per automod rule.`)
-                                .setFields({name: "Action Selected", value: "None", inline: false})
                         ],
                         components: [
                             new ActionRowBuilder<StringSelectMenuBuilder>()

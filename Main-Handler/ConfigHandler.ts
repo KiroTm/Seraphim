@@ -6,6 +6,7 @@ import { CacheLoader } from "./handlers/CacheLoader";
 import { CooldownConfigOptions, CooldownManager } from "./handlers/Cooldowns";
 import { Command } from "../typings";
 import { PrefixHandler } from "./handlers/PrefixHandler";
+import ms from "enhanced-ms";
 
 export class ConfigHandler {
     public _client: Client | undefined;
@@ -48,6 +49,7 @@ export class ConfigHandler {
         cacheOptions?: CacheLoaderOptions[];
         CooldownConfiguration?: CooldownConfigOptions;
     }) {
+        let _ = Date.now()
         const commandHandler = new CommandHandler();
         const chalk = (await import('chalk')).default;
         console.log(chalk.magentaBright.bold.underline.italic("Reading Config Data..."));
@@ -73,6 +75,7 @@ export class ConfigHandler {
             CacheLoader.getInstance(this, cacheOptions);
         }
         this._prefixHandler = PrefixHandler.getInstance(this)
+        console.log(chalk.bold.blueBright(`➙ Took ${ms(Date.now() - _)} to start`))
     }
 
     get client() { return this._client; }
