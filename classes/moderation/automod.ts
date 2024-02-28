@@ -357,6 +357,15 @@ export class AutomodClass {
                                 ])
                             )
                         ]
+                    },
+                    Threshold: {
+                        embeds: [
+                            new EmbedBuilder()
+                            .setColor('Blue')
+                            .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
+                            .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
+                            .setDescription(`**Threshold Configuration:**\nDefine the conditions under which specific actions, such as mute, ban, kick, or ignore, will be enforced to uphold customized moderation policies on your server.\nThese actions will activate once the established threshold criteria are satisfied; you'll set them up in just a moment.\n\nFor simplicity, ${client.user?.username}'s Automod currently supports only one global action per automod rule.`)
+                        ]
                     }
                 }
             },
