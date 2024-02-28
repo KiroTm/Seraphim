@@ -2,6 +2,12 @@ import { APIEmbed, APIEmbedField, ActionRowBuilder, ButtonBuilder, ButtonStyle, 
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance()
+export interface AdvancedSettingFields {
+    Channel: string[];
+    Role: string[];
+    Action: 'Kick' | 'Warn' | 'Mute' | 'Ban' | 'None';
+    Threshold: number;
+}
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_AdvancedSetting`)) return;
@@ -34,12 +40,8 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Cancel`: {
-            const [mainEmbed, infoEmbed] = interaction.message.embeds as Embed[];
-            let fields = infoEmbed.data?.fields as APIEmbedField[]
-            const updatedInfoEmbed = fields[0].name === 'Channel' 
-                ? new EmbedBuilder(infoEmbed.data).setFields(fields[0] ?? undefined).toJSON()
-                : undefined;
-            const embeds = [new EmbedBuilder(mainEmbed.data).toJSON(), updatedInfoEmbed].filter(Boolean) as (APIEmbed | JSONEncodable<APIEmbed>)[];
+            const [main, info] = interaction.message.embeds as Embed[];
+            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Role")
             interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
         }
         break;
@@ -51,19 +53,13 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Cancel`: {
             const [main, info] = interaction.message.embeds;
-            const fields = info?.fields?.filter(val => val.name !== "Action") ?? [];
-            const embeds = [new EmbedBuilder(main?.data)];
-        
-            if (fields.length > 0) {
-                embeds.push(new EmbedBuilder(info.data).setFields(fields));
-            }
-        
+            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Action")
             interaction.update({
-                embeds: embeds,
+                embeds,
                 components: automodClass.utils(interaction).constants.AdvancedSettings.CustomAction.components
             });
-            break;
         }
+        break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`: {
             const modal = new ModalBuilder()
@@ -76,13 +72,74 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     .setCustomId(`${interaction.guildId}Modal_Threshold`)
                     .setStyle(TextInputStyle.Short)
                     .setRequired(true)
-                    .setMaxLength(2)
+                    .setMaxLength(1)
                     .setLabel("Threshold")
-                    .setValue('3')
+                    .setValue('2')
                 )
             )
             await interaction.showModal(modal)   
         }
         break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Cancel`: {
+            const [main, info] = interaction.message.embeds;
+            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Threshold")
+            interaction.update({
+                embeds,
+                components: automodClass.utils(interaction).constants.AdvancedSettings.Threshold.components
+            });
+        }
+        break;
+
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Confirm`: {
+            await interaction.update({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Green')
+                        .setDescription(`<a:loading:1166992405199859733> Processing your submission`)
+                ],
+                components: []
+            });
+            
+            const fields = interaction.message.embeds[1]?.fields ?? [];
+            let settings: AdvancedSettingFields = {
+                Channel: [],
+                Role: [],
+                Action: 'None',
+                Threshold: 2
+            };
+        
+            if (fields.length > 0) {
+                fields.forEach(field => {
+                    switch (field.name) {
+                        case 'Channel':
+                        case 'Role':
+                            settings[field.name] = field.value.split(',').map(value => value.trim());
+                            break;
+                        case 'Action':
+                            settings.Action = field.value as 'Kick' | 'Warn' | 'Mute' | 'Ban';
+                            break;
+                        case 'Threshold':
+                            settings.Threshold = parseInt(field.value);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        
+            console.log(settings); // Use the settings object in your further logic
+        
+            const settingsString = Object.entries(settings).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+            await interaction.editReply({
+                embeds: [
+                    new EmbedBuilder()
+                        .setColor('Green')
+                        .setDescription(settingsString)
+                ]
+            });
+        }
+        break;
+        
     }
-} 
+}   

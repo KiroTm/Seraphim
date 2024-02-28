@@ -11,7 +11,7 @@ export default (instance: ConfigInstance, interaction: Interaction) => {
 
     const embeds = [
         new EmbedBuilder(main?.data),
-        new EmbedBuilder({ color: Colors.Blue, title: "Info", fields })
+        new EmbedBuilder({ color: Colors.Blue, title: "Info:", fields })
     ];
 
     interaction.update({

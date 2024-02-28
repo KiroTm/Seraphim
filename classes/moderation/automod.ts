@@ -1,4 +1,4 @@
-import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
 import { client } from "../..";
 
 export enum automodtype {
@@ -14,6 +14,13 @@ export interface AutomodSetupInterface {
     filterType?: string;
     customResponse?: string;
     query?: Array<string>;
+}
+
+export interface AdvancedSettingFields {
+    Channel: Array<string>;
+    Role: Array<string>;
+    Action: 'Kick' | 'Warn' | 'Mute' | 'Ban';
+    Threshold: number;
 }
 
 export class AutomodClass {
@@ -252,7 +259,7 @@ export class AutomodClass {
                             new EmbedBuilder()
                                 .setColor('Blue')
                                 .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
-                                .setDescription(`**🌟 Dive into AutoMod's Advanced Settings Wizard!**\nWelcome to the world of enhanced moderation with AutoMod, courtesy of ${interaction.client.user?.username}! 🤖✨\n\n**Unlock the Power:**\n1. **Rule Selection:** - Choose from a variety of rule types to tailor moderation to your server's unique atmosphere.\n\n2. **Instant Moderation:** - Swiftly enforce rules with instant moderation actions, ensuring a responsive and secure environment.\n\n3. **Ignored Channels and Roles:** - Configure exemptions for certain channels and roles, allowing flexibility in rule application.\n\n4. **Custom Actions:** - Implement personalized actions for handling rule violations, giving your community a distinct touch.\n\nElevate your server's moderation game with AutoMod's advanced features. Follow these steps for a more secure and enjoyable community experience!`)
+                                .setDescription(`**🌟 Dive into AutoMod's Advanced Settings Wizard!**\nWelcome to the world of enhanced moderation with AutoMod, courtesy of ${interaction.client.user?.username}! 🤖✨\n\n**Unlock the Power:**\n1. **Rule Selection:** - Choose from a variety of rule types to tailor moderation to your server's unique atmosphere.\n\n2. **Instant Moderation:** - Swiftly enforce rules with instant moderation actions, ensuring a responsive and secure environment.\n\n3. **Ignored Channels and Roles:** - Configure exemptions for certain channels and roles, allowing flexibility in rule application.\n\n4. **Custom Actions:** - Implement personalized actions for handling rule violations, giving your community a distinct touch.\n\nElevate your server's moderation game with AutoMod's advanced features. Follow these steps for a more secure and enjoyable community experience!\nDefault:\`None\``)
                         ],
                         components: [
                             new ActionRowBuilder<ButtonBuilder>()
@@ -270,7 +277,7 @@ export class AutomodClass {
                                 .setColor('Blue')
                                 .setTitle(interaction.isButton() && interaction?.message?.embeds[0]?.title && Object.keys(automodtype).includes(interaction.message.embeds[0].title) ? interaction.message.embeds[0].title : null)
                                 .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
-                                .setDescription(`**🌟 Ignored Roles Configuration:**\nExclude specific roles with Ignored Roles for enhanced control and a better community experience! 🤖✨`)
+                                .setDescription(`**🌟 Ignored Roles Configuration:**\nExclude specific roles with Ignored Roles for enhanced control and a better community experience! 🤖✨\nDefault:\`None\``)
                         ],
                         components: [
                             new ActionRowBuilder<RoleSelectMenuBuilder>()
@@ -297,7 +304,7 @@ export class AutomodClass {
                                 .setColor('Blue')
                                 .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
                                 .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
-                                .setDescription(`**Ignored Channels Configuration:**\nExclude specific channels from rule enforcement to accommodate different content and discussions, by configuring Ignored Channels, you ensure that certain areas of your server remain unaffected by specific rules, fostering a more tailored moderation experience.`)
+                                .setDescription(`**Ignored Channels Configuration:**\nExclude specific channels from rule enforcement to accommodate different content and discussions, by configuring Ignored Channels, you ensure that certain areas of your server remain unaffected by specific rules, fostering a more tailored moderation experience.\nDefault:\`None\``)
                         ],
                         components: [
                             new ActionRowBuilder<ChannelSelectMenuBuilder>()
@@ -325,62 +332,62 @@ export class AutomodClass {
                                 .setColor('Blue')
                                 .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
                                 .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
-                                .setDescription(`**Custom Action Configuration:**\nCustomize specific actions like mute, ban, kick, or ignore to enforce tailored moderation policies in your server.\nThese actions will only trigger once the threshold criteria is met; which will be setup shortly.\n\nFor the sake of simplicity ${client.user?.username} Automod only offers 1 global action per automod rule.`)
+                                .setDescription(`**Custom Action Configuration:**\nCustomize specific actions like mute, ban, kick, or ignore to enforce tailored moderation policies in your server.\nThese actions will only trigger once the threshold criteria is met; which will be setup shortly.\n\nFor the sake of simplicity ${client.user?.username} Automod only offers 1 global action per automod rule.\nDefault:\`None\``)
                         ],
                         components: [
                             new ActionRowBuilder<StringSelectMenuBuilder>()
-                            .addComponents(
-                                new StringSelectMenuBuilder()
-                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_SelectMenu`)
-                                .setMinValues(1)
-                                .setMaxValues(1)
-                                .setPlaceholder("Choose action type")
-                                .setOptions([
-                                    {
-                                        label: "Mute",
-                                        value: 'mute',
-                                        emoji: "<:mute:1211755876977872958>"
-                                    },
-                                    {
-                                        label: "Ban",
-                                        value: 'ban',
-                                        emoji: "<:ban:1211754347797422100>"
-                                    },{
-                                        label: "Warn",
-                                        value: 'warn',
-                                        emoji: "<:Warn:1211758195220160512>"
-                                    },{
-                                        label: "Kick",
-                                        value: 'kick',
-                                        emoji: "<:kick:1211757211215208469>"
-                                    },
-                                ])
-                            ),
+                                .addComponents(
+                                    new StringSelectMenuBuilder()
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_SelectMenu`)
+                                        .setMinValues(1)
+                                        .setMaxValues(1)
+                                        .setPlaceholder("Choose action type")
+                                        .setOptions([
+                                            {
+                                                label: "Mute",
+                                                value: 'Mute',
+                                                emoji: "<:mute:1211755876977872958>"
+                                            },
+                                            {
+                                                label: "Ban",
+                                                value: 'Ban',
+                                                emoji: "<:ban:1211754347797422100>"
+                                            }, {
+                                                label: "Warn",
+                                                value: 'Warn',
+                                                emoji: "<:Warn:1211758195220160512>"
+                                            }, {
+                                                label: "Kick",
+                                                value: 'Kick',
+                                                emoji: "<:kick:1211757211215208469>"
+                                            },
+                                        ])
+                                ),
                             new ActionRowBuilder<ButtonBuilder>()
-                            .addComponents(
-                                new ButtonBuilder()
-                                .setStyle(ButtonStyle.Secondary)
-                                .setLabel("Skip")
-                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold`)
-                            )
+                                .addComponents(
+                                    new ButtonBuilder()
+                                        .setStyle(ButtonStyle.Secondary)
+                                        .setLabel("Skip")
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold`)
+                                )
                         ]
                     },
                     Threshold: {
                         embeds: [
                             new EmbedBuilder()
-                            .setColor('Blue')
-                            .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
-                            .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
-                            .setDescription(`**Threshold Configuration:**\nDefine the conditions under which specific actions, such as mute, ban, kick, or ignore, will be enforced to uphold customized moderation policies on your server.\nThese actions will activate once the established threshold criteria are satisfied; you'll set them up in just a moment.\n\nFor simplicity, ${client.user?.username}'s Automod currently supports only one global action per automod rule.`)
+                                .setColor('Blue')
+                                .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
+                                .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
+                                .setDescription(`**Threshold Configuration:**\nDefine the amount of violations until the bot takes an action\nDefault:\`2\``)
                         ],
                         components: [
                             new ActionRowBuilder<ButtonBuilder>()
-                            .addComponents(
-                                new ButtonBuilder()
-                                .setStyle(ButtonStyle.Primary)
-                                .setLabel("Add Threshold")
-                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`)
-                            )
+                                .addComponents(
+                                    new ButtonBuilder()
+                                        .setStyle(ButtonStyle.Primary)
+                                        .setLabel("Add Threshold")
+                                        .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`)
+                                )
                         ]
                     }
                 }
@@ -390,6 +397,15 @@ export class AutomodClass {
                     EnableRule: (type: automodtype, query: string) => {
                         this.enableRuleType(interaction.guildId as string, type, query)
                     },
+                    RemoveField: (main: Embed, info: Embed, query: string) => {
+                        const fields = info?.fields?.filter(val => val.name !== query) ?? [];
+                        const embeds = [new EmbedBuilder(main?.data)];
+
+                        if (fields.length > 0) {
+                            embeds.push(new EmbedBuilder(info.data).setFields(fields));
+                        }
+                        return embeds
+                    }
                 },
                 BannedWords: {
                     EvaluateWords: (inputString: string): string[] => {
@@ -406,7 +422,7 @@ export class AutomodClass {
                         return int;
                     }
                 }
-                
+
             }
         };
     }
