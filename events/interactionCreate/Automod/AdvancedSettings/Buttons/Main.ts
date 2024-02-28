@@ -67,7 +67,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         
         
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Confirm`: {
-
+            
         }
         break;
     }
