@@ -1,4 +1,4 @@
-import { APIEmbed, APIEmbedField, ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, JSONEncodable } from "discord.js";
+import { APIEmbed, APIEmbedField, ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, JSONEncodable, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance()
@@ -64,10 +64,24 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             });
             break;
         }
-        
-        
-        case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Confirm`: {
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Threshold)
+
+        case `${interaction.guild}Automod_Setup_AdvancedSetting_Threshold_Setup`: {
+            const modal = new ModalBuilder()
+            .setTitle("Threshold")
+            .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Modal`)
+            .addComponents(
+                new ActionRowBuilder<TextInputBuilder>()
+                .addComponents(
+                    new TextInputBuilder()
+                    .setCustomId(`${interaction.guildId}Modal_Threshold`)
+                    .setStyle(TextInputStyle.Short)
+                    .setPlaceholder("3")
+                    .setRequired(true)
+                    .setMaxLength(2)
+                    .setLabel("Threshold")
+                )
+            )
+            await interaction.showModal(modal)   
         }
         break;
     }

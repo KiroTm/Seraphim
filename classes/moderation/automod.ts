@@ -331,7 +331,7 @@ export class AutomodClass {
                             new ActionRowBuilder<StringSelectMenuBuilder>()
                             .addComponents(
                                 new StringSelectMenuBuilder()
-                                .setCustomId(`${interaction.guildId}Automod_Setup_CustomAction_SelectMenu`)
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_SelectMenu`)
                                 .setMinValues(1)
                                 .setMaxValues(1)
                                 .setPlaceholder("Choose action type")
@@ -355,6 +355,13 @@ export class AutomodClass {
                                         emoji: "<:kick:1211757211215208469>"
                                     },
                                 ])
+                            ),
+                            new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(
+                                new ButtonBuilder()
+                                .setStyle(ButtonStyle.Secondary)
+                                .setLabel("Skip")
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold`)
                             )
                         ]
                     },
@@ -365,6 +372,15 @@ export class AutomodClass {
                             .setTitle(interaction.isButton() && interaction?.message?.embeds ? interaction.message.embeds[0]?.title ?? interaction.message.embeds[1]?.title ?? null : null)
                             .setAuthor({ name: `${interaction.client.user.username}`, iconURL: `${interaction.client.user.displayAvatarURL()}` })
                             .setDescription(`**Threshold Configuration:**\nDefine the conditions under which specific actions, such as mute, ban, kick, or ignore, will be enforced to uphold customized moderation policies on your server.\nThese actions will activate once the established threshold criteria are satisfied; you'll set them up in just a moment.\n\nFor simplicity, ${client.user?.username}'s Automod currently supports only one global action per automod rule.`)
+                        ],
+                        components: [
+                            new ActionRowBuilder<ButtonBuilder>()
+                            .addComponents(
+                                new ButtonBuilder()
+                                .setStyle(ButtonStyle.Primary)
+                                .setLabel("Add Threshold")
+                                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`)
+                            )
                         ]
                     }
                 }

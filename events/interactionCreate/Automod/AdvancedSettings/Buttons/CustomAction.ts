@@ -15,5 +15,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         if (info) embeds.push(new EmbedBuilder(info.data));
 
         interaction.update({ embeds, components });
+    } else if (customId == `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Confirm` || customId === `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold`) {
+        interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Threshold)
     }
 }

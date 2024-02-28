@@ -2,7 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Int
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
 
 export default (instance: ConfigInstance, interaction: Interaction) => {
-    if (!interaction.isStringSelectMenu() || interaction.customId !== `${interaction.guildId}Automod_Setup_CustomAction_SelectMenu`) return;
+    if (!interaction.isStringSelectMenu() || interaction.customId !== `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_SelectMenu`) return;
 
     const [main, info] = interaction.message.embeds;
     const selected = interaction.values[0];
