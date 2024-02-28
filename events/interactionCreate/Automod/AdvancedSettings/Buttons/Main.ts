@@ -36,7 +36,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Cancel`: {
             const [mainEmbed, infoEmbed] = interaction.message.embeds as Embed[];
             let fields = infoEmbed.data?.fields as APIEmbedField[]
-            const updatedInfoEmbed = fields[0].name === 'Channel(s)' 
+            const updatedInfoEmbed = fields[0].name === 'Channel' 
                 ? new EmbedBuilder(infoEmbed.data).setFields(fields[0] ?? undefined).toJSON()
                 : undefined;
             const embeds = [new EmbedBuilder(mainEmbed.data).toJSON(), updatedInfoEmbed].filter(Boolean) as (APIEmbed | JSONEncodable<APIEmbed>)[];
@@ -65,7 +65,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             break;
         }
 
-        case `${interaction.guild}Automod_Setup_AdvancedSetting_Threshold_Setup`: {
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`: {
             const modal = new ModalBuilder()
             .setTitle("Threshold")
             .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Modal`)
@@ -75,10 +75,10 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     new TextInputBuilder()
                     .setCustomId(`${interaction.guildId}Modal_Threshold`)
                     .setStyle(TextInputStyle.Short)
-                    .setPlaceholder("3")
                     .setRequired(true)
                     .setMaxLength(2)
                     .setLabel("Threshold")
+                    .setValue('3')
                 )
             )
             await interaction.showModal(modal)   

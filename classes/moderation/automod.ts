@@ -386,17 +386,27 @@ export class AutomodClass {
                 }
             },
             functions: {
+                General: {
+                    EnableRule: (type: automodtype, query: string) => {
+                        this.enableRuleType(interaction.guildId as string, type, query)
+                    },
+                },
                 BannedWords: {
                     EvaluateWords: (inputString: string): string[] => {
                         return Array.from(new Set(inputString.split(',')))
                             .map(word => word.trim()).filter(word => word !== '');
                     }
                 },
-                General: {
-                    EnableRule: (type: automodtype, query: string) => {
-                        this.enableRuleType(interaction.guildId as string, type, query)
-                    },
+                AdvancedSettings: {
+                    EvaluateThreshold: (input: string) => {
+                        const int = parseInt(input);
+                        if (Number.isNaN(int) || int < 0) {
+                            return int < 0 ? 'INT_ZERO' : 'INVALID_TYPE';
+                        }
+                        return int;
+                    }
                 }
+                
             }
         };
     }

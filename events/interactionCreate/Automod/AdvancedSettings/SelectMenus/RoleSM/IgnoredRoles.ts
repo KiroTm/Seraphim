@@ -9,7 +9,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     switch (interaction.customId) {
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRole_SelectMenu`: {
             const [, infoEmbed] = interaction.message.embeds;
-            const field = {name: "Role(s)", value: `${interaction.roles.map((r) => r).join(",")}`}
+            const field = {name: "Role", value: `${interaction.roles.map((r) => r).join(",")}`}
             let updatedEmbed: EmbedBuilder;
             infoEmbed?.title === 'Info:' ? updatedEmbed = new EmbedBuilder(infoEmbed.data).addFields(field)
                 : updatedEmbed = new EmbedBuilder().setColor('Blue').setTitle('Info:').setFields(field)
