@@ -12,8 +12,8 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isButton()) return;
     if (!interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_AdvancedSetting`)) return;
 
-    switch(interaction.customId) {
-        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Confirm` : {
+    switch (interaction.customId) {
+        case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Confirm`: {
             const object = automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles
             const embeds = object.embeds as any[]
             if (interaction.isButton() && interaction?.message?.embeds[1]?.title === "Info:") embeds.push(interaction.message.embeds[1])
@@ -22,34 +22,34 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 components: object.components
             })
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Main)
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Cancel`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels)
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Cancel`: {
             const [main, info] = interaction.message.embeds as Embed[];
             const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Role")
             interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`: {
             interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles)
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Cancel`: {
             const [main, info] = interaction.message.embeds;
@@ -59,27 +59,27 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 components: automodClass.utils(interaction).constants.AdvancedSettings.CustomAction.components
             });
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Setup`: {
             const modal = new ModalBuilder()
-            .setTitle("Threshold")
-            .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Modal`)
-            .addComponents(
-                new ActionRowBuilder<TextInputBuilder>()
+                .setTitle("Threshold")
+                .setCustomId(`${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Modal`)
                 .addComponents(
-                    new TextInputBuilder()
-                    .setCustomId(`${interaction.guildId}Modal_Threshold`)
-                    .setStyle(TextInputStyle.Short)
-                    .setRequired(true)
-                    .setMaxLength(1)
-                    .setLabel("Threshold")
-                    .setValue('2')
+                    new ActionRowBuilder<TextInputBuilder>()
+                        .addComponents(
+                            new TextInputBuilder()
+                                .setCustomId(`${interaction.guildId}Modal_Threshold`)
+                                .setStyle(TextInputStyle.Short)
+                                .setRequired(true)
+                                .setMaxLength(1)
+                                .setLabel("Threshold")
+                                .setValue('2')
+                        )
                 )
-            )
-            await interaction.showModal(modal)   
+            await interaction.showModal(modal)
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Cancel`: {
             const [main, info] = interaction.message.embeds;
@@ -89,9 +89,10 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 components: automodClass.utils(interaction).constants.AdvancedSettings.Threshold.components
             });
         }
-        break;
+            break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Confirm`: {
+            const fields = interaction.message.embeds[1]?.fields ?? [];
             await interaction.update({
                 embeds: [
                     new EmbedBuilder()
@@ -100,37 +101,22 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 ],
                 components: []
             });
-            
-            const fields = interaction.message.embeds[1]?.fields ?? [];
-            let settings: AdvancedSettingFields = {
+
+            const defaultSettings: AdvancedSettingFields = {
                 Channel: [],
                 Role: [],
                 Action: 'None',
                 Threshold: 2
             };
-        
-            if (fields.length > 0) {
-                fields.forEach(field => {
-                    switch (field.name) {
-                        case 'Channel':
-                        case 'Role':
-                            settings[field.name] = field.value.split(',').map(value => value.trim());
-                            break;
-                        case 'Action':
-                            settings.Action = field.value as 'Kick' | 'Warn' | 'Mute' | 'Ban';
-                            break;
-                        case 'Threshold':
-                            settings.Threshold = parseInt(field.value);
-                            break;
-                        default:
-                            break;
-                    }
-                });
+
+            for (const key in defaultSettings) {
+                if (Object.prototype.hasOwnProperty.call(defaultSettings, key)) {
+                    const field = fields.find((val) => val.name.toLowerCase() === key.toLowerCase());
+                    defaultSettings[key as keyof AdvancedSettingFields] = (field ? (field.value as string | string[]) : getDefault(key as keyof AdvancedSettingFields)) as never 
+                }
             }
-        
-            console.log(settings); // Use the settings object in your further logic
-        
-            const settingsString = Object.entries(settings).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`).join('\n');
+
+            const settingsString = Object.entries(defaultSettings).map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value ?? "none"}`).join('\n');
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -138,8 +124,22 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                         .setDescription(settingsString)
                 ]
             });
+
+            function getDefault(key: keyof AdvancedSettingFields): string | string[] | 'None' | number {
+                switch (key) {
+                    case 'Channel':
+                    case 'Role':
+                        return [];
+                    case 'Action':
+                        return 'None';
+                    case 'Threshold':
+                        return 2;
+                    default:
+                        return ''; // Or appropriate default value
+                }
+            }
         }
-        break;
-        
+            break;
+
     }
 }   
