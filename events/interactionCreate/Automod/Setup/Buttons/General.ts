@@ -1,13 +1,14 @@
 import { EmbedBuilder, Interaction } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass } from "../../../../../classes/moderation/automod";
+import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance()
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isButton()) return;
     if ((interaction.customId.startsWith(`${interaction.guildId}Automod_Setup`) && interaction.customId.endsWith(`Enable`))) {
         const { customId, client, } = interaction
-        const ruletype = customId.split('_')[2]
-        await interaction.update({
+        const ruletype = customId.split('_')[2] as automodtype
+        automodClass.enableRuleType(`${interaction.guildId}`, ruletype)
+        interaction.update({
             embeds: [
                 new EmbedBuilder()
                     .setColor('Blurple')

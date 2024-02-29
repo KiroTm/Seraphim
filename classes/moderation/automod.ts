@@ -16,8 +16,9 @@ export interface AutomodSetupInterface {
 }
 
 export interface RuleConfig {
-    words: string[];
-    filterType?: string;
+    Limit?: number; // MassMention specific
+    words?: string[] // BannedWords specific
+    filterType?: string; // General
 }
 
 export interface AdvancedSettingFields {
@@ -103,7 +104,9 @@ export class AutomodClass {
                     const existingConfigIndex = existingRule.config.findIndex(cfg => cfg.filterType === newConfig.filterType);
     
                     if (existingConfigIndex !== -1) {
-                        existingRule.config[existingConfigIndex].words.push(...newConfig.words);
+                        type === automodtype.BannedWords ?
+                        existingRule.config[existingConfigIndex].words!.push(...newConfig.words!) 
+                        : existingRule.config[existingConfigIndex] = { ...existingRule.config[existingConfigIndex], ...newConfig }
                     } else {
                         existingRule.config.push(newConfig);
                     }
@@ -118,14 +121,10 @@ export class AutomodClass {
         this.AutomodCollection.set(guildId, existingGuildCollection);
     }    
 
-    public enableRuleType(guildId: string, type: automodtype, query: string) {
-        const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
-        const index = existingRule.config?.findIndex(rule => arraysEqual(rule.words, [query]));
-
-        if (index !== -1) {
-            existingRule.enabled = true;
-        }
-    }
+    public enableRuleType(guildId: string, type: automodtype) {
+        this.getOrCreateGuildCollection(guildId)
+            .set(type, { ...this.getOrCreateRuleTypeCollection(guildId, type), enabled: true });
+    }    
 
     public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
         return {
@@ -413,7 +412,7 @@ export class AutomodClass {
             functions: {
                 General: {
                     EnableRule: (type: automodtype, query: string) => {
-                        this.enableRuleType(interaction.guildId as string, type, query)
+                        this.enableRuleType(interaction.guildId as string, type)
                     },
                     RemoveField: (main: Embed, info: Embed, query: string) => {
                         const fields = info?.fields?.filter(val => val.name !== query) ?? [];
