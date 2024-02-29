@@ -1,6 +1,5 @@
 import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
 import { client } from "../..";
-
 export enum automodtype {
     BannedWords = 'bannedwords',
     ServerInvites = 'serverinvites',
@@ -11,17 +10,23 @@ export enum automodtype {
 export interface AutomodSetupInterface {
     type: automodtype;
     enabled?: boolean;
-    filterType?: string;
     customResponse?: string;
-    query?: Array<string>;
+    config?: RuleConfig[];
+    advancedSettings?: AdvancedSettingFields;
+}
+
+export interface RuleConfig {
+    words: string[];
+    filterType?: string;
 }
 
 export interface AdvancedSettingFields {
-    Channel: Array<string>;
-    Role: Array<string>;
+    Channel: string[];
+    Role: string[];
     Action: 'Kick' | 'Warn' | 'Mute' | 'Ban' | 'None';
     Threshold: number;
 }
+
 export const AdvancedSettingCustomActions = {
     Warn: {
         id: "Warn",
@@ -41,71 +46,86 @@ export const AdvancedSettingCustomActions = {
     }
 }
 export class AutomodClass {
+    
     private static instance: AutomodClass;
-    public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface[]>> = new Collection();
+    public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface>> = new Collection();
 
     private constructor() {
+        this.startUp();
     }
 
     public static getInstance(): AutomodClass {
         return this.instance || (this.instance = new AutomodClass());
     }
 
-    private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface[]> {
+    private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface> {
         const existingGuildCollection = this.AutomodCollection.get(guildId);
 
         if (existingGuildCollection) {
             return existingGuildCollection;
         } else {
-            const newGuildCollection = new Collection<string, AutomodSetupInterface[]>();
+            const newGuildCollection = new Collection<string, AutomodSetupInterface>();
             this.AutomodCollection.set(guildId, newGuildCollection);
             return newGuildCollection;
         }
     }
 
-    private getOrCreateRuleTypeCollection(guildId: string, type: automodtype): AutomodSetupInterface[] {
+    private getOrCreateRuleTypeCollection(guildId: string, type: automodtype): AutomodSetupInterface {
         const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
-        const existingRules = existingGuildCollection.get(type);
+        const existingRule = existingGuildCollection.get(type);
 
-        if (existingRules) {
-            return existingRules;
+        if (existingRule) {
+            return existingRule;
         } else {
-            const newRules: AutomodSetupInterface[] = [];
-            existingGuildCollection.set(type, newRules);
-            return newRules;
+            const newRule: AutomodSetupInterface = {
+                type: type,
+                enabled: false,
+                config: [],
+                advancedSettings: {
+                    Channel: [],
+                    Role: [],
+                    Action: 'None',
+                    Threshold: 2
+                }
+            };
+            existingGuildCollection.set(type, newRule);
+            return newRule;
         }
     }
 
     public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
-        const existingRules = this.getOrCreateRuleTypeCollection(guildId, data.type);
-        const existingRuleIndex = existingRules.findIndex(rule => rule.query && rule.query.join() === data.query?.join());
-
-        if (existingRuleIndex !== -1) {
-            const existingRule = existingRules[existingRuleIndex];
-            Object.assign(existingRule, data);
-        } else {
-            existingRules.push(data);
+        const { type, config } = data;
+        const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
+    
+        if (config && config.length > 0) {
+            config.forEach(newConfig => {
+                if (existingRule.config) {
+                    const existingConfigIndex = existingRule.config.findIndex(cfg => cfg.filterType === newConfig.filterType);
+    
+                    if (existingConfigIndex !== -1) {
+                        existingRule.config[existingConfigIndex].words.push(...newConfig.words);
+                    } else {
+                        existingRule.config.push(newConfig);
+                    }
+                } else {
+                    existingRule.config = [newConfig];
+                }
+            });
         }
-
+    
         const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
-        existingGuildCollection.set(data.type, existingRules);
+        existingGuildCollection.set(type, existingRule);
         this.AutomodCollection.set(guildId, existingGuildCollection);
-    }
-
+    }    
 
     public enableRuleType(guildId: string, type: automodtype, query: string) {
-        const existingRules = this.getOrCreateRuleTypeCollection(guildId, type);
-        const index = existingRules.findIndex(rule => rule.query && rule.query.join() === query);
+        const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
+        const index = existingRule.config?.findIndex(rule => arraysEqual(rule.words, [query]));
 
         if (index !== -1) {
-            existingRules[index].enabled = true;
-
-            const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
-            existingGuildCollection.set(type, existingRules);
-            this.AutomodCollection.set(guildId, existingGuildCollection);
+            existingRule.enabled = true;
         }
     }
-
 
     public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
         return {
@@ -425,4 +445,24 @@ export class AutomodClass {
         };
     }
 
+    private startUp() {
+        setInterval(() => {
+            console.log("--------------------")
+            console.log(this.AutomodCollection.get('1138806085352951950'))
+            console.log(this.AutomodCollection.get('1138806085352951950')?.map((val) => val.config))
+            console.log(this.AutomodCollection.get('1138806085352951950')?.map((val) => val.config?.map((v) => v.words) ?? 'None'))
+            console.log("--------------------")
+        }, 5000);
+    }
+}
+
+function arraysEqual(a: any[], b: any[]): boolean {
+    if (a === b) return true;
+    if (a == null || b == null) return false;
+    if (a.length !== b.length) return false;
+
+    for (let i = 0; i < a.length; ++i) {
+        if (a[i] !== b[i]) return false;
+    }
+    return true;
 }

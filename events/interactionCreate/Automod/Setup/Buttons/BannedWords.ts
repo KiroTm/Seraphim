@@ -78,9 +78,13 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             })
             automodClass.addOrUpdateRuleType(interaction.guildId as string, {
                 type: automodtype.BannedWords,
-                enabled: false, 
-                query: word,
-                filterType: title as string
+                enabled: false,
+                config: [
+                    {
+                        words: word,
+                        filterType: title
+                    }
+                ]
             })
         }
         break;

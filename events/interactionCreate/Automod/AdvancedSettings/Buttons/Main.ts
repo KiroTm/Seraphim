@@ -105,9 +105,6 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 return `${key} – **${formattedValue}**`;
             });
         
-            console.log(defaultSettings);
-            console.log(settingsString);
-        
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()

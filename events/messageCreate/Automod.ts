@@ -14,7 +14,7 @@ export default async (instance: ConfigInstance, message: Message) => {
     for (const [type, rules] of automodData) {
         switch (type) {
             case automodtype.BannedWords:
-                checkBannedWords(message, rules);
+                // checkBannedWords(message, rules);
                 break;
         }
     }
@@ -50,29 +50,7 @@ async function handleBannedWords(message: Message) {
             content: `${message.author} Your message contains banned words and has been removed.`,
             allowedMentions: { users: [message.author.id] }
         }, '3s', 'Create');
-        sendLog(message);
     } catch (error) {
         console.error("Error deleting message:", error);
     }
-}
-
-async function sendLog(message: Message) {
-    const logsChannel = message.client.channels.cache.get('1180829802383560714') as TextChannel;
-
-    if (!logsChannel) return;
-
-    const webhook = new WebhookClient({
-        token: process.env.TOKEN,
-        id: "1180834581562265660",
-        url: "https://discord.com/api/webhooks/1180834581562265660/uiZDS14yPCRwcw9nvMK5A_9P3RNXFR3sYfFGD5qsMk1CkgDH_ibEjpvwTspDKWZc4r4w"
-    });
-
-    webhook?.send({
-        embeds: [
-            new EmbedBuilder()
-                .setColor('Blue')
-                .setDescription(`**Message Deleted in ${message.channel}**\n${message.content}\n**Reason**\n - Banned Words`)
-                .setFooter({ text: message.author.username, iconURL: message.author.displayAvatarURL() })
-        ]
-    });
 }
