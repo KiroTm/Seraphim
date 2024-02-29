@@ -47,12 +47,11 @@ export const AdvancedSettingCustomActions = {
     }
 }
 export class AutomodClass {
-    
+
     private static instance: AutomodClass;
     public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface>> = new Collection();
 
     private constructor() {
-        this.startUp();
     }
 
     public static getInstance(): AutomodClass {
@@ -81,13 +80,7 @@ export class AutomodClass {
             const newRule: AutomodSetupInterface = {
                 type: type,
                 enabled: false,
-                config: [],
-                advancedSettings: {
-                    Channel: [],
-                    Role: [],
-                    Action: 'None',
-                    Threshold: 2
-                }
+                config: []
             };
             existingGuildCollection.set(type, newRule);
             return newRule;
@@ -97,16 +90,16 @@ export class AutomodClass {
     public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
         const { type, config } = data;
         const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
-    
+
         if (config && config.length > 0) {
             config.forEach(newConfig => {
                 if (existingRule.config) {
                     const existingConfigIndex = existingRule.config.findIndex(cfg => cfg.filterType === newConfig.filterType);
-    
+
                     if (existingConfigIndex !== -1) {
                         type === automodtype.BannedWords ?
-                        existingRule.config[existingConfigIndex].words!.push(...newConfig.words!) 
-                        : existingRule.config[existingConfigIndex] = { ...existingRule.config[existingConfigIndex], ...newConfig }
+                            existingRule.config[existingConfigIndex].words!.push(...newConfig.words!)
+                            : existingRule.config[existingConfigIndex] = { ...existingRule.config[existingConfigIndex], ...newConfig }
                     } else {
                         existingRule.config.push(newConfig);
                     }
@@ -115,16 +108,23 @@ export class AutomodClass {
                 }
             });
         }
-    
+
         const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
         existingGuildCollection.set(type, existingRule);
         this.AutomodCollection.set(guildId, existingGuildCollection);
-    }    
-
+    }
     public enableRuleType(guildId: string, type: automodtype) {
-        this.getOrCreateGuildCollection(guildId)
-            .set(type, { ...this.getOrCreateRuleTypeCollection(guildId, type), enabled: true });
-    }    
+        const guildCollection = this.AutomodCollection.get(guildId)!
+        const existingRule = guildCollection.get(type);
+        
+        if (existingRule) {
+            existingRule.enabled = true;
+            guildCollection.set(type, existingRule);
+        }
+    
+        this.AutomodCollection.set(guildId, guildCollection);
+    } 
+    
 
     public utils(interaction: ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
         return {
@@ -378,7 +378,7 @@ export class AutomodClass {
                                         .setMinValues(1)
                                         .setMaxValues(1)
                                         .setPlaceholder("Choose action type")
-                                        .setOptions(Object.values(AdvancedSettingCustomActions).map(({id, emoji}) => { return { label: id, value: id, emoji}}))
+                                        .setOptions(Object.values(AdvancedSettingCustomActions).map(({ id, emoji }) => { return { label: id, value: id, emoji } }))
                                 ),
                             new ActionRowBuilder<ButtonBuilder>()
                                 .addComponents(
@@ -411,9 +411,6 @@ export class AutomodClass {
             },
             functions: {
                 General: {
-                    EnableRule: (type: automodtype, query: string) => {
-                        this.enableRuleType(interaction.guildId as string, type)
-                    },
                     RemoveField: (main: Embed, info: Embed, query: string) => {
                         const fields = info?.fields?.filter(val => val.name !== query) ?? [];
                         const embeds = [new EmbedBuilder(main?.data)];
@@ -443,25 +440,4 @@ export class AutomodClass {
             }
         };
     }
-
-    private startUp() {
-        setInterval(() => {
-            console.log("--------------------")
-            console.log(this.AutomodCollection.get('1138806085352951950'))
-            console.log(this.AutomodCollection.get('1138806085352951950')?.map((val) => val.config))
-            console.log(this.AutomodCollection.get('1138806085352951950')?.map((val) => val.config?.map((v) => v.words) ?? 'None'))
-            console.log("--------------------")
-        }, 5000);
-    }
-}
-
-function arraysEqual(a: any[], b: any[]): boolean {
-    if (a === b) return true;
-    if (a == null || b == null) return false;
-    if (a.length !== b.length) return false;
-
-    for (let i = 0; i < a.length; ++i) {
-        if (a[i] !== b[i]) return false;
-    }
-    return true;
 }
