@@ -19,10 +19,27 @@ export interface AutomodSetupInterface {
 export interface AdvancedSettingFields {
     Channel: Array<string>;
     Role: Array<string>;
-    Action: 'Kick' | 'Warn' | 'Mute' | 'Ban';
+    Action: 'Kick' | 'Warn' | 'Mute' | 'Ban' | 'None';
     Threshold: number;
 }
-
+export const AdvancedSettingCustomActions = {
+    Warn: {
+        id: "Warn",
+        emoji: '<:Warn:1211758195220160512>'
+    },
+    Ban: {
+        id: "Ban",
+        emoji: '<:ban:1211754347797422100>'
+    },
+    Kick: {
+        id: "Kick",
+        emoji: '<:kick:1211757211215208469>'
+    },
+    Mute: {
+        id: "Mute",
+        emoji: '<:mute:1211755876977872958>'
+    }
+}
 export class AutomodClass {
     private static instance: AutomodClass;
     public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface[]>> = new Collection();
@@ -342,26 +359,7 @@ export class AutomodClass {
                                         .setMinValues(1)
                                         .setMaxValues(1)
                                         .setPlaceholder("Choose action type")
-                                        .setOptions([
-                                            {
-                                                label: "Mute",
-                                                value: 'Mute',
-                                                emoji: "<:mute:1211755876977872958>"
-                                            },
-                                            {
-                                                label: "Ban",
-                                                value: 'Ban',
-                                                emoji: "<:ban:1211754347797422100>"
-                                            }, {
-                                                label: "Warn",
-                                                value: 'Warn',
-                                                emoji: "<:Warn:1211758195220160512>"
-                                            }, {
-                                                label: "Kick",
-                                                value: 'Kick',
-                                                emoji: "<:kick:1211757211215208469>"
-                                            },
-                                        ])
+                                        .setOptions(Object.values(AdvancedSettingCustomActions).map(({id, emoji}) => { return { label: id, value: id, emoji}}))
                                 ),
                             new ActionRowBuilder<ButtonBuilder>()
                                 .addComponents(
@@ -428,4 +426,3 @@ export class AutomodClass {
     }
 
 }
-
