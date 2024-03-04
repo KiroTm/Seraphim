@@ -14,19 +14,13 @@ Explore the diverse range of commands Seraphim offers:
 - **Marriage and other fun commands**: Engage your community with interactive features.
 - **Built over a custom handler**: Enjoy seamless command execution with NeoHandler integration.
 
-## Features 📈
-Discover the impressive capabilities of Seraphim:
-- **Command Logging**: Keep track of user interactions and command usage for better moderation.
-- **Customizable Prefix**: Set your preferred command prefix to suit your server's needs.
-- **Error Handling**: Handle errors gracefully to ensure uninterrupted bot operation.
-- **Web Dashboard**: Access a user-friendly web interface to manage bot settings and configurations.
-
 ## Upcoming Features 🚀
 Stay tuned for exciting updates and additions:
 - **Economy System**: Dive into a thriving virtual economy within your Discord server.
 - **2 player games**: Challenge your friends to exciting multiplayer adventures.
 - **Announcements**: Keep your community informed with customizable welcome messages, farewell messages, and comprehensive stats logging for roles, channels, and member activities.
 - **Voice Channel Activities**: Enjoy interactive experiences with voice channel games and activities.
+- **Command Logging**: Keep track of user interactions and command usage for better moderation.
 
 ## TO-DO 📝
 In the pipeline for Seraphim's development:
