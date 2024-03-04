@@ -79,8 +79,14 @@ export class AutomodClass {
         } else {
             const newRule: AutomodSetupInterface = {
                 type: type,
-                enabled: false,
-                config: []
+                enabled: true,
+                config: [],
+                advancedSettings: {
+                    Action: 'None',
+                    Channel: [],
+                    Role: [],
+                    Threshold: 2
+                }
             };
             existingGuildCollection.set(type, newRule);
             return newRule;
