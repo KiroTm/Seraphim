@@ -3,4 +3,5 @@ package.json
 package-lock.json
 .env
 .DS_Store
-
+.zed
+.vscode

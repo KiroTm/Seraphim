@@ -1,5 +1,5 @@
 import { Guild, GuildMember, Message, Role, TextChannel, MessageCreateOptions, EmbedBuilder, Collection } from "discord.js";
-import muteSchema from "../../models/mute-schema"; 
+import muteSchema from "../../models/mute-schema";
 import { client } from '../../index';
 import { ModlogType, Modlogs } from "./modlogs";
 const Modlog = Modlogs.getInstance()
