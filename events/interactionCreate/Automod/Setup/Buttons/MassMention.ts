@@ -30,7 +30,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
 
     case `${interaction.guildId}Automod_Setup_MassMention_Limit_Confirm`: {
       const [_, info] = interaction.message.embeds;
-      const limit = info.fields[0].value! as string
+      const limit = info.description as string
       await interaction.update({
         embeds: [
           new EmbedBuilder()
