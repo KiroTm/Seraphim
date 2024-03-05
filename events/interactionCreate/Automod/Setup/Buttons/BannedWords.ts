@@ -14,7 +14,7 @@ import {
   automodtype,
 } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance();
-export default async (instance: ConfigInstance, interaction: Interaction) => {
+export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isButton()) return;
 
   const customId = interaction.customId;

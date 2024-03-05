@@ -69,33 +69,21 @@ export class AutomodClass {
     Collection<string, AutomodSetupInterface>
   > = new Collection();
 
-  private constructor() {}
-
+  private constructor() { }
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
   }
 
-  private getOrCreateGuildCollection(
-    guildId: string,
-  ): Collection<string, AutomodSetupInterface> {
+  private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface> {
     const existingGuildCollection = this.AutomodCollection.get(guildId);
 
-    if (existingGuildCollection) {
-      return existingGuildCollection;
-    } else {
-      const newGuildCollection = new Collection<
-        string,
-        AutomodSetupInterface
-      >();
-      this.AutomodCollection.set(guildId, newGuildCollection);
-      return newGuildCollection;
-    }
+    if (existingGuildCollection) return existingGuildCollection;
+    const newGuildCollection = new Collection<string, AutomodSetupInterface>();
+    this.AutomodCollection.set(guildId, newGuildCollection);
+    return newGuildCollection;
   }
 
-  private getOrCreateRuleTypeCollection(
-    guildId: string,
-    type: automodtype,
-  ): AutomodSetupInterface {
+  private getOrCreateRuleTypeCollection(guildId: string, type: automodtype): AutomodSetupInterface {
     const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
     const existingRule = existingGuildCollection.get(type);
 
@@ -104,7 +92,7 @@ export class AutomodClass {
     } else {
       const newRule: AutomodSetupInterface = {
         type: type,
-        enabled: true,
+        enabled: false,
         config: [],
         advancedSettings: {
           Action: "None",
@@ -132,12 +120,12 @@ export class AutomodClass {
           if (existingConfigIndex !== -1) {
             type === automodtype.BannedWords
               ? existingRule.config[existingConfigIndex].words!.push(
-                  ...newConfig.words!,
-                )
+                ...newConfig.words!,
+              )
               : (existingRule.config[existingConfigIndex] = {
-                  ...existingRule.config[existingConfigIndex],
-                  ...newConfig,
-                });
+                ...existingRule.config[existingConfigIndex],
+                ...newConfig,
+              });
           } else {
             existingRule.config.push(newConfig);
           }
@@ -163,13 +151,19 @@ export class AutomodClass {
     this.AutomodCollection.set(guildId, guildCollection);
   }
 
-  public utils(
-    interaction:
-      | ButtonInteraction
-      | AnySelectMenuInteraction
-      | ModalSubmitInteraction
-      | ChatInputCommandInteraction,
-  ) {
+  public addAdvancedSettings(guildId: string, ruleType: automodtype, config: AdvancedSettingFields) {
+    const guildCollection = this.getOrCreateGuildCollection(guildId);
+    const existingRule = guildCollection.get(ruleType);
+
+    if (existingRule) {
+      existingRule.advancedSettings = config;
+      guildCollection.set(ruleType, existingRule);
+    }
+
+    this.AutomodCollection.set(guildId, guildCollection);
+  }
+
+  public utils(interaction: | ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
     return {
       constants: {
         Main: {
@@ -332,10 +326,10 @@ export class AutomodClass {
               new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
                   .setCustomId(
-                    `${interaction.guildId}Automod_Setup_MassMentions_Enable`,
+                    `${interaction.guildId}Automod_Setup_MassMentions_Limit_Setup`,
                   )
                   .setStyle(ButtonStyle.Primary)
-                  .setLabel("Enable Anti Mass Mention"),
+                  .setLabel("Setup Mentions Limit"),
               ),
 
               new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -454,8 +448,8 @@ export class AutomodClass {
                 .setTitle(
                   interaction.isButton() && interaction?.message?.embeds
                     ? interaction.message.embeds[0]?.title ??
-                        interaction.message.embeds[1]?.title ??
-                        null
+                    interaction.message.embeds[1]?.title ??
+                    null
                     : null,
                 )
                 .setAuthor({
@@ -495,8 +489,8 @@ export class AutomodClass {
                 .setTitle(
                   interaction.isButton() && interaction?.message?.embeds
                     ? interaction.message.embeds[0]?.title ??
-                        interaction.message.embeds[1]?.title ??
-                        null
+                    interaction.message.embeds[1]?.title ??
+                    null
                     : null,
                 )
                 .setAuthor({
@@ -541,8 +535,8 @@ export class AutomodClass {
                 .setTitle(
                   interaction.isButton() && interaction?.message?.embeds
                     ? interaction.message.embeds[0]?.title ??
-                        interaction.message.embeds[1]?.title ??
-                        null
+                    interaction.message.embeds[1]?.title ??
+                    null
                     : null,
                 )
                 .setAuthor({
@@ -578,21 +572,19 @@ export class AutomodClass {
             }
             return embeds;
           },
+          EvaluateNumber: (input: string) => {
+            const int = parseInt(input);
+            if (Number.isNaN(int) || int < 0) {
+              return int < 0 ? "INT_ZERO" : "INVALID_TYPE";
+            }
+            return int;
+          }
         },
         BannedWords: {
           EvaluateWords: (inputString: string): string[] => {
             return Array.from(new Set(inputString.split(",")))
               .map((word) => word.trim())
               .filter((word) => word !== "");
-          },
-        },
-        AdvancedSettings: {
-          EvaluateThreshold: (input: string) => {
-            const int = parseInt(input);
-            if (Number.isNaN(int) || int < 0) {
-              return int < 0 ? "INT_ZERO" : "INVALID_TYPE";
-            }
-            return int;
           },
         },
       },

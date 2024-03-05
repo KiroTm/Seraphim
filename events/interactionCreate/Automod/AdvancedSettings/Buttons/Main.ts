@@ -1,6 +1,6 @@
 import { Interaction, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, APIEmbedField } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AdvancedSettingFields, AutomodClass } from "../../../../../classes/moderation/automod";
+import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
 
 const automodClass = AutomodClass.getInstance();
 export default async (instance: ConfigInstance, interaction: Interaction) => {
@@ -73,8 +73,17 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Confirm`: {
-            const fields = interaction.message.embeds[1]?.fields ?? [];
-            
+          const [main, info] = interaction.message.embeds
+            const fields = info.fields ?? [];
+            const ruleType = main.title
+            if (!ruleType) return interaction.update(
+              {embeds: [
+                new EmbedBuilder()
+                  .setColor('Red')
+                  .setAuthor({ name: `${interaction.client.user?.username}`, iconURL: `${interaction.client.user?.displayAvatarURL()}` })
+                  .setDescription(`There was an error configuring this setting, please try again.`)
+              ]}
+            )
             await interaction.update({
                 embeds: [
                     new EmbedBuilder()
@@ -84,14 +93,14 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 ],
                 components: []
             });
-        
+
             const defaultSettings: AdvancedSettingFields = {
                 Channel: [],
                 Role: [],
                 Action: 'None',
                 Threshold: 2
             };
-        
+
             for (const key in defaultSettings) {
                 if (Object.prototype.hasOwnProperty.call(defaultSettings, key)) {
                     const field = fields.find((val) => val.name.toLowerCase() === key.toLowerCase());
@@ -99,12 +108,14 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                     defaultSettings[fieldKey] = (getValue(fieldKey, field)) as never;
                 }
             }
-        
+
             const settingsString = Object.entries(defaultSettings).map(([key, value]) => {
                 const formattedValue = Array.isArray(value) ? value.length > 0 ? value.map((val) => `<${key === 'Role' ? "@&" : "#"}${val}>`).join(", ") : "None" : value;
                 return `${key} – **${formattedValue}**`;
             });
-        
+
+            automodClass.addAdvancedSettings(interaction.guildId!, automodtype[ruleType as keyof typeof automodtype] , defaultSettings)
+
             await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
@@ -115,7 +126,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             });
         }
         break;
-        
+
     }
 };
 
@@ -137,7 +148,7 @@ function getID(value: string) {
 }
 
 function getValue(key: keyof AdvancedSettingFields, field: APIEmbedField | undefined) {
-    return field 
-    ? key === 'Channel' || key === 'Role' ? getID(field.value) : field.value 
+    return field
+    ? key === 'Channel' || key === 'Role' ? getID(field.value) : field.value
     : getDefault(key)
 }
