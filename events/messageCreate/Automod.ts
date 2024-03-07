@@ -1,10 +1,9 @@
 import { Message, Collection } from "discord.js";
 import { AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/automod";
 import { ResponseClass } from "../../classes/Utility/Response";
-
 const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
-
+const linkCooldownCollection: Collection<string, Collection<string, number>> = new Collection();
 export default async (_: any, message: Message) => {
   const { author, guildId, channelId, member } = message;
   const automodData = automodClass.AutomodCollection.get(guildId!);
@@ -14,31 +13,87 @@ export default async (_: any, message: Message) => {
     if (rules.advancedSettings && rules.advancedSettings.Channel.includes(channelId) || (member && rules.advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
     const content = filterContent(message.content) as string
     switch (rules.type) {
-      case "bannedwords": {
+      case automodtype.BannedWords: {
         if (!rules.config) return;
         const slursFound = checkForSlurs(content, rules);
-        if (slursFound) {
-          handleViolation(message, rules);
-        }
+        if (slursFound) handleViolation(message, rules)
         break;
       }
 
-      case "massmention": {
+      case automodtype.MassMention: {
         if (!rules.config) return;
         const mentionCount = content.match(/<@!?\d+>/g)?.length ?? 0;
-        if (mentionCount >= rules.config[0].Limit! ?? 3) {
+        if (mentionCount >= rules.config[0].Query! ?? 3) handleViolation(message, rules)
+        break;
+      }
+
+      case automodtype.ServerInvites: {
+        const inviteRegex = /\b(?:discord\.com\/invite|discord\.gg)\/[a-zA-Z0-9]+/g;
+        if (inviteRegex.test(content)) handleViolation(message, rules)
+        break;
+      }
+
+      case automodtype.PhishingLinks: {
+
+        break;
+      }
+
+      case automodtype.MassEmoji: {
+        if (!rules.config) return;
+        const emojiCount = content.split(/<a?:\w+:\d+>/).length - 1; // Count custom emojis
+        if (emojiCount >= (rules.config[0].Query ?? 5)) handleViolation(message, rules)
+        break;
+      }
+
+      case automodtype.LinkCooldown: {
+        if (!rules.config) return;
+        const cooldownLimit = rules.config[0].Query || 30000; // Default to 5 seconds if not provided
+
+        const guildCooldowns = linkCooldownCollection.get(guildId!) ?? new Collection<string, number>();
+        const userLastLinkTimestamp = guildCooldowns.get(author.id) ?? 0;
+        const currentTime = Date.now();
+
+        if (currentTime - userLastLinkTimestamp < cooldownLimit) {
           handleViolation(message, rules);
+        } else {
+          guildCooldowns.set(author.id, currentTime);
+          linkCooldownCollection.set(guildId!, guildCooldowns);
         }
         break;
       }
 
-      case "serverinvites": {
-        const inviteRegex = /\b(?:discord\.com\/invite|discord\.gg)\/[a-zA-Z0-9]+/g;
-        if (inviteRegex.test(content)) {
-          handleViolation(message, rules);
-        }
+
+      case automodtype.NewLines: {
+        if (/\n\s*\n\s*/.test(content)) handleViolation(message, rules)
         break;
       }
+
+      case automodtype.ChatFlood: {
+        if (/(\w+)\1{50,}/.test(content)) handleViolation(message, rules)
+        break;
+      }
+
+      case automodtype.FastMessage: {
+        // soon™️
+        break;
+      }
+
+      case automodtype.AllCaps: {
+        const contentWithoutSpaces = content.replace(/\s+/g, '');
+        const totalChars = contentWithoutSpaces.length;
+        const uppercaseChars = contentWithoutSpaces.replace(/[^A-Z]/g, '').length;
+
+        if (totalChars && uppercaseChars / totalChars >= 0.75) handleViolation(message, rules);
+        break;
+      }
+
+      case automodtype.TextLimit: {
+        if (!rules.config) return;
+        const maxCharacterCount = rules.config[0]?.Query ?? 0;
+        if (content.length > maxCharacterCount) handleViolation(message, rules);
+        break;
+      }
+
     }
   };
 }
@@ -47,11 +102,8 @@ function handleViolation(message: Message, rules: AutomodSetupInterface) {
   const violations = (violationsCollection.get(guildId!)?.get(author.id) ?? 0) + 1;
   const advanced = violations === rules.advancedSettings?.Threshold ?? false;
   Violation.add(guildId!, author.id);
-  if (advanced) {
-    Violation.reset(guildId!, author.id);
-  }
+  if (advanced) Violation.reset(guildId!, author.id)
   message.delete().catch(() => { });
-
   new ResponseClass().sendTemporaryMessage(message, {
     content: rules.customResponse ?? getResponse(rules.type, message),
     allowedMentions: { users: [message.author.id] }
@@ -74,14 +126,22 @@ const Violation = {
 
 function getResponse(ruleType: automodtype, message: Message) {
   const responses: Record<automodtype, string> = {
-    bannedwords: `${message.author} Your message has been removed for containing banned words.`,
-    massmention: `${message.author} Your message has been removed for containing more mentions than allowed per message.`,
-    phishinglinks: `${message.author} Your message has been removed for containing phishing links.`,
-    serverinvites: `${message.author} Your message has been removed for containing server invites.`
+    [automodtype.BannedWords]: `${message.author} Your message has been flagged for containing banned words.`,
+    [automodtype.ServerInvites]: `${message.author} Your message has been flagged for containing server invites.`,
+    [automodtype.PhishingLinks]: `${message.author} Your message has been flagged for containing phishing links.`,
+    [automodtype.MassMention]: `${message.author} Your message has been flagged for containing more mentions than allowed per message.`,
+    [automodtype.MassEmoji]: `${message.author} Your message has been flagged for containing excessive emojis.`,
+    [automodtype.LinkCooldown]: `${message.author} Please refrain from posting links too frequently.`,
+    [automodtype.NewLines]: `${message.author} Your message has been flagged for excessive use of new lines.`,
+    [automodtype.ChatFlood]: `${message.author} Your message has been flagged for flooding the chat.`,
+    [automodtype.FastMessage]: `${message.author} Your message has been flagged for being sent too quickly.`,
+    [automodtype.AllCaps]: `${message.author} Your message has been flagged for excessive use of capital letters.`,
+    [automodtype.TextLimit]: `${message.author} Your message has been flagged for containing excessive characters.`
   };
 
-  return responses[ruleType] || `${message.author} Your message has been removed for violating server rules.`;
+  return responses[ruleType] || `${message.author} Your message has been flagged for violating server rules.`;
 }
+
 
 function checkForSlurs(content: string, slursConfig: AutomodSetupInterface) {
   const args = content.split(/\s+/);
@@ -93,13 +153,6 @@ function checkForSlurs(content: string, slursConfig: AutomodSetupInterface) {
         return rule.words?.some(word => args.some((arg) => arg === word));
       case "include":
         return rule.words?.some(word => content.toLowerCase().includes(word.toLowerCase()));
-      case "wildcard":
-        return rule.words?.some(word => {
-          const escapedWord = word.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-          const wildcardPattern = escapedWord.replace(/\*/g, '[a-zA-Z0-9]*');
-          const regex = new RegExp(`(${wildcardPattern})`, 'i');
-          return regex.test(content);
-        });
 
       default:
         return false;

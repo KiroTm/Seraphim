@@ -8,7 +8,13 @@ export enum automodtype {
   ServerInvites = "serverinvites",
   PhishingLinks = "phishinglinks",
   MassMention = "massmention",
-
+  MassEmoji = "massemoji",
+  LinkCooldown = "linkcooldown",
+  NewLines = "newlines",
+  ChatFlood = "chatflood",
+  FastMessage = "fastmessage",
+  AllCaps = "allcaps",
+  TextLimit = "textlimit"
 }
 
 export interface AutomodSetupInterface {
@@ -20,9 +26,9 @@ export interface AutomodSetupInterface {
 }
 
 export interface RuleConfig {
-  Limit?: number; // MassMention specific
-  words?: string[]; // BannedWords specific
-  filterType?: string; // General
+  Query?: number;
+  words?: string[];
+  filterType?: string;
 }
 
 export interface AdvancedSettingFields {
@@ -53,19 +59,17 @@ export const AdvancedSettingCustomActions = {
 };
 export class AutomodClass {
   private static instance: AutomodClass;
-  public AutomodCollection: Collection<
-    string,
-    Collection<string, AutomodSetupInterface>
-  > = new Collection();
+
+  public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface>> = new Collection();
 
   private constructor() { }
+
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
   }
 
   private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface> {
     const existingGuildCollection = this.AutomodCollection.get(guildId);
-
     if (existingGuildCollection) return existingGuildCollection;
     const newGuildCollection = new Collection<string, AutomodSetupInterface>();
     this.AutomodCollection.set(guildId, newGuildCollection);
@@ -76,17 +80,10 @@ export class AutomodClass {
     const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
     const existingRule = existingGuildCollection.get(type);
 
-    if (existingRule) {
-      return existingRule;
-    } else {
-      const newRule: AutomodSetupInterface = {
-        type: type,
-        enabled: false,
-        config: []
-      };
-      existingGuildCollection.set(type, newRule);
-      return newRule;
-    }
+    if (existingRule) return existingRule;
+    const newRule: AutomodSetupInterface = { type: type, enabled: false, config: [] };
+    existingGuildCollection.set(type, newRule);
+    return newRule;
   }
 
   public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
@@ -96,11 +93,8 @@ export class AutomodClass {
     if (config && config.length > 0) {
       config.forEach((newConfig) => {
         if (existingRule.config) {
-          const existingConfigIndex = existingRule.config.findIndex(
-            (cfg) => cfg.filterType === newConfig.filterType,
-          );
-
-          if (existingConfigIndex !== -1) {
+          const existingConfigIndex = existingRule.config.findIndex((cfg) => cfg.filterType === newConfig.filterType)
+          existingConfigIndex !== -1 ?
             type === automodtype.BannedWords
               ? existingRule.config[existingConfigIndex].words!.push(
                 ...newConfig.words!,
@@ -108,10 +102,8 @@ export class AutomodClass {
               : (existingRule.config[existingConfigIndex] = {
                 ...existingRule.config[existingConfigIndex],
                 ...newConfig,
-              });
-          } else {
-            existingRule.config.push(newConfig);
-          }
+              })
+            : existingRule.config.push(newConfig);
         } else {
           existingRule.config = [newConfig];
         }
@@ -134,12 +126,10 @@ export class AutomodClass {
   public addAdvancedSettings(guildId: string, ruleType: automodtype, config: AdvancedSettingFields) {
     const guildCollection = this.getOrCreateGuildCollection(guildId);
     const existingRule = guildCollection.get(ruleType);
-
     if (existingRule) {
       existingRule.advancedSettings = config;
       guildCollection.set(ruleType, existingRule);
     }
-
     this.AutomodCollection.set(guildId, guildCollection);
   }
 
@@ -184,7 +174,7 @@ export class AutomodClass {
                 })
                 .setColor("Blue")
                 .setDescription(
-                  `**🚫 Banned Words System Setup!**\nElevate your server's content moderation with the Banned Words system, a robust feature of AutoMod by ${client.user?.username}. 🌟🔍\n\n**Quick Setup Guide:**\n\n1. **Define Banned Words:**\n   - Compile a list of words you want to restrict or filter within your server.\n\n2. **Enable Banned Words System:**\n   - Activate the Banned Words module to automatically detect and take action against prohibited language\n\nSet up the list of prohibited words for this server and choose the desired filtering method:\n\n- **Match**: Matches the entire word (case insensitive).\n- **Exact**: Matches the exact word (case sensitive).\n- **Include**: Filters out any message containing the specified word.\n- **Wildcard**: Allows for more flexible filtering using wildcards for partial matches.\n\nChoose the method that best aligns with your moderation preferences and server policies.`,
+                  `**🚫 Banned Words System Setup!**\nElevate your server's content moderation with the Banned Words system, a robust feature of AutoMod by ${client.user?.username}. 🌟🔍\n\n**Quick Setup Guide:**\n\n1. **Define Banned Words:**\n   - Compile a list of words you want to restrict or filter within your server.\n\n2. **Enable Banned Words System:**\n   - Activate the Banned Words module to automatically detect and take action against prohibited language\n\nSet up the list of prohibited words for this server and choose the desired filtering method:\n\n- **Match**: Matches the entire word (case insensitive).\n- **Exact**: Matches the exact word (case sensitive).\n- **Include**: Filters out any message containing the specified word.\n\nChoose the method that best aligns with your moderation preferences and server policies.`,
                 ),
             ],
             components: [
@@ -200,7 +190,6 @@ export class AutomodClass {
                     { label: "Match", value: "match" },
                     { label: "Exact", value: "exact" },
                     { label: "Includes", value: "includes" },
-                    { label: "Wildcard", value: "wildcard" },
                   ]),
               ),
 
@@ -220,7 +209,7 @@ export class AutomodClass {
                 .setTitle(
                   interaction.isButton() &&
                     interaction.message?.embeds[0]?.title &&
-                    ["match", "includes", "exact", "wildcard"].includes(
+                    ["match", "includes", "exact"].includes(
                       interaction.message.embeds[0].title,
                     )
                     ? interaction.message.embeds[0].title

@@ -33,7 +33,13 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
           interaction.update(automodClass.utils(interaction).constants.ServerLinks.Main)
         }
           break;
-
+        default: {
+          interaction.update({
+            embeds: [],
+            components: [],
+            content: "We're working on this!"
+          })
+        }
       }
     }
       break;
