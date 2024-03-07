@@ -98,6 +98,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 Channel: [],
                 Role: [],
                 Action: 'None',
+                Duration: 0,
                 Threshold: 2
             };
 
@@ -136,7 +137,8 @@ function getDefault(key: keyof AdvancedSettingFields): string | string[] | 'None
         Channel: [],
         Role: [],
         Action: 'None',
-        Threshold: 2
+        Threshold: 2,
+        Duration: 0
     };
 
     return defaultValues[key];

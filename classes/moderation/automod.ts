@@ -1,26 +1,13 @@
-import {
-  ActionRowBuilder,
-  AnySelectMenuInteraction,
-  ButtonBuilder,
-  ButtonInteraction,
-  ButtonStyle,
-  ChannelSelectMenuBuilder,
-  ChannelType,
-  ChatInputCommandInteraction,
-  Collection,
-  Embed,
-  EmbedBuilder,
-  ModalSubmitInteraction,
-  RoleSelectMenuBuilder,
-  SelectMenuComponentOptionData,
-  StringSelectMenuBuilder,
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder,
 } from "discord.js";
 import { client } from "../..";
+import ms from "ms";
 export enum automodtype {
   BannedWords = "bannedwords",
   ServerInvites = "serverinvites",
   PhishingLinks = "phishinglinks",
   MassMention = "massmention",
+
 }
 
 export interface AutomodSetupInterface {
@@ -42,6 +29,7 @@ export interface AdvancedSettingFields {
   Role: string[];
   Action: "Kick" | "Warn" | "Mute" | "Ban" | "None";
   Threshold: number;
+  Duration: number;
 }
 
 export const AdvancedSettingCustomActions = {
@@ -99,6 +87,7 @@ export class AutomodClass {
           Channel: [],
           Role: [],
           Threshold: 2,
+          Duration: 0
         },
       };
       existingGuildCollection.set(type, newRule);
@@ -352,7 +341,7 @@ export class AutomodClass {
                 })
                 .setColor("Blue")
                 .setDescription(
-                  `**🌐 Server Invites Module Setup!**\nEmpower your server security with the Server Invites module, a key feature of AutoMod by ${client.user?.username}. 🚀🔒\n\n**Quick Setup Guide:**\n\n1. **Customize Settings:**\n   - Tailor the module to your preferences, setting specific criteria for invite detection.\n\n2. **Immediate Moderation:**\n   - Enjoy swift moderation actions for any unwanted or unauthorized server invites.\n\n3. **Protect Community:**\n   - Safeguard your server community by preventing the spread of inappropriate or harmful content.\n\nActivate the Server Invites module now and fortify your server against unauthorized invite activities!`,
+                  `**🌐 Server Invites Module Setup!**\nEmpower your server security with the Server Invites module, a key feature of AutoMod by ${client.user?.username}. 🚀🔒\n\n**Quick Setup Guide:**\n\n1. **Customize Settings:**\n   - Tailor the module to your preferences\n\n2. **Immediate Moderation:**\n   - Enjoy swift moderation actions for any unwanted or unauthorized server invites.\n\n3. **Protect Community:**\n   - Safeguard your server community by preventing the spread of inappropriate or harmful content.\n\nActivate the Server Invites module now and fortify your server against unauthorized invite activities!`,
                 ),
             ],
             components: [
@@ -562,10 +551,12 @@ export class AutomodClass {
       },
       functions: {
         General: {
-          RemoveField: (main: Embed, info: Embed, query: string) => {
+          RemoveField: (main: Embed | undefined, info: Embed, query: string) => {
             const fields =
               info?.fields?.filter((val) => val.name !== query) ?? [];
-            const embeds = [new EmbedBuilder(main?.data)];
+            const embeds = [];
+
+            if (main) embeds.push(new EmbedBuilder(main.data))
 
             if (fields.length > 0) {
               embeds.push(new EmbedBuilder(info.data).setFields(fields));
@@ -574,10 +565,13 @@ export class AutomodClass {
           },
           EvaluateNumber: (input: string) => {
             const int = parseInt(input);
-            if (Number.isNaN(int) || int < 0) {
-              return int < 0 ? "INT_ZERO" : "INVALID_TYPE";
-            }
+            if (Number.isNaN(int) || int < 0) return int < 0 ? "INT_ZERO" : "INVALID_TYPE";
             return int;
+          },
+          EvaluateDuration: (input: string) => {
+            const milliseconds = ms(input);
+            if (isNaN(milliseconds) || (milliseconds < 600000 && milliseconds !== -1)) return (milliseconds < 600000 && milliseconds !== -1) ? "INT_LIMIT" : "INVALID_TYPE";
+            return ms(milliseconds);
           }
         },
         BannedWords: {

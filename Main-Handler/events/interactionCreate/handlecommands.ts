@@ -5,9 +5,9 @@ import { Command } from "../../../typings";
 import { Utils } from "../../../functions/Utils";
 const localCommands = getLocalCommands();
 export default async (instance: ConfigInstance, interaction: Interaction) => {
-    if (!interaction.isChatInputCommand()) return;      
-    const command = localCommands.get(interaction.commandName) as Command    
-    if (!command || Utils.devOnly(instance, command, interaction.user.id) == false || Utils.HandlehasPermissions(command, undefined, interaction) == false) return;
+    if (!interaction.isChatInputCommand()) return;
+    const command = localCommands.get(interaction.commandName) as Command
+    if (!command || Utils.devOnly(instance, command, interaction.user.id) == false || Utils.HandlehasPermissions(command, undefined, interaction, instance) == false) return;
     const client = instance._client as Client
     const member = interaction.member as GuildMember
     const user = interaction.user as User

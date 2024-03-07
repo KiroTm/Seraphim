@@ -13,7 +13,7 @@ export class Utils {
 
     /**
      * @param {string} path_1 - ```javascript
-     *      import path from 'path';    
+     *      import path from 'path';
      *      const path = path.join(__dirname, "<your path here>", "<folder name here>");
      *      const folders = getAllFiles(path, true) // returns an array of all the sub folders of the given parent folder as given in the "path" declaration.
      * ```
@@ -42,7 +42,7 @@ export class Utils {
         };
     };
 
-    /**     
+    /**
      * @returns {boolean}
      */
     static isValidHex(hex: string): boolean {
@@ -54,7 +54,7 @@ export class Utils {
     };
 
     /**
-     * @param {Array<any>} inp - Input an array.    
+     * @param {Array<any>} inp - Input an array.
      */
     static removeDuplicates(inp: string | Array<any>) {
         if (typeof inp == 'string') {
@@ -79,7 +79,7 @@ export class Utils {
     /**
      * @param {string} text - Input a string
      * @param {number} max_length - Max charaters your text should have
-     * @returns {string} ```javascript 
+     * @returns {string} ```javascript
      * const string = "12345"
      * Compress_String(string, 2) // returns "12.."
      * ```
@@ -248,13 +248,10 @@ export class Utils {
         return !command.ownersOnly || instance._botOwners?.includes(id);
     }
 
-    static HandlehasPermissions(
-        command: { permissions?: bigint[] },
-        message?: Message,
-        interaction?: ChatInputCommandInteraction
-    ): boolean {
+    static HandlehasPermissions(command: { permissions?: bigint[] }, message?: Message, interaction?: ChatInputCommandInteraction, instance?: ConfigInstance): boolean {
+      const member = (message ?? interaction)!.member as GuildMember
+        if (instance && instance._botOwners?.includes(member.user.id)) return true
         const permissions = command.permissions || [];
-        const member = (message ? message.member : interaction?.member) as GuildMember;
         const text = `You can't use this command, use the help command to know more..`
         if (permissions.length > 0 && permissions.some(permission => !member.permissions.has(permission))) {
             if (interaction) interaction.reply({ content: text, ephemeral: true })

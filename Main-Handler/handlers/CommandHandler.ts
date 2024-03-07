@@ -56,7 +56,7 @@ export class CommandHandler {
     public canRun(instance: ConfigInstance, command: any, message: Message, args: string[], prefix: string): boolean {
         const { devOnly, HandlehasPermissions, CheckArgs } = Utils
         if (devOnly(instance, command, message.author.id) === false) return false;
-        if (HandlehasPermissions(command, message, undefined) === false) return false;
+        if (HandlehasPermissions(command, message, undefined, instance) === false) return false;
         if (CheckArgs(command, args, prefix, message, undefined) === false) return false;
         return true;
     }

@@ -21,7 +21,6 @@ export interface Command {
     callback: Function
     aliases?: Array<string>
     type?: CommandType | CommandType.legacy,
-    preconditions?: {}
     permissions?: Array<bigInt>
     args?: { minArgs: number, maxArgs: number, CustomErrorMessage: string}
     cooldown?: { CustomCooldownMessage?: string, Duration: string, Type?: CooldownsType, SendWarningMessage?: boolean | true }

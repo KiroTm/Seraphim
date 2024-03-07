@@ -1,17 +1,7 @@
-import {
-  IntentsBitField,
-  Client,
-  Partials,
-  ActivityType,
-  Message,
-} from "discord.js";
-import {
-  ConfigHandler,
-  CacheLoaderOptions,
-} from "./Main-Handler/ConfigHandler";
+import { IntentsBitField, Client, Partials, ActivityType } from "discord.js";
+import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
 import path from "path";
-const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } =
-  Partials;
+const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
 require("dotenv/config");
 
 export const client = new Client({
