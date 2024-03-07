@@ -4,10 +4,12 @@ import { ResponseClass } from "../../classes/Utility/Response";
 const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
 const linkCooldownCollection: Collection<string, Collection<string, number>> = new Collection();
+const messageTimestamps: Collection<string, Collection<string, any>> = new Collection();
 export default async (_: any, message: Message) => {
   const { author, guildId, channelId, member } = message;
   const automodData = automodClass.AutomodCollection.get(guildId!);
   if (!automodData || author.bot) return;
+
   for (const rules of automodData.values()) {
     if (!rules.enabled) return;
     if (rules.advancedSettings && rules.advancedSettings.Channel.includes(channelId) || (member && rules.advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
@@ -23,7 +25,7 @@ export default async (_: any, message: Message) => {
       case automodtype.MassMention: {
         if (!rules.config) return;
         const mentionCount = content.match(/<@!?\d+>/g)?.length ?? 0;
-        if (mentionCount >= rules.config[0].Query! ?? 3) handleViolation(message, rules)
+        if (mentionCount >= rules.config[0]?.Query! ?? 3) handleViolation(message, rules)
         break;
       }
 
@@ -40,19 +42,21 @@ export default async (_: any, message: Message) => {
 
       case automodtype.MassEmoji: {
         if (!rules.config) return;
-        const emojiCount = content.split(/<a?:\w+:\d+>/).length - 1; // Count custom emojis
-        if (emojiCount >= (rules.config[0].Query ?? 5)) handleViolation(message, rules)
+        const emojiCount = message.content.split(/<:.*?:\d+>|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]/g).length - 1;
+        if (emojiCount >= (rules.config[0]?.Query ?? 3)) handleViolation(message, rules)
         break;
       }
 
       case automodtype.LinkCooldown: {
         if (!rules.config) return;
-        const cooldownLimit = rules.config[0].Query || 30000; // Default to 5 seconds if not provided
+        const cooldownLimit = rules.config[0]?.Query || 30000; // Default to 30 seconds if not provided
+        const currentTime = Date.now();
+        const linkRegex = /(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*/gi;
+        const containsLink = linkRegex.test(content);
 
+        if (!containsLink) return;
         const guildCooldowns = linkCooldownCollection.get(guildId!) ?? new Collection<string, number>();
         const userLastLinkTimestamp = guildCooldowns.get(author.id) ?? 0;
-        const currentTime = Date.now();
-
         if (currentTime - userLastLinkTimestamp < cooldownLimit) {
           handleViolation(message, rules);
         } else {
@@ -74,22 +78,40 @@ export default async (_: any, message: Message) => {
       }
 
       case automodtype.FastMessage: {
-        // soon™️
+        const { config } = rules;
+        if (!config) return;
+
+        const numMessagesAllowed = config[0]?.Query ?? 7;
+        const timeWindow = 5000;
+
+        if (!messageTimestamps.has(guildId!)) messageTimestamps.set(guildId!, new Collection());
+        const userTimestamps = messageTimestamps.get(guildId!)!;
+
+        const currentTime = Date.now();
+        const timestamps = userTimestamps.get(author.id) || [];
+
+        const recentTimestamps = timestamps.filter((timestamp: any) => currentTime - timestamp < timeWindow);
+
+        recentTimestamps.length >= numMessagesAllowed ? handleViolation(message, rules) : userTimestamps.set(author.id, [...recentTimestamps, currentTime]);
+
         break;
       }
+
+
 
       case automodtype.AllCaps: {
         const contentWithoutSpaces = content.replace(/\s+/g, '');
         const totalChars = contentWithoutSpaces.length;
+        if (totalChars <= 10) break;
         const uppercaseChars = contentWithoutSpaces.replace(/[^A-Z]/g, '').length;
-
-        if (totalChars && uppercaseChars / totalChars >= 0.75) handleViolation(message, rules);
+        const uppercasePercentage = uppercaseChars / totalChars;
+        if (uppercasePercentage >= 0.75) handleViolation(message, rules);
         break;
       }
 
       case automodtype.TextLimit: {
         if (!rules.config) return;
-        const maxCharacterCount = rules.config[0]?.Query ?? 0;
+        const maxCharacterCount = rules.config[0]?.Query ?? 4000;
         if (content.length > maxCharacterCount) handleViolation(message, rules);
         break;
       }
@@ -161,25 +183,27 @@ function checkForSlurs(content: string, slursConfig: AutomodSetupInterface) {
 }
 
 function filterContent(content: string) {
-  const reverseAlphabets = {};
+  const reverseAlphabets: Record<string, string> = {};
   for (const alphabet in alphabets) {
     const alternatives = alphabets[alphabet as keyof typeof alphabets];
     for (const alternative of alternatives) {
-      reverseAlphabets[alternative as keyof typeof reverseAlphabets] = alphabet as never;
+      reverseAlphabets[alternative] = alphabet;
     }
   }
 
   let converted = '';
-  for (const char of content) {
-    const alphabet = reverseAlphabets[char as keyof typeof reverseAlphabets];
-    if (alphabet) {
-      converted += alphabet;
-    } else {
-      converted += char; // If no matching alphabet, keep the original character
-    }
+  for (let i = 0; i < content.length; i++) {
+    const char = content[i];
+    const alphabet = reverseAlphabets[char];
+    alphabet ?
+      char === char.toUpperCase() ?
+        converted += alphabet.toUpperCase() :
+        converted += alphabet.toLowerCase() :
+      converted += char;
   }
   return converted;
 }
+
 
 const alphabets = {
   a: ['a', 'ā', 'á', 'ǎ', 'à', '@', 'æ', 'å', 'ą', 'α', 'Δ', 'A', 'Ā', 'Á', 'Ǎ', 'À', 'Æ', 'Å', 'Ą', 'Α', '4', '^', 'ª', 'Ꭺ', '𝔄', '₳', '🄰', '𝐚', '𝒂', '𝓪', '𝔞', '𝕒', '𝖆', '𝖺', '𝗮', '𝘢', '𝙖', '𝚊'],

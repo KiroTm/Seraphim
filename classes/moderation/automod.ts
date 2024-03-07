@@ -344,6 +344,238 @@ export class AutomodClass {
             ],
           },
         },
+        MassEmoji: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  `**🎉 MassEmoji Rule Setup!**\nEnhance your server's moderation with the MassEmoji rule, part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Customize Emoji Threshold:**\n   - Tailor the number of emojis that trigger the MassEmoji system.\n\n2. **Immediate Moderation:**\n   - Experience swift moderation for excessive emoji usage to maintain a balanced server environment.\n\n3. **Fine-Tune Security:**\n   - Adjust the MassEmoji settings to align with your server's moderation requirements.\n\nEnable MassEmoji now and enjoy a hassle-free moderation experience!`,
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_MassEmoji_Limit_Setup`,
+                  )
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Setup Emoji Limit"),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+        LinkCooldown: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  `**⏳ Link Cooldown Rule Setup!**\nEnhance your server's moderation with the Link Cooldown rule, part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Define Cooldown Time:**\n   - Set the cooldown time between consecutive links sent by users.\n\n2. **Immediate Moderation:**\n   - Experience swift moderation for users who exceed the defined link cooldown.\n\n3. **Fine-Tune Security:**\n   - Adjust the Link Cooldown settings to align with your server's moderation requirements.\n\nEnable Link Cooldown now and enjoy a hassle-free moderation experience!`,
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_LinkCooldown_Cooldown_Setup`,
+                  )
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Setup Cooldown Time"),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+        NewLines: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  "**🔄 New Lines Rule Setup**\n\nEnhance your server's content cleanliness with the New Lines rule, a part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Immediate Moderation:**\n - Experience swift moderation for users who excessively use new lines in messages.\n\n2. **Fine-Tune Security:**\n - Adjust the New Lines settings to align with your server's moderation requirements.\n\nEnable the New Lines rule now and maintain a neat and organized server environment!",
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Enable New Lines Rule")
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_NewLines_Enable`,
+                  ),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+
+        ChatFlood: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  "**💬 Chat Flood Rule Setup**\n\nEnhance your server's chat experience with the Chat Flood rule, a part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Immediate Moderation:**\n - Experience swift moderation for users who flood the chat with excessive messages.\n\n2. **Fine-Tune Security:**\n - Adjust the Chat Flood settings to align with your server's moderation requirements.\n\nEnable the Chat Flood rule now and maintain a balanced and organized chat environment!",
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Enable Chat Flood Rule")
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_ChatFlood_Enable`,
+                  ),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+        FastMessage: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  "**⚡ Fast Message Rule Setup**\n\nEnhance your server's chat experience with the Fast Message rule, a part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Immediate Moderation:**\n - Experience swift moderation for users who send messages too quickly.\n\n2. **Fine-Tune Security:**\n - Adjust the Fast Message settings to align with your server's moderation requirements.\n\nEnable the Fast Message rule now and maintain a balanced and organized chat environment! \n\n**Explanation:**\n\nThe Fast Message rule is implemented to manage situations where users send messages at an unusually fast pace. Such behavior can flood the chat and disrupt the flow of conversation, leading to a less enjoyable chat experience for all members. By enabling the Fast Message rule, the server can promptly detect instances of rapid message sending and take immediate moderation actions to address the issue effectively. Server administrators have the flexibility to adjust the rule settings to suit the moderation requirements of their server, ensuring a balanced and organized chat environment for all members. Enabling the Fast Message rule helps to maintain a pleasant and engaging chat atmosphere, promoting healthier and more constructive interactions among server members."
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_FastMessage_Limit_Setup`,
+                  )
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Setup FastMessage"),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+        AllCaps: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  "**🔠 All Caps Rule Setup**\n\nEnhance your server's communication etiquette with the All Caps rule, a part of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Immediate Moderation:**\n - Experience swift moderation for messages written in all capital letters.\n\n2. **Fine-Tune Security:**\n - Adjust the All Caps rule settings to align with your server's moderation requirements.\n\nEnable the All Caps rule now and promote a more respectful and readable chat environment! \n\n**Explanation:**\n\nThe All Caps rule is implemented to discourage the excessive use of capital letters in messages. Messages written in all caps can be perceived as shouting and may create a disruptive atmosphere in the chat. By enabling the All Caps rule, the server can promptly detect messages written in all caps and take immediate moderation actions to address the issue effectively. Server administrators have the flexibility to adjust the rule settings to suit the moderation requirements of their server, promoting a more respectful and readable chat environment for all members."
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Enable All Caps Rule")
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_AllCaps_Enable`,
+                  ),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
+        TextLimit: {
+          Main: {
+            embeds: [
+              new EmbedBuilder()
+                .setAuthor({
+                  name: `${client.user?.username}`,
+                  iconURL: `${client.user?.displayAvatarURL()}`,
+                })
+                .setColor("Blue")
+                .setDescription(
+                  "**📏 Text Limit Rule Setup**\n\nManage the length of messages with the Text Limit rule, a feature of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Define Message Length:**\n - Set the maximum number of characters allowed in a message.\n\n2. **Immediate Moderation:**\n - Experience swift moderation for messages exceeding the specified character limit.\n\n3. **Flexible Configuration:**\n - Adjust the Text Limit rule settings to suit your server's moderation requirements.\n\nSet up the Text Limit rule now and ensure concise and effective communication in your server! \n\n**Explanation:**\n\nThe Text Limit rule helps maintain message clarity and readability by restricting the length of messages. Messages exceeding the specified character limit can disrupt the flow of conversation and make it challenging for users to follow discussions. By implementing the Text Limit rule, the server can enforce message length standards and promote concise and effective communication among members."
+                ),
+            ],
+            components: [
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setStyle(ButtonStyle.Primary)
+                  .setLabel("Setup Characters Limit")
+                  .setCustomId(
+                    `${interaction.guildId}Automod_Setup_TextLimit_Limit_Setup`,
+                  ),
+              ),
+
+              new ActionRowBuilder<ButtonBuilder>().addComponents(
+                new ButtonBuilder()
+                  .setLabel("Back")
+                  .setEmoji("<:back:1159470407527694367>")
+                  .setStyle(ButtonStyle.Secondary)
+                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
+              ),
+            ],
+          },
+        },
         AdvancedSettings: {
           Main: {
             embeds: [
@@ -550,7 +782,7 @@ export class AutomodClass {
           },
           EvaluateDuration: (input: string) => {
             const milliseconds = ms(input);
-            if (isNaN(milliseconds) || (milliseconds < 600000 && milliseconds !== -1)) return (milliseconds < 600000 && milliseconds !== -1) ? "INT_LIMIT" : "INVALID_TYPE";
+            if (isNaN(milliseconds) && milliseconds !== -1) return (milliseconds < 600000 && milliseconds !== -1) ? "INT_LIMIT" : "INVALID_TYPE";
             return ms(milliseconds);
           }
         },

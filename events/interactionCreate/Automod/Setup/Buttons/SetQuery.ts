@@ -1,21 +1,24 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
+import ms from "ms";
 const automodClass = AutomodClass.getInstance();
 export default async (_: ConfigInstance, interaction: Interaction) => {
-  if (!interaction.isButton() || !interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_MassMention`)) return;
+  if (!interaction.isButton()) return;
+  const type: keyof typeof automodtype = interaction.customId.split("_")[2] as 'MassEmoji' | 'MassMention' | 'FastMessage' | 'LinkCooldown'
+  if (!type) return;
   switch (interaction.customId) {
-    case `${interaction.guildId}Automod_Setup_MassMentions_Limit_Setup`: {
+    case `${interaction.guildId}Automod_Setup_${type}_Limit_Setup`: {
       const modal = new ModalBuilder()
-        .setTitle("Limit")
-        .setCustomId(`${interaction.guildId}Automod_Setup_MassMention_Limit_Modal`)
+        .setTitle(type === 'LinkCooldown' ? "Duration" : "Limit")
+        .setCustomId(`${interaction.guildId}Automod_Setup_${type}_Limit_Modal`)
         .addComponents(
           new ActionRowBuilder<TextInputBuilder>().addComponents(
             new TextInputBuilder()
               .setCustomId(`${interaction.guildId}Modal_Limit`)
               .setStyle(TextInputStyle.Short)
               .setRequired(true)
-              .setMaxLength(1)
+              .setMaxLength(type === 'LinkCooldown' ? 10 : 1)
               .setLabel("Set Limit"),
           ),
         );
@@ -23,12 +26,13 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     }
       break;
 
-    case `${interaction.guildId}Automod_Setup_MassMention_Limit_Cancel`: {
-      interaction.update(automodClass.utils(interaction).constants.MassMention.Main)
+    case `${interaction.guildId}Automod_Setup_${type}_Limit_Cancel`: {
+      const constants = automodClass.utils(interaction).constants
+      interaction.update(constants[type]?.Main)
     }
       break;
 
-    case `${interaction.guildId}Automod_Setup_MassMention_Limit_Confirm`: {
+    case `${interaction.guildId}Automod_Setup_${type}_Limit_Confirm`: {
       const [_, info] = interaction.message.embeds;
       const limit = info.description as string
       await interaction.update({
@@ -39,7 +43,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
               iconURL: `${interaction.client.user.displayAvatarURL()}`,
             })
             .setColor("Blue")
-            .setDescription(`Successfully setup Anti Mass Mention. You can enable it anytime!`),
+            .setDescription(`Successfully setup ${type}. You can enable it anytime!`),
 
           new EmbedBuilder()
             .setColor("Blue")
@@ -54,24 +58,24 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
               .setLabel("Enable Anti Mass Mention")
               .setStyle(ButtonStyle.Primary)
               .setCustomId(
-                `${interaction.guildId}Automod_Setup_MassMention_Enable`,
+                `${interaction.guildId}Automod_Setup_${type}_Enable`,
               ),
 
             new ButtonBuilder()
               .setLabel("Maybe later")
               .setStyle(ButtonStyle.Secondary)
               .setCustomId(
-                `${interaction.guildId}Automod_Setup_MassMention_EnableNot`,
+                `${interaction.guildId}Automod_Setup_${type}_EnableNot`,
               ),
           ),
         ],
       });
       automodClass.addOrUpdateRuleType(interaction.guildId as string, {
-        type: automodtype.MassMention,
+        type: automodtype[type],
         enabled: false,
         config: [
           {
-            Limit: parseInt(limit)
+            Query: type === 'LinkCooldown' ? ms(limit) : parseInt(limit)
           },
         ],
       })

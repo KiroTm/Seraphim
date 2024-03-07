@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, Message } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AutomodClass, AutomodSetupInterface } from "../../../../../classes/moderation/automod";
+import ms from "ms";
 
 const automodClass = AutomodClass.getInstance();
 
@@ -14,7 +15,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     let [main, info] = interaction.message?.embeds as Embed[] | EmbedBuilder[];
     info = automodClass.utils(interaction).functions.General.RemoveField(undefined, info as Embed, "Duration")[0]
     const duration = automodClass.utils(interaction).functions.General.EvaluateDuration(modalField);
-    if (duration === 'INT_LIMIT' || duration === 'INVALID_TYPE') {
+    if (duration === 'INVALID_TYPE' || ms(duration) < 60000) {
       return interaction.reply({
         content: `${duration === 'INT_LIMIT' ? "Duration should be greater than 10 minutes" : "Duration must be a whole number"}`,
         ephemeral: true

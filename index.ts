@@ -58,7 +58,7 @@ client.on("ready", async (cli) => {
       CustomErrorMessage: "A little too quick there!",
       OwnersBypass: true,
       RatelimitIgnore: true,
-    },
+    }
   });
 
   process.on("uncaughtException", (error, origin) => {
@@ -71,7 +71,7 @@ client.on("ready", async (cli) => {
 
   process.on("unhandledRejection", (error, promise) => {
     console.log(
-      chalk.redBright(`Unhandled Rejection - ${error}\nPromise: ${promise}`),
+      chalk.redBright(`Unhandled Rejection - ${error}\nPromise: ${promise.catch((e) => console.log(e))}`),
     );
   });
 });

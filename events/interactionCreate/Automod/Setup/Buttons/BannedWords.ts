@@ -1,18 +1,6 @@
-import {
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  EmbedBuilder,
-  Interaction,
-  ModalBuilder,
-  TextInputBuilder,
-  TextInputStyle,
-} from "discord.js";
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import {
-  AutomodClass,
-  automodtype,
-} from "../../../../../classes/moderation/automod";
+import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
 const automodClass = AutomodClass.getInstance();
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isButton()) return;
