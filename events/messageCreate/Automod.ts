@@ -6,19 +6,16 @@ const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
 
 export default async (_: any, message: Message) => {
-  const { guild, author, guildId, channelId, member } = message;
-  const automodData = automodClass.AutomodCollection.get(guild?.id!);
+  const { author, guildId, channelId, member } = message;
+  const automodData = automodClass.AutomodCollection.get(guildId!);
   if (!automodData || author.bot) return;
   for (const rules of automodData.values()) {
-    if (!rules.config || !rules.advancedSettings || !rules.enabled) continue;
-    const { Channel, Role } = rules.advancedSettings;
-    if (Channel.includes(channelId) || (member && Role.some(role => member.roles.cache.has(role)))) return;
+    if (!rules.enabled) return;
+    if (rules.advancedSettings && rules.advancedSettings.Channel.includes(channelId) || (member && rules.advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
     const content = filterContent(message.content) as string
-    const time = Date.now()
-    console.log(content)
-    console.log(time - Date.now())
     switch (rules.type) {
       case "bannedwords": {
+        if (!rules.config) return;
         const slursFound = checkForSlurs(content, rules);
         if (slursFound) {
           handleViolation(message, rules);
@@ -27,6 +24,7 @@ export default async (_: any, message: Message) => {
       }
 
       case "massmention": {
+        if (!rules.config) return;
         const mentionCount = content.match(/<@!?\d+>/g)?.length ?? 0;
         if (mentionCount >= rules.config[0].Limit! ?? 3) {
           handleViolation(message, rules);
@@ -35,13 +33,15 @@ export default async (_: any, message: Message) => {
       }
 
       case "serverinvites": {
-
-      }
+        const inviteRegex = /\b(?:discord\.com\/invite|discord\.gg)\/[a-zA-Z0-9]+/g;
+        if (inviteRegex.test(content)) {
+          handleViolation(message, rules);
+        }
         break;
+      }
     }
-  }
-};
-
+  };
+}
 function handleViolation(message: Message, rules: AutomodSetupInterface) {
   const { guildId, author } = message;
   const violations = (violationsCollection.get(guildId!)?.get(author.id) ?? 0) + 1;
@@ -84,12 +84,13 @@ function getResponse(ruleType: automodtype, message: Message) {
 }
 
 function checkForSlurs(content: string, slursConfig: AutomodSetupInterface) {
+  const args = content.split(/\s+/);
   return slursConfig.config?.some(rule => {
     switch (rule.filterType) {
       case "match":
-        return rule.words?.some(word => content.toLowerCase() === word.toLowerCase());
+        return rule.words?.some(word => args.some((arg) => arg.toLowerCase() === word.toLowerCase()));
       case "exact":
-        return rule.words?.some(word => content === word);
+        return rule.words?.some(word => args.some((arg) => arg === word));
       case "include":
         return rule.words?.some(word => content.toLowerCase().includes(word.toLowerCase()));
       case "wildcard":

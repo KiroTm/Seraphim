@@ -1,4 +1,5 @@
-import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder,
+import {
+  ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder,
 } from "discord.js";
 import { client } from "../..";
 import ms from "ms";
@@ -81,14 +82,7 @@ export class AutomodClass {
       const newRule: AutomodSetupInterface = {
         type: type,
         enabled: false,
-        config: [],
-        advancedSettings: {
-          Action: "None",
-          Channel: [],
-          Role: [],
-          Threshold: 2,
-          Duration: 0
-        },
+        config: []
       };
       existingGuildCollection.set(type, newRule);
       return newRule;
@@ -129,14 +123,11 @@ export class AutomodClass {
     this.AutomodCollection.set(guildId, existingGuildCollection);
   }
   public enableRuleType(guildId: string, type: automodtype) {
-    const guildCollection = this.getOrCreateGuildCollection(guildId);
-    const existingRule = guildCollection.get(type);
-
-    if (existingRule) {
-      existingRule.enabled = true;
-      guildCollection.set(type, existingRule);
-    }
-
+    let guildCollection = this.getOrCreateGuildCollection(guildId);
+    let existingRule = guildCollection.get(type);
+    if (!existingRule) existingRule = this.getOrCreateRuleTypeCollection(guildId, type)
+    existingRule.enabled = true;
+    guildCollection.set(type, existingRule);
     this.AutomodCollection.set(guildId, guildCollection);
   }
 
