@@ -1,6 +1,11 @@
-import { Message, Collection } from "discord.js";
+import { Message, Collection, Role, EmbedBuilder } from "discord.js";
 import { AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/automod";
 import { ResponseClass } from "../../classes/Utility/Response";
+import ms from "ms";
+import { MuteClass } from "../../classes/moderation/mute";
+import { WarnClass } from "../../classes/moderation/warn";
+const muteClass = MuteClass.getInstance();
+const warnClass = WarnClass.getInstance();
 const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
 const linkCooldownCollection: Collection<string, Collection<string, number>> = new Collection();
@@ -49,7 +54,7 @@ export default async (_: any, message: Message) => {
 
       case automodtype.LinkCooldown: {
         if (!rules.config) return;
-        const cooldownLimit = rules.config[0]?.Query || 30000; // Default to 30 seconds if not provided
+        const cooldownLimit = rules.config[0]?.Query || 30000;
         const currentTime = Date.now();
         const linkRegex = /(?:https?|ftp):\/\/[^\s/$.?#].[^\s]*/gi;
         const containsLink = linkRegex.test(content);
@@ -122,9 +127,12 @@ export default async (_: any, message: Message) => {
 function handleViolation(message: Message, rules: AutomodSetupInterface) {
   const { guildId, author } = message;
   const violations = (violationsCollection.get(guildId!)?.get(author.id) ?? 0) + 1;
-  const advanced = violations === rules.advancedSettings?.Threshold ?? false;
+  const advanced = (violations === rules.advancedSettings?.Threshold)
   Violation.add(guildId!, author.id);
-  if (advanced) Violation.reset(guildId!, author.id)
+  if (advanced) {
+    Violation.reset(guildId!, author.id)
+    if (rules.advancedSettings?.Action && rules.advancedSettings.Action !== 'None') performCustomAction(rules, message)
+  }
   message.delete().catch(() => { });
   new ResponseClass().sendTemporaryMessage(message, {
     content: rules.customResponse ?? getResponse(rules.type, message),
@@ -204,6 +212,32 @@ function filterContent(content: string) {
   return converted;
 }
 
+function performCustomAction(rule: AutomodSetupInterface, message: Message) {
+  const { advancedSettings, type } = rule
+  if (!advancedSettings) return;
+  const Action = advancedSettings.Action
+  if (!Action) return;
+  let duration;
+  if (advancedSettings.Duration) duration = advancedSettings.Duration
+  switch (Action) {
+    case "Mute": {
+      const timeString = duration ? `for ${ms(duration, { long: true })}` : '';
+      const reason = `Automod : ${type}`
+      message.author.send({ embeds: [new EmbedBuilder().setColor("Blue").setDescription(`**You were muted in ${message.guild?.name} ${timeString} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => {})
+      const mutedRole = message.guild?.roles.cache.find((r) => r.name.toLowerCase() === "muted") as Role
+      const expirationTime = duration ? Date.now() + duration : null
+      muteClass.mute(message, message.member!, mutedRole, reason, expirationTime)
+    }
+    break;
+
+    case "Warn": {
+      const reason = `Automod: ${type}`
+      warnClass.warn(message.member!, message.guild?.members.me!, reason)
+      message.member?.send({embeds: [new EmbedBuilder().setColor('Blue').setDescription(`**You were warned in ${message.guild!.name} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp/1000))}:R>`)]}).catch((r) => {})
+    }
+    break;
+  }
+}
 
 const alphabets = {
   a: ['a', 'ā', 'á', 'ǎ', 'à', '@', 'æ', 'å', 'ą', 'α', 'Δ', 'A', 'Ā', 'Á', 'Ǎ', 'À', 'Æ', 'Å', 'Ą', 'Α', '4', '^', 'ª', 'Ꭺ', '𝔄', '₳', '🄰', '𝐚', '𝒂', '𝓪', '𝔞', '𝕒', '𝖆', '𝖺', '𝗮', '𝘢', '𝙖', '𝚊'],

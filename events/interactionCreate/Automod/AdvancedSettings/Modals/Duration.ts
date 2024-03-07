@@ -15,7 +15,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     let [main, info] = interaction.message?.embeds as Embed[] | EmbedBuilder[];
     info = automodClass.utils(interaction).functions.General.RemoveField(undefined, info as Embed, "Duration")[0]
     const duration = automodClass.utils(interaction).functions.General.EvaluateDuration(modalField);
-    if (duration === 'INVALID_TYPE' || ms(duration) < 60000) {
+    if (duration === 'INVALID_TYPE' || ms(duration) !== -1 && ms(duration) < 60000) {
       return interaction.reply({
         content: `${duration === 'INT_LIMIT' ? "Duration should be greater than 10 minutes" : "Duration must be a whole number"}`,
         ephemeral: true

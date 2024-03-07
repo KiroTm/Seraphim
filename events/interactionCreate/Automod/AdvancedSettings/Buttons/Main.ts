@@ -1,6 +1,7 @@
 import { Interaction, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, APIEmbedField } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
+import ms from "ms";
 
 const automodClass = AutomodClass.getInstance();
 export default async (instance: ConfigInstance, interaction: Interaction) => {
@@ -151,6 +152,6 @@ function getID(value: string) {
 
 function getValue(key: keyof AdvancedSettingFields, field: APIEmbedField | undefined) {
     return field
-    ? key === 'Channel' || key === 'Role' ? getID(field.value) : field.value
+    ? key === 'Channel' || key === 'Role' ? getID(field.value) : key === 'Duration' ? ms(field.value) : key === 'Threshold' ? parseInt(field.value) : field.value
     : getDefault(key)
 }

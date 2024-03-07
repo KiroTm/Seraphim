@@ -22,7 +22,7 @@ export class MuteClass {
         const roles = Array.from(member.roles.cache.keys())
         muteSchema.create({ GuildID: member.guild.id, UserID: member.user.id, Reason: reason, roles, expiresAt: time })
         const filteredroles = member.roles.cache.filter((r) => r.tags?.botId || r.tags?.availableForPurchase || r.tags?.subscriptionListingId || r.tags?.premiumSubscriberRole || r.tags?.guildConnections).keys()
-        member.roles.set([...filteredroles, mutedrole]).catch((error) => console.error("Error adding muted role:", error));
+        member.roles.set([...filteredroles, mutedrole]).catch((error) => {});
         Modlog.create(member, message.member as GuildMember, ModlogType.Mute, reason)
         return true;
     }
