@@ -166,7 +166,7 @@ export function utils(interaction: | ButtonInteraction | AnySelectMenuInteractio
               new ActionRowBuilder<ButtonBuilder>().addComponents(
                 new ButtonBuilder()
                   .setCustomId(
-                    `${interaction.guildId}Automod_Setup_MassMentions_Limit_Setup`,
+                    `${interaction.guildId}Automod_Setup_MassMention_Limit_Setup`,
                   )
                   .setStyle(ButtonStyle.Primary)
                   .setLabel("Setup Mentions Limit"),

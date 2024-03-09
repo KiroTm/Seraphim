@@ -20,7 +20,6 @@ export default async (_: any, message: Message) => {
   for (const rules of automodData.rules.values()) {
     if (!rules.enabled) return;
     let advancedSettings = automodData.defaultAdvancedSettings ?? automodData.defaultAdvancedSettings  ?? undefined
-    console.log(advancedSettings)
     if (advancedSettings && advancedSettings.Channel.includes(channelId) || (member && advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
     const content = filterContent(message.content) as string
     switch (rules.type) {
