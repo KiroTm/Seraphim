@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, Message, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
-const automodClass = AutomodClass.getInstance();
+import { automodtype } from "../../../../../classes/moderation/Automod/automod";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isModalSubmit()) return;
   const type: keyof typeof automodtype = interaction.customId.split("_")[2] as 'MassEmoji' | 'MassMention' | 'FastMessage' | 'LinkCooldown'
@@ -10,10 +10,10 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     case `${interaction.guildId}Automod_Setup_${type}_Limit_Modal`: {
       const modalField = interaction.fields.getField(`${interaction.guildId}Modal_Limit`).value as string
       let embeds = interaction.message?.embeds as Embed[];
-      const query = automodClass.utils(interaction).functions.General[type === 'LinkCooldown' ? 'EvaluateDuration' : 'EvaluateNumber'](modalField);
-      if (type === 'LinkCooldown' ? (query === 'INT_LIMIT' || query === 'INVALID_TYPE') : (typeof query !== 'number' || query <= 3)) {
+      const query = utils(interaction).functions.General[type === 'LinkCooldown' ? 'EvaluateDuration' : 'EvaluateNumber'](modalField);
+      if (type === 'LinkCooldown' ? (query === 'INT_LIMIT' || query === 'INVALID_TYPE') : (typeof query !== 'number' || query <= 1)) {
         return interaction.reply({
-          content: `${type === 'LinkCooldown' ? query === 'INT_LIMIT' ? "Cooldown should be greater than 30 seconds" : "Cooldown must be a whole number" : query === 'INT_ZERO' ? "Limit cannot be negative" : "Limit must be a whole number greater than 3"}`,
+          content: `${type === 'LinkCooldown' ? query === 'INT_LIMIT' ? "Cooldown should be greater than 30 seconds" : "Cooldown must be a whole number" : query === 'INT_ZERO' ? "Limit cannot be negative" : "Limit must be a whole number greater than 1"}`,
           ephemeral: true
         });
       }

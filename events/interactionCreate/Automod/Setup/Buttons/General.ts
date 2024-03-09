@@ -1,9 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import {
-  AutomodClass,
-  automodtype,
-} from "../../../../../classes/moderation/automod";
+import { AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 const automodClass = AutomodClass.getInstance();
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isButton()) return;
@@ -36,6 +34,6 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
       ],
     });
   } else if (interaction.customId === `${interaction.guildId}Automod_Setup_Main`) {
-    interaction.update(automodClass.utils(interaction).constants.Main);
+    interaction.update(utils(interaction).constants.Main);
   };
 };

@@ -1,6 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
+import { AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 const automodClass = AutomodClass.getInstance();
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isButton()) return;
@@ -14,7 +15,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     case `${interaction.guildId}Automod_Setup_BannedWords_Main`:
       {
         await interaction.update(
-          automodClass.utils(interaction).constants.BannedWords.Main,
+          utils(interaction).constants.BannedWords.Main,
         );
       }
       break;
@@ -46,9 +47,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
         const [embed1, embed2] = interaction.message.embeds;
         const title = embed1.title as string;
         const fields = embed2.description as string;
-        const word = automodClass
-          .utils(interaction)
-          .functions.BannedWords.EvaluateWords(fields);
+        const word = utils(interaction).functions.BannedWords.EvaluateWords(fields);
         await interaction.update({
           embeds: [
             new EmbedBuilder()
@@ -102,7 +101,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     case `${interaction.guildId}Automod_Setup_BannedWords_AddWord_Cancel`:
       {
         await interaction.update(
-          automodClass.utils(interaction).constants.BannedWords.AddWord,
+          utils(interaction).constants.BannedWords.AddWord,
         );
       }
       break;

@@ -1,10 +1,12 @@
 import { Message, Collection, Role, EmbedBuilder } from "discord.js";
-import { AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/automod";
+import { AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/Automod/automod";
 import { ResponseClass } from "../../classes/Utility/Response";
-import ms from "ms";
 import { MuteClass } from "../../classes/moderation/mute";
 import { WarnClass } from "../../classes/moderation/warn";
+import { ModlogType, Modlogs } from "../../classes/moderation/modlogs";
+import ms from "ms";
 const muteClass = MuteClass.getInstance();
+const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();
 const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
@@ -15,7 +17,7 @@ export default async (_: any, message: Message) => {
   const automodData = automodClass.AutomodCollection.get(guildId!);
   if (!automodData || author.bot) return;
 
-  for (const rules of automodData.values()) {
+  for (const rules of automodData.rules.values()) {
     if (!rules.enabled) return;
     if (rules.advancedSettings && rules.advancedSettings.Channel.includes(channelId) || (member && rules.advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
     const content = filterContent(message.content) as string
@@ -113,14 +115,6 @@ export default async (_: any, message: Message) => {
         if (uppercasePercentage >= 0.75) handleViolation(message, rules);
         break;
       }
-
-      case automodtype.TextLimit: {
-        if (!rules.config) return;
-        const maxCharacterCount = rules.config[0]?.Query ?? 4000;
-        if (content.length > maxCharacterCount) handleViolation(message, rules);
-        break;
-      }
-
     }
   };
 }
@@ -131,7 +125,7 @@ function handleViolation(message: Message, rules: AutomodSetupInterface) {
   Violation.add(guildId!, author.id);
   if (advanced) {
     Violation.reset(guildId!, author.id)
-    if (rules.advancedSettings?.Action && rules.advancedSettings.Action !== 'None') performCustomAction(rules, message)
+    if (rules.advancedSettings?.Action) performCustomAction(rules, message)
   }
   message.delete().catch(() => { });
   new ResponseClass().sendTemporaryMessage(message, {
@@ -166,7 +160,6 @@ function getResponse(ruleType: automodtype, message: Message) {
     [automodtype.ChatFlood]: `${message.author} Your message has been flagged for flooding the chat.`,
     [automodtype.FastMessage]: `${message.author} Your message has been flagged for being sent too quickly.`,
     [automodtype.AllCaps]: `${message.author} Your message has been flagged for excessive use of capital letters.`,
-    [automodtype.TextLimit]: `${message.author} Your message has been flagged for containing excessive characters.`
   };
 
   return responses[ruleType] || `${message.author} Your message has been flagged for violating server rules.`;
@@ -223,19 +216,34 @@ function performCustomAction(rule: AutomodSetupInterface, message: Message) {
     case "Mute": {
       const timeString = duration ? `for ${ms(duration, { long: true })}` : '';
       const reason = `Automod : ${type}`
-      message.author.send({ embeds: [new EmbedBuilder().setColor("Blue").setDescription(`**You were muted in ${message.guild?.name} ${timeString} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => {})
+      message.author.send({ embeds: [new EmbedBuilder().setColor("Blue").setDescription(`**You were muted in ${message.guild?.name} ${timeString} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => { })
       const mutedRole = message.guild?.roles.cache.find((r) => r.name.toLowerCase() === "muted") as Role
       const expirationTime = duration ? Date.now() + duration : null
       muteClass.mute(message, message.member!, mutedRole, reason, expirationTime)
     }
-    break;
+      break;
 
     case "Warn": {
       const reason = `Automod: ${type}`
       warnClass.warn(message.member!, message.guild?.members.me!, reason)
-      message.member?.send({embeds: [new EmbedBuilder().setColor('Blue').setDescription(`**You were warned in ${message.guild!.name} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp/1000))}:R>`)]}).catch((r) => {})
+      message.member?.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription(`**You were warned in ${message.guild!.name} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => { })
     }
-    break;
+      break;
+
+    case "Kick": {
+      const reason = `Automod: ${type}`
+      if (!message.member?.kickable) return;
+      message.member?.send({ embeds: [new EmbedBuilder().setColor('Blue').setDescription(`**You were kicked from ${message.guild!.name} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => { }).then(() => {
+        message.member?.kick(reason).catch(() => {})
+      })
+      modlogClass.create(message.member!, message.guild?.members.me!, ModlogType.Kick, reason)
+    }
+      break;
+
+    case "Ban": {
+
+    }
+      break;
   }
 }
 

@@ -1,139 +1,9 @@
-import {
-  ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder,
-} from "discord.js";
-import { client } from "../..";
+import { ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Embed, EmbedBuilder, ModalSubmitInteraction, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder } from "discord.js";
 import ms from "ms";
-export enum automodtype {
-  BannedWords = "bannedwords",
-  ServerInvites = "serverinvites",
-  PhishingLinks = "phishinglinks",
-  MassMention = "massmention",
-  MassEmoji = "massemoji",
-  LinkCooldown = "linkcooldown",
-  NewLines = "newlines",
-  ChatFlood = "chatflood",
-  FastMessage = "fastmessage",
-  AllCaps = "allcaps",
-  TextLimit = "textlimit"
-}
+import { client } from "../../..";
+import { automodtype, AdvancedSettingCustomActions } from "./automod";
 
-export interface AutomodSetupInterface {
-  type: automodtype;
-  enabled?: boolean;
-  customResponse?: string;
-  config?: RuleConfig[];
-  advancedSettings?: AdvancedSettingFields;
-}
-
-export interface RuleConfig {
-  Query?: number;
-  words?: string[];
-  filterType?: string;
-}
-
-export interface AdvancedSettingFields {
-  Channel: string[];
-  Role: string[];
-  Action: "Kick" | "Warn" | "Mute" | "Ban" | "None";
-  Threshold: number;
-  Duration: number;
-}
-
-export const AdvancedSettingCustomActions = {
-  Warn: {
-    id: "Warn",
-    emoji: "<:Warn:1211758195220160512>",
-  },
-  Ban: {
-    id: "Ban",
-    emoji: "<:ban:1211754347797422100>",
-  },
-  Kick: {
-    id: "Kick",
-    emoji: "<:kick:1211757211215208469>",
-  },
-  Mute: {
-    id: "Mute",
-    emoji: "<:mute:1211755876977872958>",
-  },
-};
-export class AutomodClass {
-  private static instance: AutomodClass;
-
-  public AutomodCollection: Collection<string, Collection<string, AutomodSetupInterface>> = new Collection();
-
-  private constructor() { }
-
-  public static getInstance(): AutomodClass {
-    return this.instance || (this.instance = new AutomodClass());
-  }
-
-  private getOrCreateGuildCollection(guildId: string): Collection<string, AutomodSetupInterface> {
-    const existingGuildCollection = this.AutomodCollection.get(guildId);
-    if (existingGuildCollection) return existingGuildCollection;
-    const newGuildCollection = new Collection<string, AutomodSetupInterface>();
-    this.AutomodCollection.set(guildId, newGuildCollection);
-    return newGuildCollection;
-  }
-
-  private getOrCreateRuleTypeCollection(guildId: string, type: automodtype): AutomodSetupInterface {
-    const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
-    const existingRule = existingGuildCollection.get(type);
-
-    if (existingRule) return existingRule;
-    const newRule: AutomodSetupInterface = { type: type, enabled: false, config: [] };
-    existingGuildCollection.set(type, newRule);
-    return newRule;
-  }
-
-  public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
-    const { type, config } = data;
-    const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
-
-    if (config && config.length > 0) {
-      config.forEach((newConfig) => {
-        if (existingRule.config) {
-          const existingConfigIndex = existingRule.config.findIndex((cfg) => cfg.filterType === newConfig.filterType)
-          existingConfigIndex !== -1 ?
-            type === automodtype.BannedWords
-              ? existingRule.config[existingConfigIndex].words!.push(
-                ...newConfig.words!,
-              )
-              : (existingRule.config[existingConfigIndex] = {
-                ...existingRule.config[existingConfigIndex],
-                ...newConfig,
-              })
-            : existingRule.config.push(newConfig);
-        } else {
-          existingRule.config = [newConfig];
-        }
-      });
-    }
-
-    const existingGuildCollection = this.getOrCreateGuildCollection(guildId);
-    existingGuildCollection.set(type, existingRule);
-    this.AutomodCollection.set(guildId, existingGuildCollection);
-  }
-  public enableRuleType(guildId: string, type: automodtype) {
-    let guildCollection = this.getOrCreateGuildCollection(guildId);
-    let existingRule = guildCollection.get(type);
-    if (!existingRule) existingRule = this.getOrCreateRuleTypeCollection(guildId, type)
-    existingRule.enabled = true;
-    guildCollection.set(type, existingRule);
-    this.AutomodCollection.set(guildId, guildCollection);
-  }
-
-  public addAdvancedSettings(guildId: string, ruleType: automodtype, config: AdvancedSettingFields) {
-    const guildCollection = this.getOrCreateGuildCollection(guildId);
-    const existingRule = guildCollection.get(ruleType);
-    if (existingRule) {
-      existingRule.advancedSettings = config;
-      guildCollection.set(ruleType, existingRule);
-    }
-    this.AutomodCollection.set(guildId, guildCollection);
-  }
-
-  public utils(interaction: | ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
+export function utils(interaction: | ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {
     return {
       constants: {
         Main: {
@@ -543,39 +413,6 @@ export class AutomodClass {
             ],
           },
         },
-        TextLimit: {
-          Main: {
-            embeds: [
-              new EmbedBuilder()
-                .setAuthor({
-                  name: `${client.user?.username}`,
-                  iconURL: `${client.user?.displayAvatarURL()}`,
-                })
-                .setColor("Blue")
-                .setDescription(
-                  "**📏 Text Limit Rule Setup**\n\nManage the length of messages with the Text Limit rule, a feature of AutoMod by ${client.user?.username}. 🌟🤖\n\n**Quick Setup Guide:**\n\n1. **Define Message Length:**\n - Set the maximum number of characters allowed in a message.\n\n2. **Immediate Moderation:**\n - Experience swift moderation for messages exceeding the specified character limit.\n\n3. **Flexible Configuration:**\n - Adjust the Text Limit rule settings to suit your server's moderation requirements.\n\nSet up the Text Limit rule now and ensure concise and effective communication in your server! \n\n**Explanation:**\n\nThe Text Limit rule helps maintain message clarity and readability by restricting the length of messages. Messages exceeding the specified character limit can disrupt the flow of conversation and make it challenging for users to follow discussions. By implementing the Text Limit rule, the server can enforce message length standards and promote concise and effective communication among members."
-                ),
-            ],
-            components: [
-              new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder()
-                  .setStyle(ButtonStyle.Primary)
-                  .setLabel("Setup Characters Limit")
-                  .setCustomId(
-                    `${interaction.guildId}Automod_Setup_TextLimit_Limit_Setup`,
-                  ),
-              ),
-
-              new ActionRowBuilder<ButtonBuilder>().addComponents(
-                new ButtonBuilder()
-                  .setLabel("Back")
-                  .setEmoji("<:back:1159470407527694367>")
-                  .setStyle(ButtonStyle.Secondary)
-                  .setCustomId(`${interaction.guildId}Automod_Setup_Main`),
-              ),
-            ],
-          },
-        },
         AdvancedSettings: {
           Main: {
             embeds: [
@@ -796,4 +633,3 @@ export class AutomodClass {
       },
     };
   }
-}

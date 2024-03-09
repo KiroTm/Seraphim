@@ -1,6 +1,7 @@
 import { ActionRowBuilder, Embed, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass } from "../../../../../classes/moderation/automod";
+import { AutomodClass } from "../../../../../classes/moderation/Automod/automod";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 
 const automodClass = AutomodClass.getInstance();
 
@@ -9,7 +10,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
   const customId = interaction.customId;
   if (customId === `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Confirm` || customId === `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction`) {
-    const { embeds, components } = automodClass.utils(interaction).constants.AdvancedSettings.CustomAction;
+    const { embeds, components } = utils(interaction).constants.AdvancedSettings.CustomAction;
     const [_, info] = interaction.message.embeds as Embed[];
 
     if (info) embeds.push(new EmbedBuilder(info.data));
@@ -34,7 +35,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         );
       return interaction.showModal(modal);
     }
-    const { embeds, components } = automodClass.utils(interaction).constants.AdvancedSettings.Threshold
+    const { embeds, components } = utils(interaction).constants.AdvancedSettings.Threshold
     if (interaction.message.embeds && interaction.message.embeds[1]) embeds.push(new EmbedBuilder(interaction.message.embeds[1].data))
     interaction.update({ embeds, components })
   }

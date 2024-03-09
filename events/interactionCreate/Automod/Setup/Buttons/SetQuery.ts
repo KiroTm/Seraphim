@@ -1,7 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
+import { AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
 import ms from "ms";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 const automodClass = AutomodClass.getInstance();
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isButton()) return;
@@ -27,7 +28,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
       break;
 
     case `${interaction.guildId}Automod_Setup_${type}_Limit_Cancel`: {
-      const constants = automodClass.utils(interaction).constants
+      const constants = utils(interaction).constants
       interaction.update(constants[type]?.Main)
     }
       break;

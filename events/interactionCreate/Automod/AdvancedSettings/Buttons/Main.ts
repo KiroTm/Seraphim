@@ -1,7 +1,8 @@
 import { Interaction, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, APIEmbedField } from "discord.js";
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
-import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../classes/moderation/automod";
+import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
 import ms from "ms";
+import { utils } from "../../../../../classes/moderation/Automod/utils";
 
 const automodClass = AutomodClass.getInstance();
 export default async (instance: ConfigInstance, interaction: Interaction) => {
@@ -9,7 +10,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
     switch (interaction.customId) {
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Confirm`: {
-            const object = automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles;
+            const object = utils(interaction).constants.AdvancedSettings.IgnoredRoles;
             const embeds = [...object.embeds];
             if (interaction?.message?.embeds[1]?.title === "Info:") embeds.push(new EmbedBuilder(interaction.message.embeds[1].data));
             interaction.update({ embeds, components: object.components });
@@ -17,32 +18,32 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting`:
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.Main);
+            interaction.update(utils(interaction).constants.AdvancedSettings.Main);
             break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels`:
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels);
+            interaction.update(utils(interaction).constants.AdvancedSettings.IgnoredChannels);
             break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredChannels_Cancel`:
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredChannels);
+            interaction.update(utils(interaction).constants.AdvancedSettings.IgnoredChannels);
             break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles_Cancel`: {
             const [main, info] = interaction.message.embeds;
-            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Role");
-            interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
+            const embeds = utils(interaction).functions.General.RemoveField(main, info, "Role");
+            interaction.update({ embeds, components: utils(interaction).constants.AdvancedSettings.IgnoredRoles.components });
         }
         break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_IgnoredRoles`:
-            interaction.update(automodClass.utils(interaction).constants.AdvancedSettings.IgnoredRoles);
+            interaction.update(utils(interaction).constants.AdvancedSettings.IgnoredRoles);
             break;
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_Cancel`: {
             const [main, info] = interaction.message.embeds;
-            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Action");
-            interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.CustomAction.components });
+            const embeds = utils(interaction).functions.General.RemoveField(main, info, "Action");
+            interaction.update({ embeds, components: utils(interaction).constants.AdvancedSettings.CustomAction.components });
         }
         break;
 
@@ -68,8 +69,8 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
 
         case `${interaction.guildId}Automod_Setup_AdvancedSetting_Threshold_Cancel`: {
             const [main, info] = interaction.message.embeds;
-            const embeds = automodClass.utils(interaction).functions.General.RemoveField(main, info, "Threshold");
-            interaction.update({ embeds, components: automodClass.utils(interaction).constants.AdvancedSettings.Threshold.components });
+            const embeds = utils(interaction).functions.General.RemoveField(main, info, "Threshold");
+            interaction.update({ embeds, components: utils(interaction).constants.AdvancedSettings.Threshold.components });
         }
         break;
 
@@ -98,7 +99,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
             const defaultSettings: AdvancedSettingFields = {
                 Channel: [],
                 Role: [],
-                Action: 'None',
+                Action: 'Delete',
                 Duration: 0,
                 Threshold: 2
             };
@@ -116,7 +117,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 return `${key} – **${formattedValue}**`;
             });
 
-            automodClass.addAdvancedSettings(interaction.guildId!, automodtype[ruleType as keyof typeof automodtype] , defaultSettings)
+            automodClass.addAdvancedSettings(interaction.guildId!, defaultSettings, automodtype[ruleType as keyof typeof automodtype])
 
             await interaction.editReply({
                 embeds: [
