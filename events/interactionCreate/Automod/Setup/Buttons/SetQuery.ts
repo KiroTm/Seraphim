@@ -9,7 +9,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
   const type: keyof typeof automodtype = interaction.customId.split("_")[2] as 'MassEmoji' | 'MassMention' | 'FastMessage' | 'LinkCooldown'
   if (!type) return;
   switch (interaction.customId) {
-    case `${interaction.guildId}Automod_Setup_${type}_Limit_Setup`: {
+    case `${interaction.guildId}Automod_Setup_${type}_${type === 'LinkCooldown' ? "Cooldown" : "Limit"}_Setup`: {
       const modal = new ModalBuilder()
         .setTitle(type === 'LinkCooldown' ? "Duration" : "Limit")
         .setCustomId(`${interaction.guildId}Automod_Setup_${type}_Limit_Modal`)
