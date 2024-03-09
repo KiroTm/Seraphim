@@ -1,5 +1,5 @@
 import { Message, Collection, Role, EmbedBuilder } from "discord.js";
-import { AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/Automod/automod";
+import { AdvancedSettingFields, AutomodClass, AutomodSetupInterface, automodtype } from "../../classes/moderation/Automod/automod";
 import { ResponseClass } from "../../classes/Utility/Response";
 import { MuteClass } from "../../classes/moderation/mute";
 import { WarnClass } from "../../classes/moderation/warn";
@@ -19,7 +19,9 @@ export default async (_: any, message: Message) => {
 
   for (const rules of automodData.rules.values()) {
     if (!rules.enabled) return;
-    if (rules.advancedSettings && rules.advancedSettings.Channel.includes(channelId) || (member && rules.advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
+    let advancedSettings = automodData.defaultAdvancedSettings ?? automodData.defaultAdvancedSettings  ?? undefined
+    console.log(advancedSettings)
+    if (advancedSettings && advancedSettings.Channel.includes(channelId) || (member && advancedSettings?.Role.some(role => member.roles.cache.has(role)))) return;
     const content = filterContent(message.content) as string
     switch (rules.type) {
       case automodtype.BannedWords: {
@@ -32,13 +34,13 @@ export default async (_: any, message: Message) => {
       case automodtype.MassMention: {
         if (!rules.config) return;
         const mentionCount = content.match(/<@!?\d+>/g)?.length ?? 0;
-        if (mentionCount >= rules.config[0]?.Query! ?? 3) handleViolation(message, rules)
+        if (mentionCount >= rules.config[0]?.Query! ?? 3) handleViolation(message, rules, advancedSettings)
         break;
       }
 
       case automodtype.ServerInvites: {
         const inviteRegex = /\b(?:discord\.com\/invite|discord\.gg)\/[a-zA-Z0-9]+/g;
-        if (inviteRegex.test(content)) handleViolation(message, rules)
+        if (inviteRegex.test(content)) handleViolation(message, rules, advancedSettings)
         break;
       }
 
@@ -50,7 +52,7 @@ export default async (_: any, message: Message) => {
       case automodtype.MassEmoji: {
         if (!rules.config) return;
         const emojiCount = message.content.split(/<:.*?:\d+>|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\u2600-\u27BF]/g).length - 1;
-        if (emojiCount >= (rules.config[0]?.Query ?? 3)) handleViolation(message, rules)
+        if (emojiCount >= (rules.config[0]?.Query ?? 3)) handleViolation(message, rules, advancedSettings)
         break;
       }
 
@@ -65,7 +67,7 @@ export default async (_: any, message: Message) => {
         const guildCooldowns = linkCooldownCollection.get(guildId!) ?? new Collection<string, number>();
         const userLastLinkTimestamp = guildCooldowns.get(author.id) ?? 0;
         if (currentTime - userLastLinkTimestamp < cooldownLimit) {
-          handleViolation(message, rules);
+          handleViolation(message, rules, advancedSettings);
         } else {
           guildCooldowns.set(author.id, currentTime);
           linkCooldownCollection.set(guildId!, guildCooldowns);
@@ -75,12 +77,12 @@ export default async (_: any, message: Message) => {
 
 
       case automodtype.NewLines: {
-        if (/\n\s*\n\s*/.test(content)) handleViolation(message, rules)
+        if (/\n\s*\n\s*/.test(content)) handleViolation(message, rules, advancedSettings)
         break;
       }
 
       case automodtype.ChatFlood: {
-        if (/(\w+)\1{50,}/.test(content)) handleViolation(message, rules)
+        if (/(\w+)\1{50,}/.test(content)) handleViolation(message, rules, advancedSettings)
         break;
       }
 
@@ -99,12 +101,10 @@ export default async (_: any, message: Message) => {
 
         const recentTimestamps = timestamps.filter((timestamp: any) => currentTime - timestamp < timeWindow);
 
-        recentTimestamps.length >= numMessagesAllowed ? handleViolation(message, rules) : userTimestamps.set(author.id, [...recentTimestamps, currentTime]);
+        recentTimestamps.length >= numMessagesAllowed ? handleViolation(message, rules, advancedSettings) : userTimestamps.set(author.id, [...recentTimestamps, currentTime]);
 
         break;
       }
-
-
 
       case automodtype.AllCaps: {
         const contentWithoutSpaces = content.replace(/\s+/g, '');
@@ -112,20 +112,20 @@ export default async (_: any, message: Message) => {
         if (totalChars <= 10) break;
         const uppercaseChars = contentWithoutSpaces.replace(/[^A-Z]/g, '').length;
         const uppercasePercentage = uppercaseChars / totalChars;
-        if (uppercasePercentage >= 0.75) handleViolation(message, rules);
+        if (uppercasePercentage >= 0.75) handleViolation(message, rules, advancedSettings);
         break;
       }
     }
   };
 }
-function handleViolation(message: Message, rules: AutomodSetupInterface) {
+function handleViolation(message: Message, rules: AutomodSetupInterface, advancedSetting?: AdvancedSettingFields) {
   const { guildId, author } = message;
   const violations = (violationsCollection.get(guildId!)?.get(author.id) ?? 0) + 1;
-  const advanced = (violations === rules.advancedSettings?.Threshold)
+  const advanced = (violations === advancedSetting?.Threshold)
   Violation.add(guildId!, author.id);
   if (advanced) {
     Violation.reset(guildId!, author.id)
-    if (rules.advancedSettings?.Action) performCustomAction(rules, message)
+    if (advancedSetting?.Action) performCustomAction(rules, message, advancedSetting ?? undefined)
   }
   message.delete().catch(() => { });
   new ResponseClass().sendTemporaryMessage(message, {
@@ -205,8 +205,8 @@ function filterContent(content: string) {
   return converted;
 }
 
-function performCustomAction(rule: AutomodSetupInterface, message: Message) {
-  const { advancedSettings, type } = rule
+function performCustomAction(rule: AutomodSetupInterface, message: Message, advancedSettings?: AdvancedSettingFields) {
+  const { type } = rule
   if (!advancedSettings) return;
   const Action = advancedSettings.Action
   if (!Action) return;

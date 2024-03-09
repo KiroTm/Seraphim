@@ -117,7 +117,7 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
                 return `${key} – **${formattedValue}**`;
             });
 
-            automodClass.addAdvancedSettings(interaction.guildId!, defaultSettings, automodtype[ruleType as keyof typeof automodtype])
+            automodClass.addAdvancedSettings(interaction.guildId!, defaultSettings, automodtype[ruleType as keyof typeof automodtype] ?? undefined)
 
             await interaction.editReply({
                 embeds: [

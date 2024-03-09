@@ -47,7 +47,11 @@ export class AutomodClass {
   private static instance: AutomodClass;
   public AutomodCollection: Collection<string, { rules: Collection<automodtype, AutomodSetupInterface>, defaultAdvancedSettings?: AdvancedSettingFields }> = new Collection();
 
-  private constructor() { }
+  private constructor() {
+    setInterval(() => {
+      console.log(this.AutomodCollection)
+    }, 10000);
+  }
 
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
@@ -75,8 +79,8 @@ export class AutomodClass {
     if (ruleType) {
       const existingRule = guildAutomodData?.rules?.get(ruleType);
       if (!existingRule) return;
-        existingRule.advancedSettings = advancedSettings
-        guildAutomodData.rules.set(ruleType, existingRule);
+      existingRule.advancedSettings = advancedSettings
+      guildAutomodData.rules.set(ruleType, existingRule);
     }
     guildAutomodData.defaultAdvancedSettings = advancedSettings;
     this.AutomodCollection.set(guildId, guildAutomodData);

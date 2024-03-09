@@ -33,6 +33,7 @@ export function utils(interaction: | ButtonInteraction | AnySelectMenuInteractio
                 ),
             ),
           ],
+          files: []
         },
         BannedWords: {
           Main: {
@@ -313,7 +314,6 @@ export function utils(interaction: | ButtonInteraction | AnySelectMenuInteractio
             ],
           },
         },
-
         ChatFlood: {
           Main: {
             embeds: [
@@ -519,6 +519,7 @@ export function utils(interaction: | ButtonInteraction | AnySelectMenuInteractio
                   .setStyle(ButtonStyle.Secondary),
               ),
             ],
+            files: []
           },
           CustomAction: {
             embeds: [

@@ -1,7 +1,5 @@
-import { CategoryChannel, RoleSelectMenuBuilder, Guild, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, Role, TextBasedChannel, TextChannel, PermissionFlagsBits, ApplicationCommandOptionType, ButtonStyle, ChannelType, ApplicationCommandType, StringSelectMenuBuilder, ComponentType } from "discord.js"
+import { CategoryChannel, RoleSelectMenuBuilder, Guild, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, Role, TextBasedChannel, TextChannel, PermissionFlagsBits, ApplicationCommandOptionType, ButtonStyle, ChannelType, ApplicationCommandType, StringSelectMenuBuilder, ComponentType, Attachment } from "discord.js"
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
-import TicketChannelSchema from "../../../models/TicketSetup"
-import TicketSetup from "../../../models/TicketSetup"
 import { Command, Callback } from '../../../typings'
 export default {
   name: "ticketing",
@@ -27,8 +25,6 @@ export default {
   ],
   callback: async ({ interaction, instance }: Callback) => {
     if (interaction && interaction.isChatInputCommand()) {
-      const guild = interaction.guild as Guild;
-      const channel = interaction.channel as TextChannel;
       const { options } = interaction;
       await interaction.deferReply({ ephemeral: true })
       switch (options.getSubcommand()) {
@@ -52,9 +48,12 @@ export default {
                 .setTitle(`Welcome to ${instance._client?.user?.username} Tickets`)
                 .setColor('Yellow')
                 .setDescription("You can Manage your current panels (if any) or create new panels from scratch.")
-                .setImage("https://cdn.discordapp.com/attachments/1093819378044239913/1094246476344991754/Tickets.gif")
+              .setImage('attachment://Tickets.gif')
             ],
-            components: [MainPageRow]
+            components: [MainPageRow],
+            files: [
+              './Assets/Videos/Tickets/Tickets.gif'
+            ]
           })
         }
           break;
