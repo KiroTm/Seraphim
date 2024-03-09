@@ -24,7 +24,9 @@ export default {
       await interaction.deferReply({ ephemeral: true })
       const Subcommand = interaction.options.getSubcommand()
       if (Subcommand === 'config') {
-        await interaction.editReply(utils(interaction).constants.Main)
+        await interaction.editReply({
+          
+        })
       } else if (Subcommand === 'manage') {
 
       }
