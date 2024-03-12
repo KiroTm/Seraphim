@@ -47,12 +47,7 @@ export class AutomodClass {
   private static instance: AutomodClass;
   public AutomodCollection: Collection<string, { rules: Collection<automodtype, AutomodSetupInterface>, defaultAdvancedSettings?: AdvancedSettingFields }> = new Collection();
 
-  private constructor() {
-    setInterval(() => {
-      console.log(this.AutomodCollection)
-      console.log(this.AutomodCollection.get('519734247519420438')?.rules.map((r) => r.advancedSettings))
-    }, 10000);
-  }
+  private constructor() {}
 
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
