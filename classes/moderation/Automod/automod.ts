@@ -50,6 +50,7 @@ export class AutomodClass {
   private constructor() {
     setInterval(() => {
       console.log(this.AutomodCollection)
+      console.log(this.AutomodCollection.get('519734247519420438')?.rules.map((r) => r.advancedSettings))
     }, 10000);
   }
 
@@ -80,7 +81,7 @@ export class AutomodClass {
       const existingRule = guildAutomodData?.rules?.get(ruleType);
       if (!existingRule) return;
       existingRule.advancedSettings = advancedSettings
-      guildAutomodData.rules.set(ruleType, existingRule);
+      return guildAutomodData.rules.set(ruleType, existingRule)
     }
     guildAutomodData.defaultAdvancedSettings = advancedSettings;
     this.AutomodCollection.set(guildId, guildAutomodData);
@@ -95,11 +96,11 @@ export class AutomodClass {
     return newGuildData;
   }
 
-  public enableRuleType(guildId: string, type: automodtype) {
+  public enableorDisableRuleType(guildId: string, type: automodtype, disable?: boolean) {
     const existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
     if (!existingRule) return;
 
-    existingRule.enabled = true;
+    existingRule.enabled = disable ? false : true
     const guildAutomodData = this.getOrCreateGuildAutomodData(guildId);
     guildAutomodData.rules.set(type, existingRule);
     this.AutomodCollection.set(guildId, guildAutomodData);
@@ -116,4 +117,16 @@ export class AutomodClass {
 
     return existingRule;
   }
+
+  public updateQueryField(guildId: string, type: automodtype, newQuery: number) {
+    const guildAutomodData = this.getOrCreateGuildAutomodData(guildId);
+    let existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
+    if (!existingRule.config) existingRule.config = []
+    const configIndex = existingRule.config.findIndex(config => config.Query !== undefined);
+    configIndex === -1 ? existingRule.config.push({ Query: newQuery }): existingRule.config[configIndex].Query = newQuery
+    guildAutomodData.rules.set(type, existingRule);
+    this.AutomodCollection.set(guildId, guildAutomodData);
+}
+
+
 }

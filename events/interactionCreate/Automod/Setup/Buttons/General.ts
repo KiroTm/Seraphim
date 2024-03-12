@@ -9,7 +9,7 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
   if (interaction.customId.startsWith(`${interaction.guildId}Automod_Setup`) && interaction.customId.endsWith(`Enable`)) {
     const { customId, client } = interaction;
     const ruletype = customId.split("_")[2];
-    automodClass.enableRuleType(`${interaction.guildId}`, automodtype[ruletype as keyof typeof automodtype]);
+    automodClass.enableorDisableRuleType(`${interaction.guildId}`, automodtype[ruletype as keyof typeof automodtype]);
     interaction.update({
       embeds: [
         new EmbedBuilder()

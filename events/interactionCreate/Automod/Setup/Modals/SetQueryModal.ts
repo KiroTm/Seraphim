@@ -2,6 +2,7 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Inte
 import { ConfigInstance } from "../../../../../Main-Handler/ConfigHandler";
 import { automodtype } from "../../../../../classes/moderation/Automod/automod";
 import { utils } from "../../../../../classes/moderation/Automod/utils";
+import ms from "ms";
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isModalSubmit()) return;
   const type: keyof typeof automodtype = interaction.customId.split("_")[2] as 'MassEmoji' | 'MassMention' | 'FastMessage' | 'LinkCooldown' | 'BannedWords'
@@ -12,9 +13,10 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
       let embeds = interaction.message?.embeds as Embed[];
       //@ts-ignore
       let query = utils(interaction).functions[type === 'BannedWords' ? 'BannedWords' : 'General'][type === 'LinkCooldown' ? 'EvaluateDuration' : type === 'BannedWords' ? 'EvaluateWords' : 'EvaluateNumber'](modalField);
+      if (type === 'LinkCooldown' && typeof query === 'string' && query !== 'INVALID_TYPE' && (ms(query) < 30000 || ms(query) > 300000)) query = 'INT_LIMIT'
       if (!Array.isArray(query) && (type === 'LinkCooldown' ? (query === 'INT_LIMIT' || query === 'INVALID_TYPE') : (typeof query !== 'number' || query <= 1))) {
         return interaction.reply({
-          content: `${type === 'LinkCooldown' ? query === 'INT_LIMIT' ? "Cooldown should be greater than 30 seconds" : "Cooldown must be of this type:\nPattern:\`<number>\<min | sec |  hr>`\nExample: \`15mins | 30 sec | 3hr\`" : query === 'INT_ZERO' ? "Limit cannot be negative" : "Limit must be a whole number greater than 1"}`,
+          content: `${type === 'LinkCooldown' ? query === 'INT_LIMIT' ? "Cooldown should be greater than 30 seconds and less than 5 min" : "Cooldown must be of this type:\nPattern:\`<number>\<min | sec |  hr>`\nExample: \`15mins | 30 sec | 3hr\`" : query === 'INT_ZERO' ? "Limit cannot be negative" : "Limit must be a whole number greater than 1"}`,
           ephemeral: true
         });
       }

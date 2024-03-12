@@ -10,10 +10,11 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
     const embeds: EmbedBuilder[] = [];
     let [main, info] = interaction.message?.embeds as Embed[] | EmbedBuilder[];
     info = utils(interaction).functions.General.RemoveField(undefined, info as Embed, "Duration")[0]
-    const duration = utils(interaction).functions.General.EvaluateDuration(modalField);
-    if (duration === 'INVALID_TYPE' || ms(duration) !== -1 && ms(duration) < 60000) {
+    let duration = utils(interaction).functions.General.EvaluateDuration(modalField);
+    if (ms(duration) < 60000 || ms(duration) > 31557600000) duration = 'INT_LIMIT'
+    if (duration === 'INVALID_TYPE' || duration === 'INT_LIMIT') {
       return interaction.reply({
-        content: `${duration === 'INT_LIMIT' ? "Duration should be greater than 10 minutes" : "Duration must be a whole number"}`,
+        content: `${duration === 'INT_LIMIT' ? "Duration should be greater than 1 minute and less than a year" : "Duration must be a whole number"}`,
         ephemeral: true
       });
     }
