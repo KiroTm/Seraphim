@@ -50,8 +50,22 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
         );
       interaction.showModal(modal)
     } else if (customId === `${interaction.guildId}Automod_Manage_RuleType_${type}_Modal_Confirm`) {
-        const updatedField = ms(interaction.message.embeds[0].data.fields![0].value!)
-        automodClass.updateQueryField(interaction.guildId!, (config?.type ?? ruletype) as automodtype, updatedField)
+        automodClass.updateQueryField(interaction.guildId!, (config?.type ?? ruletype) as automodtype, ms(interaction.message.embeds[0].data.fields![0].value!))
+        interaction.update({
+            embeds: [
+                new EmbedBuilder()
+                .setColor("Blurple")
+                .setTitle(`${ruletype}`)
+                .setAuthor({
+                  name: `${interaction.client.user.username}`,
+                  iconURL: `${interaction.client.user.displayAvatarURL()}`,
+                })
+                .setDescription(
+                  `<:success:1146683498766291024> Updated ${ruletype} Automod Rule!`,
+                ),
+            ],
+            components: [],
+        })
     } else if (customId === `${interaction.guildId}Automod_Manage_RuleType_${type}_Modal_Cancel`) {
                 const val = config?.config?.[0].Query
                 interaction.update({
