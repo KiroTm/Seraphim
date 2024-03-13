@@ -25,10 +25,7 @@ export default {
             await message.channel.send({
                 embeds: [new EmbedBuilder().setColor("#2B2D32").addFields(embedFields)],
             });
-        } catch (error) {
-            console.error(error);
-            await message.reply("An error occurred while fetching bot information.");
-        }
+        } catch (error) {}
     },
 } as Command;
 
