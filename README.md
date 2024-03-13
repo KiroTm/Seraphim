@@ -1,6 +1,6 @@
 # Seraphim 🤖
 
-### A versatile Discord.js Bot featuring a custom command handler for both legacy and slash types, powered by NeoHandler (v1.6.0).
+### A versatile Discord.js Bot featuring a custom command handler for both legacy and slash types, powered by NeoHandler (v1.7.1).
 
 ## Overview 🌟
 Welcome to Seraphim, your all-in-one Discord bot designed to elevate your server experience. With a plethora of commands and exciting features, Seraphim is here to make your Discord community flourish!
@@ -8,6 +8,7 @@ Welcome to Seraphim, your all-in-one Discord bot designed to elevate your server
 ## Commands 🚀
 Explore the diverse range of commands Seraphim offers:
 - **Button Roles**: Assign roles effortlessly with intuitive buttons.
+- **Automod**: Providing unparalleled moderation with advanced filtering capabilities to maintain a healthy server environment.
 - **Tickets**: Streamline support and management with a robust ticketing system.
 - **Moderation commands**: Maintain order and manage your server effectively.
 - **Info commands**: Fetch user information swiftly and efficiently.
@@ -25,4 +26,4 @@ Stay tuned for exciting updates and additions:
 ## TO-DO 📝
 In the pipeline for Seraphim's development:
 - **Revamp Ticketing System**: Enhance the functionality and user experience of the ticketing system.
-- **Updating the handler ASAP**: Ensure compatibility and efficiency with the latest updates.
+- **NeoHandler V2**: Ensure compatibility and efficiency with the latest updates.

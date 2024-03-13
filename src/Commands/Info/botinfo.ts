@@ -16,12 +16,12 @@ export default {
             const embedFields = [
                 { name: titles.latency, value: `Bot Ping: \`${client.ws.ping}\`ms`, inline: true },
                 { name: titles.stats, value: ` Users: \`${stats.users}\`\n Servers: \`${stats.guilds}\`\n Channels: \`${stats.channels}\``, inline: true },
+                { name: titles.misc, value: ` Lines of code: \`${codeStats.linesOfCode}\`\n Files: \`${codeStats.numOfFiles}\``, inline: true },
                 { name: titles.uptime, value: ` Client: ${uptimeStats.client}`, inline: true },
                 { name: titles.serverUsage, value: ` Heap: \`${usageStats.ramUsed}MB\` (Total: \`${usageStats.ramTotal}MB\`)\n CPU Load: ${usageStats.cpuLoad}`, inline: true },
-                { name: titles.misc, value: ` Lines of code: \`${codeStats.linesOfCode}\`\n Files: \`${codeStats.numOfFiles}\``, inline: true }
             ];
 
-            await message.channel.send({embeds: [new EmbedBuilder().setTitle('Bot Information').setColor('#2B2D32').addFields(embedFields)]});
+            await message.channel.send({embeds: [new EmbedBuilder().setColor('#2B2D32').addFields(embedFields)]});
         } catch (error) {
             console.log(error)
         }
