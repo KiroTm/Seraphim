@@ -43,8 +43,8 @@ client.on("ready", async (seraphim) => {
   new ConfigHandler({
     client: seraphim,
     botOwners: ["919568881939517460"],
-    commandsDir: path.join(__dirname, './src/', "commands"),
-    featuresDir: path.join(__dirname, './src/', "events"),
+    commandsDir: path.join(__dirname, './src/', "Commands"),
+    featuresDir: path.join(__dirname, './src/', "Events"),
     mongoUri: `${process.env.MONGO_URI}`,
     //   SyncSlashCommands: true,
     cacheOptions: [

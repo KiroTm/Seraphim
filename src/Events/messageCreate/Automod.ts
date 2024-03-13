@@ -1,10 +1,10 @@
 import { Message, Collection, Role, EmbedBuilder } from "discord.js";
 import { AdvancedSettingFields, AutomodClass, AutomodSetupInterface, automodtype } from "../../Classes/moderation/Automod/automod";
 import { ResponseClass } from "../../Classes/Utility/Response";
-import { MuteClass } from "../../Classes/moderation/mute";
 import { WarnClass } from "../../Classes/moderation/warn";
 import { ModlogType, Modlogs } from "../../Classes/moderation/modlogs";
 import ms from "ms";
+import { MuteClass } from "../../Classes/moderation/mute";
 const muteClass = MuteClass.getInstance();
 const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();

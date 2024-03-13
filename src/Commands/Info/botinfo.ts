@@ -7,8 +7,7 @@ export default {
     description: "Displays bot's information",
     callback: async ({ message, instance, client }: Callback) => {
         try {
-            console.log("ran")
-            console.log(((await new CodeStatistics().count()).linesOfCode))
+            const codeStats = await new CodeStatistics().count()
             const titles = { latency: 'Latency', stats: 'Statistics', uptime: 'Uptime', misc: 'Misc', serverUsage: "CPU usage" };
             const stats = generalStatistics(instance);
             const uptimeStats = uptimeStatistics(instance);
@@ -19,6 +18,7 @@ export default {
                 { name: titles.stats, value: ` Users: \`${stats.users}\`\n Servers: \`${stats.guilds}\`\n Channels: \`${stats.channels}\``, inline: true },
                 { name: titles.uptime, value: ` Client: ${uptimeStats.client}`, inline: true },
                 { name: titles.serverUsage, value: ` Heap: \`${usageStats.ramUsed}MB\` (Total: \`${usageStats.ramTotal}MB\`)\n CPU Load: ${usageStats.cpuLoad}`, inline: true },
+                { name: titles.misc, value: ` Lines of code: \`${codeStats.linesOfCode}\`\n Files: \`${codeStats.numOfFiles}\``, inline: true }
             ];
 
             await message.channel.send({embeds: [new EmbedBuilder().setTitle('Bot Information').setColor('#2B2D32').addFields(embedFields)]});
