@@ -1,4 +1,4 @@
-import { IntentsBitField, Client, Partials, ActivityType } from "discord.js";
+import { IntentsBitField, Client, Partials, ActivityType } from 'discord.js'
 import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
 import path from "path";
 const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
