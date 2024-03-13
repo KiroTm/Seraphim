@@ -1,5 +1,5 @@
 import mongoose, { Schema } from "mongoose";
-import { ModlogType } from "../classes/moderation/modlogs";
+import { ModlogType } from "../Classes/moderation/modlogs";
 const ModlogSchema = new Schema({
     GuildID: { type: String, required: true },
     UserID: { type: String, required: true },

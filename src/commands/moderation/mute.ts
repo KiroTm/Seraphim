@@ -1,8 +1,8 @@
 import { EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
 import { Callback, Command } from '../../../typings';
-import { MemberClass } from "../../classes/misc/member";
-import { MuteClass } from "../../classes/moderation/mute";
+import { MemberClass } from "../../Classes/Misc/member";
+import { MuteClass } from "../../Classes/moderation/mute";
 import ms from 'ms';
 
 const memberClass = new MemberClass();

@@ -1,5 +1,5 @@
 import { Callback, Command } from "../../../typings";
-import { ChannelClass } from "../../classes/misc/channel";
+import { ChannelClass } from "../../Classes/Misc/channel";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { EmbedBuilder, PermissionFlagsBits, TextChannel } from "discord.js";
 import ms from "enhanced-ms";

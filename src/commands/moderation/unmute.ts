@@ -1,8 +1,8 @@
 import { Embed, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from "discord.js"
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
 import { Callback, Command } from '../../../typings';
-import { MemberClass } from "../../classes/misc/member";
-import { UnmuteClass } from "../../classes/moderation/unmute";
+import { MemberClass } from "../../Classes/Misc/member";
+import { UnmuteClass } from "../../Classes/moderation/unmute";
 export default {
     name: "unmute",
     description: "Unmutes a member that has been muted before",

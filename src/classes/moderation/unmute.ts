@@ -1,5 +1,5 @@
 import { GuildMember, Message, Role } from "discord.js";
-import ModlogsSchema from "../../models/Modlogs-Schema";
+import ModlogsSchema from "../../Models/Modlogs-Schema";
 import { ModlogType } from "./modlogs";
 
 export class UnmuteClass {

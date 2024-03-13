@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ComponentType, Embed, EmbedBuilder, Interaction, Message, MessageComponent, ModalBuilder, RoleSelectMenuBuilder, StringSelectMenuBuilder, TextChannel, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigHandler } from "../../../../../Main-Handler/ConfigHandler";
-import TicketSetup from "../../../../models/TicketSetup";
+import TicketSetup from "../../../../Models/TicketSetup";
 
 export default async (instance: ConfigHandler, interaction: Interaction) => {
     if (interaction.isButton()) {

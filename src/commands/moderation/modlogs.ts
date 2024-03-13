@@ -1,9 +1,9 @@
 import { EmbedBuilder, GuildMember, PermissionFlagsBits, User } from "discord.js";
 import { Callback, Command } from "../../../typings";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
-import { MemberClass } from "../../classes/misc/member";
-import { Modlogs } from "../../classes/moderation/modlogs";
-import { Messagepagination } from "../../functions/utility/pagination";
+import { MemberClass } from "../../Classes/Misc/member";
+import { Modlogs } from "../../Classes/moderation/modlogs";
+import { Messagepagination } from "../../Functions/utility/pagination";
 const ModlogsClass = Modlogs.getInstance()
 export default {
     name: "modlogs",

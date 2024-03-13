@@ -1,5 +1,5 @@
 import { Collection, GuildMember, Snowflake } from "discord.js";
-import MarriageSchema from "../../models/Marriage-Schema";
+import MarriageSchema from "../../Models/Marriage-Schema";
 
 export class MarriageClass {
   private static instance: MarriageClass;

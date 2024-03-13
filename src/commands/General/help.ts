@@ -2,7 +2,7 @@ import { EmbedBuilder, GuildMember, APIEmbedField, TextChannel } from "discord.j
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import ms from "ms";
 import { Callback, Command } from "../../../typings";
-import { ResponseClass } from "../../classes/Utility/Response";
+import { ResponseClass } from "../../Classes/Utility/Response";
 export default {
   name: "help",
   description: "Get a detailed explanation of each command",

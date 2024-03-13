@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, GuildMember, GuildPremiumTier, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { MemberClass } from "../../classes/misc/member";
+import { MemberClass } from "../../Classes/Misc/member";
 import { Callback, Command } from "../../../typings";
 const memberClass = new MemberClass()
 export default {

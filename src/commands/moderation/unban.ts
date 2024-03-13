@@ -1,9 +1,9 @@
 import { EmbedBuilder, GuildMember, PermissionFlagsBits, User } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../../typings";
-import { MemberClass } from "../../classes/misc/member";
+import { MemberClass } from "../../Classes/Misc/member";
 import { client } from "../../..";
-import { UserClass } from "../../classes/misc/user";
+import { UserClass } from "../../Classes/Misc/user";
 
 export default {
     name: "unban",

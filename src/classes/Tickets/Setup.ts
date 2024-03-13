@@ -1,5 +1,5 @@
 import { Collection } from "discord.js";
-import TicketSetup from "../../models/TicketSetup";
+import TicketSetup from "../../Models/TicketSetup";
 interface TicketSetupInterface {
     GuildID: string,
     Type: string, Category?: string,

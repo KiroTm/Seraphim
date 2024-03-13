@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js"
 import { Callback, Command } from "../../../typings"
-import { UserClass } from "../../classes/misc/user"
+import { UserClass } from "../../Classes/Misc/user"
 
 export default {
     name: 'pp',

@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, EmbedData, Interaction, Message, ModalBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 import ms from "ms";
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isModalSubmit() || (!interaction.customId.startsWith(`${interaction.guildId}Automod_Manage_RuleType`) && !interaction.customId.endsWith("Modal"))) return;

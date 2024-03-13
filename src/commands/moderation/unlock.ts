@@ -1,5 +1,5 @@
 import { ChannelType, EmbedBuilder, Guild, PermissionFlagsBits } from "discord.js";
-import { ChannelClass } from "../../classes/misc/channel";
+import { ChannelClass } from "../../Classes/Misc/channel";
 import { Callback, Command } from "../../../typings";
 const channelClass = new ChannelClass();
 

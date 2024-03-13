@@ -1,5 +1,5 @@
 import { Collection, Guild, GuildMember } from "discord.js";
-import ModlogsSchema from "../../models/Modlogs-Schema";
+import ModlogsSchema from "../../Models/Modlogs-Schema";
 
 export enum ModlogType {
     Mute = "Mute",

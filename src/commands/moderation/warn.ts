@@ -1,11 +1,11 @@
 import { EmbedBuilder, Guild, GuildMember, PermissionFlagsBits, PermissionsBitField } from "discord.js"
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
 import { Callback, Command } from '../../../typings';
-import { MemberClass } from "../../classes/misc/member";
-import warnSchema from "../../models/warnSchema";
-import ModlogsSchema from "../../models/Modlogs-Schema";
-import { ModlogType } from "../../classes/moderation/modlogs";
-import { WarnClass } from "../../classes/moderation/warn";
+import { MemberClass } from "../../Classes/Misc/member";
+import warnSchema from "../../Models/warnSchema";
+import ModlogsSchema from "../../Models/Modlogs-Schema";
+import { ModlogType } from "../../Classes/moderation/modlogs";
+import { WarnClass } from "../../Classes/moderation/warn";
 const warnClass = WarnClass.getInstance()
 export default {
     name: "warn",

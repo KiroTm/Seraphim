@@ -1,5 +1,5 @@
 import { Collection, Guild, GuildMember, Message, User } from 'discord.js';
-import StatsSchema from '../../../src/models/StatsSchema';
+import StatsSchema from '../../../src/Models/StatsSchema';
 export class StatsClass {
     private static instance: StatsClass;
     private statsData: Collection<string, Collection<string, Collection<string, string>>> = new Collection();

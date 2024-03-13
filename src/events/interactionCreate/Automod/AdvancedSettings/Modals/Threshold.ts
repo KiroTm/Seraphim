@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, Message } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isModalSubmit() || !interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_AdvancedSetting`)) return;

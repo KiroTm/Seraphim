@@ -1,8 +1,8 @@
 import { Interaction, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, APIEmbedField } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
+import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../Classes/moderation/Automod/automod";
 import ms from "ms";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 
 const automodClass = AutomodClass.getInstance();
 export default async (instance: ConfigInstance, interaction: Interaction) => {

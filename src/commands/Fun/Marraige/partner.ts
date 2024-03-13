@@ -1,7 +1,7 @@
 import { Callback, Command } from "../../../../typings";
-import { MarriageClass } from "../../../classes/misc/marriage";
+import { MarriageClass } from "../../../Classes/Misc/marriage";
 import { EmbedBuilder, GuildMember } from "discord.js";
-import { UserClass } from "../../../classes/misc/user";
+import { UserClass } from "../../../Classes/Misc/user";
 const marriageClass = MarriageClass.getInstance()
 export default {
     name: 'partner',

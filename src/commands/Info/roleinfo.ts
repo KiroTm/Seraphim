@@ -1,6 +1,6 @@
 import { EmbedBuilder, Role } from "discord.js";
 import { Callback, Command } from "../../../typings";
-import { RoleClass } from "../../classes/misc/role";
+import { RoleClass } from "../../Classes/Misc/role";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 
 export default {

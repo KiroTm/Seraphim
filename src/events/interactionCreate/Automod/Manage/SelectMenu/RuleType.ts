@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, Message, StringSelectMenuBuilder, StringSelectMenuComponentData } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass, automodtype } from "../../../../../classes/moderation/Automod/automod";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { AutomodClass, automodtype } from "../../../../../Classes/moderation/Automod/automod";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 import ms from "ms";
 const automodClass = AutomodClass.getInstance();
 

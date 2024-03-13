@@ -1,8 +1,8 @@
 import { Callback, Command } from "../../../../typings";
-import { MarriageClass } from "../../../classes/misc/marriage";
+import { MarriageClass } from "../../../Classes/Misc/marriage";
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ColorResolvable, ComponentType, EmbedBuilder, Guild, GuildMember, Message } from "discord.js";
-import { UserClass } from "../../../classes/misc/user";
-import { MemberClass } from "../../../classes/misc/member";
+import { UserClass } from "../../../Classes/Misc/user";
+import { MemberClass } from "../../../Classes/Misc/member";
 const marriageClass = MarriageClass.getInstance();
 async function divorce(a: GuildMember, b: GuildMember, message: Message): Promise<{ description: string, color: ColorResolvable }> {
     const collector = message.createMessageComponentCollector({

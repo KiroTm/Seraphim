@@ -1,7 +1,7 @@
 import { Callback, Command } from "../../../typings";
 import { EmbedBuilder } from "discord.js";
 import { CpuInfo, cpus } from 'os';
-import { CodeStatistics } from "../../classes/misc/codestats";
+import { CodeStatistics } from "../../Classes/Misc/codestats";
 export default {
     name: "botinfo",
     description: "Displays bot's information",

@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction, Message, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { automodtype } from "../../../../../classes/moderation/Automod/automod";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { automodtype } from "../../../../../Classes/moderation/Automod/automod";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 import ms from "ms";
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isModalSubmit()) return;

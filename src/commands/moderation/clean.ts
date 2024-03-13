@@ -1,7 +1,7 @@
 import { EmbedBuilder, GuildMember, Message, PermissionFlagsBits, TextChannel } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../../typings";
-import { MemberClass } from "../../classes/misc/member";
+import { MemberClass } from "../../Classes/Misc/member";
 
 export default {
     name: "clean",

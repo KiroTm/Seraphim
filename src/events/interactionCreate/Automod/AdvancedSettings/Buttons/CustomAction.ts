@@ -1,7 +1,7 @@
 import { ActionRowBuilder, Embed, EmbedBuilder, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { AutomodClass } from "../../../../../classes/moderation/Automod/automod";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { AutomodClass } from "../../../../../Classes/moderation/Automod/automod";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 
 const automodClass = AutomodClass.getInstance();
 

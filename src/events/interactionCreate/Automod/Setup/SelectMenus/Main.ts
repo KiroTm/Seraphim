@@ -1,7 +1,7 @@
 import { Interaction, } from "discord.js";
 import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
-import { automodtype } from "../../../../../classes/moderation/Automod/automod";
-import { utils } from "../../../../../classes/moderation/Automod/utils";
+import { automodtype } from "../../../../../Classes/moderation/Automod/automod";
+import { utils } from "../../../../../Classes/moderation/Automod/utils";
 
 export default async (_: ConfigInstance, interaction: Interaction) => {
   if (!interaction.isStringSelectMenu()) return;

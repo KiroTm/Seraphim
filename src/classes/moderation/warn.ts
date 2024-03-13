@@ -1,5 +1,5 @@
 import { GuildMember, Message } from "discord.js";
-import warnSchema, { WarnDocument } from "../../models/warnSchema";
+import warnSchema, { WarnDocument } from "../../Models/warnSchema";
 import { Collection } from "discord.js";
 import { ModlogType, Modlogs } from "./modlogs";
 

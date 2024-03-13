@@ -1,5 +1,5 @@
 import { ButtonInteraction, Role, GuildMember, User, ChannelType, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, TextChannel, Guild, InteractionUpdateOptions } from "discord.js";
-import TicketSchema from '../../models/tickets-schema'
+import TicketSchema from '../../Models/tickets-schema'
 export async function makeTicket(interaction: ButtonInteraction, data: any) {
     const member = interaction.member as GuildMember
     let guild = interaction.guild as Guild

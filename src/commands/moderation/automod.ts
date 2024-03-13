@@ -1,7 +1,7 @@
 import { APIStringSelectComponent, ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, Client, EmbedBuilder, PermissionFlagsBits, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuComponent, messageLink } from "discord.js";
 import { Callback, Command } from "../../../typings";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
-import { utils } from "../../classes/moderation/Automod/utils";
+import { utils } from "../../Classes/moderation/Automod/utils";
 export default {
   name: 'automod',
   description: 'Automod module.',

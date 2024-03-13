@@ -1,6 +1,6 @@
 import { TextChannel } from "discord.js";
 import { ConfigHandler } from "../../../Main-Handler/ConfigHandler";
-import TicketSchema from '../../models/tickets-schema';
+import TicketSchema from '../../Models/tickets-schema';
 export default async (instance: ConfigHandler, channel: TextChannel) => {
     const data = TicketSchema.findOne({
         ChannelID: channel.id

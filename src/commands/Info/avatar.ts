@@ -1,8 +1,8 @@
 import { EmbedBuilder, Guild, GuildMember, User } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from '../../../typings';
-import { MemberClass } from "../../classes/misc/member";
-import { UserClass } from "../../classes/misc/user";
+import { MemberClass } from "../../Classes/Misc/member";
+import { UserClass } from "../../Classes/Misc/user";
 
 const userClass = new UserClass();
 const memberClass = new MemberClass();

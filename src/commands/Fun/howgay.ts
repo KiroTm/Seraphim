@@ -1,4 +1,4 @@
-import { UserClass } from "../../classes/misc/user";
+import { UserClass } from "../../Classes/Misc/user";
 import { Callback, Command } from "../../../typings";
 
 export default {
