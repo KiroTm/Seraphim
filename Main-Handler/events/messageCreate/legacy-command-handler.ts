@@ -1,33 +1,17 @@
 import { ChannelType, Embed, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
 import { ConfigInstance } from "../../ConfigHandler";
-import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../../typings";
 import { CooldownManager } from "../../handlers/Cooldowns";
 import { CommandHandler } from "../../handlers/CommandHandler";
-
-const localCommands = getLocalCommands();
-const commandHandler = new CommandHandler();
-const commandAliases = new Map<string, Command[]>();
-
-localCommands.forEach((command) => {
-  if (command.aliases) {
-    command.aliases.forEach((alias) => {
-      if (!commandAliases.has(alias)) {
-        commandAliases.set(alias, []);
-      }
-      commandAliases.get(alias)!.push(command);
-    });
-  }
-  commandAliases.set(command.name, [command]);
-});
-
 export default async (instance: ConfigInstance, message: Message) => {
+  const allCommands = instance._commandHandler?.getAllCommands()!
+  const commandHandler = new CommandHandler();
   const prefix = instance._prefixHandler?.getPrefix(`${message.guildId}`) as string || "?"
   const Cooldowns = instance._cooldownsManager as CooldownManager
   if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type !== ChannelType.GuildText || !message.guild || !message.member) return;
   if (Cooldowns.isUserIgnored(message.author.id)) return;
   const [commandName, ...args] = message.content.slice(prefix.length).split(/\s+/);
-  const commandCandidates = commandAliases.get(commandName.toLowerCase()) || [];
+  const commandCandidates = allCommands.get(commandName.toLowerCase()) || [];
   const command = commandCandidates.find((c) =>
     commandHandler.canRun(instance, c, message, args, prefix)
   ) as Command;
@@ -42,5 +26,5 @@ export default async (instance: ConfigInstance, message: Message) => {
     }
     Cooldowns.set(guild.id, member, command, (command.cooldown.Type || 'perGuildCooldown'))
   }
-  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix });
+  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: allCommands, prefix });
 };

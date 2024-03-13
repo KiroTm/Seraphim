@@ -68,8 +68,8 @@ export class ConfigHandler {
         this._ReloadCommands = async (instance_1: ConfigInstance) => this._commandHandler?.readFiles(instance_1, commandsDir!)
         this._cooldownsManager = CooldownManager.getInstance(this, CooldownConfiguration ?? { SendWarningMessage: true, CustomErrorMessage: "A little too quick there!", OwnersBypass: false, RatelimitIgnore: true });
         if (featuresDir) this._featuresHandler = new FeaturesHandler(this, featuresDir, client, chalk);
-        if (commandsDir) this._commandHandler = commandHandler;
-        if (commandsDir && SyncSlashCommands === true) commandHandler.readFiles(this, commandsDir);
+        if (commandsDir) this._commandHandler = commandHandler
+        if (commandsDir) commandHandler.readFiles(this, commandsDir, SyncSlashCommands);
         if (cacheOptions && cacheOptions.length > 0) {
             this._cacheOptions = cacheOptions;
             CacheLoader.getInstance(this, cacheOptions);

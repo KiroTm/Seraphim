@@ -1,10 +1,10 @@
 import { Channel, Collection, EmbedBuilder, Guild, GuildMember, Role } from "discord.js";
-import { MemberClass } from "../../../classes/misc/member";
+import { MemberClass } from "../../../src/classes/misc/member";
 import { Callback, Command } from "../../../typings";
 import { StatsClass } from "../Class/Message";
-import { ChannelClass } from "../../../classes/misc/channel";
+import { ChannelClass } from "../../../src/classes/misc/channel";
 import ms from "enhanced-ms";
-import { RoleClass } from "../../../classes/misc/role";
+import { RoleClass } from "../../../src/classes/misc/role";
 const statsClass = StatsClass.getInstance();
 const timeFrameLabels: Record<string, string> = {
     "7days": "1 week",

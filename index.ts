@@ -37,14 +37,14 @@ export const client = new Client({
   },
 });
 
-client.on("ready", async (cli) => {
+client.on("ready", async (seraphim) => {
   const chalk = (await import("chalk")).default;
   client.setMaxListeners(Infinity);
   new ConfigHandler({
-    client: cli,
+    client: seraphim,
     botOwners: ["919568881939517460"],
-    commandsDir: path.join(__dirname, "./", "commands"),
-    featuresDir: path.join(__dirname, "./", "events"),
+    commandsDir: path.join(__dirname, './src/', "commands"),
+    featuresDir: path.join(__dirname, './src/', "events"),
     mongoUri: `${process.env.MONGO_URI}`,
     //   SyncSlashCommands: true,
     cacheOptions: [

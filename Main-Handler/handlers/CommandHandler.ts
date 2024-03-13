@@ -1,19 +1,22 @@
-import { ApplicationCommand, ApplicationCommandOption, ApplicationCommandOptionType, Client, ClientApplication, Guild, Message } from "discord.js";
+import { ClientApplication, Collection, Guild, Message } from "discord.js";
 import { CommandType, ConfigInstance } from "../ConfigHandler";
-import { Utils } from "../../functions/Utils";
+import { Utils } from "../../src/functions/Utils";
 import getLocalCommands from "../utils/getLocalCommands";
-import { Callback, Command } from "../../typings";
-
+import { Command } from "../../typings";
 export class CommandHandler {
+    private localCommands = new Collection<string, Command>()
     public instance!: ConfigInstance;
-    async readFiles(instance: ConfigInstance, Commandsdir: string,) {
+    async readFiles(instance: ConfigInstance, commandsdir: any, reloadslash?: boolean | false) {
         const { _chalk, _client } = instance
-        console.log(`${instance._chalk.bold.white("➙ Loading commands...")}`);
-        const localcommands = getLocalCommands().filter((c) => (typeof c.type !== 'undefined' && c.type !== CommandType.legacy))
-        console.log(`${_chalk.bold.white(`➙ Iterating through ${localcommands.size} slash commands...`)}`);
+        console.log(`${instance._chalk.bold.white("➙ Loading legacy commands...")}`);
+        this.localCommands = getLocalCommands(commandsdir);
+        if (!reloadslash) return;
+        console.log(`${instance._chalk.bold.white("➙ Loading slash commands...")}`);
+        const slashcommands = this.localCommands.filter((c) => (typeof c.type !== 'undefined' && c.type !== CommandType.legacy))
+        console.log(`${_chalk.bold.white(`➙ Iterating through ${slashcommands.size} slash commands...`)}`);
         const application = instance._client?.application as ClientApplication
         const commands = await application.commands.fetch()
-        for (const localcommand of localcommands) {
+        for (const localcommand of slashcommands) {
             const [name, commandObject] = localcommand
             const description = commandObject.description
             const options = commandObject.options as any
@@ -63,5 +66,26 @@ export class CommandHandler {
 
     public async run(command: Command, callbackData: any) {
         await command.callback(callbackData)
+    }
+
+    public getLocalCommands() {
+        return this.localCommands
+    }
+
+    public getAllCommands() {
+        const localCommands = this.getLocalCommands()
+        const commandAliases = new Map<string, Command[]>();
+        localCommands.forEach((command) => {
+            if (command.aliases) {
+                command.aliases.forEach((alias) => {
+                    if (!commandAliases.has(alias)) {
+                        commandAliases.set(alias, []);
+                    }
+                    commandAliases.get(alias)!.push(command);
+                });
+            }
+            commandAliases.set(command.name, [command]);
+        });
+        return commandAliases
     }
 }
