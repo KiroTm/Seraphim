@@ -1,6 +1,6 @@
 import { GuildMember, Role } from "discord.js";
 import { ConfigHandler } from "../../../Main-Handler/ConfigHandler";
-import { MuteClass } from "../../Classes/moderation/mute";
+import { MuteClass } from "../../classes/moderation/mute";
 const muteClass = MuteClass.getInstance();
 
 export default async (instance: ConfigHandler, OldMember: GuildMember, NewMember: GuildMember) => {
