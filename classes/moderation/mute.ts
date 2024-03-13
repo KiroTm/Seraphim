@@ -15,10 +15,8 @@ export class MuteClass {
 
     private constructor() {
         this.initializeData().then(() => {
-            setInterval(() => {
-                this.checkMutes();
-                this.uploadDataToMongoose();
-            }, 10 * 1000);
+            setInterval(this.checkMutes.bind(this), 10 * 1000)
+            setInterval(() => {this.uploadDataToMongoose}, 30 * 1000);
         })
     }
 
@@ -36,7 +34,7 @@ export class MuteClass {
         if (!this.mutes.has(member.guild.id)) this.mutes.set(member.guild.id, new Collection());
         this.mutes.get(member.guild.id)?.set(member.id, muteData);
         const filteredroles = member.roles.cache.filter((r) => r.tags).keys()
-        member.roles.set([...filteredroles, mutedRole]).catch((error) => {});
+        member.roles.set([...filteredroles, mutedRole]).catch((error) => { });
         return true;
     }
 
