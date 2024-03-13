@@ -38,9 +38,9 @@ export interface AdvancedSettingFields {
 
 export const AdvancedSettingCustomActions = {
   Warn: { id: "Warn", emoji: "<:Warn:1211758195220160512>" },
-  Ban: { id: "Ban", emoji: "<:ban:1211754347797422100>" },
-  Kick: { id: "Kick", emoji: "<:kick:1211757211215208469>" },
-  Mute: { id: "Mute", emoji: "<:mute:1211755876977872958>" }
+  Ban: { id: "Ban", emoji: "<:Ban:1217489469398061056>" },
+  Kick: { id: "Kick", emoji: "<:Kick:1217489435231256678>" },
+  Mute: { id: "Mute", emoji: "<:Mute:1211755876977872958>" }
 };
 
 export class AutomodClass {
