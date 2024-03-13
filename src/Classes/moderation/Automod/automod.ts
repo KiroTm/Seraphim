@@ -47,7 +47,11 @@ export class AutomodClass {
   private static instance: AutomodClass;
   public AutomodCollection: Collection<string, { rules: Collection<automodtype, AutomodSetupInterface>, defaultAdvancedSettings?: AdvancedSettingFields }> = new Collection();
 
-  private constructor() {}
+  private constructor() {
+    setInterval(() => {
+      this.AutomodCollection ? console.log(this.AutomodCollection.get("519734247519420438")?.rules.get(automodtype.BannedWords)?.config) : null
+    }, 10000);
+  }
 
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
@@ -55,20 +59,35 @@ export class AutomodClass {
 
   public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
     const guildAutomodData = this.getOrCreateGuildAutomodData(guildId);
-    const ruleData = guildAutomodData.rules.get(data.type);
+    const existingRule = this.getOrCreateRuleTypeCollection(guildId, data.type);
 
-    if (ruleData) {
-      guildAutomodData.rules.set(data.type, { ...ruleData, ...data });
-    } else {
-      guildAutomodData.rules.set(data.type, data);
+    if (data.config && data.config.length > 0) {
+      data.config.forEach((newConfig) => {
+        if (existingRule.config) {
+          const existingConfigIndex = existingRule.config.findIndex(
+            (cfg) => cfg.filterType === newConfig.filterType
+          );
+          existingConfigIndex !== -1 ?
+            data.type === automodtype.BannedWords ?
+              existingRule.config[existingConfigIndex].words = [
+                ...(existingRule.config[existingConfigIndex].words || []),
+                ...(newConfig.words || [])
+              ] :
+              existingRule.config[existingConfigIndex] = {
+                ...existingRule.config[existingConfigIndex],
+                ...newConfig
+              }
+            : existingRule.config.push(newConfig);
+        } else {
+          existingRule.config = [newConfig];
+        }
+      });
     }
 
-    if (!data.advancedSettings) {
-      data.advancedSettings = guildAutomodData.defaultAdvancedSettings;
-    }
-
+    guildAutomodData.rules.set(data.type, existingRule);
     this.AutomodCollection.set(guildId, guildAutomodData);
   }
+
 
   public addAdvancedSettings(guildId: string, advancedSettings: AdvancedSettingFields, ruleType?: automodtype) {
     const guildAutomodData = this.getOrCreateGuildAutomodData(guildId);
@@ -118,10 +137,10 @@ export class AutomodClass {
     let existingRule = this.getOrCreateRuleTypeCollection(guildId, type);
     if (!existingRule.config) existingRule.config = []
     const configIndex = existingRule.config.findIndex(config => config.Query !== undefined);
-    configIndex === -1 ? existingRule.config.push({ Query: newQuery }): existingRule.config[configIndex].Query = newQuery
+    configIndex === -1 ? existingRule.config.push({ Query: newQuery }) : existingRule.config[configIndex].Query = newQuery
     guildAutomodData.rules.set(type, existingRule);
     this.AutomodCollection.set(guildId, guildAutomodData);
-}
+  }
 
 
 }
