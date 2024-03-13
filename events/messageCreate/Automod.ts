@@ -218,7 +218,7 @@ function performCustomAction(rule: AutomodSetupInterface, message: Message, adva
       message.author.send({ embeds: [new EmbedBuilder().setColor("Blue").setDescription(`**You were muted in ${message.guild?.name} ${timeString} | ${reason}**\nModerator: ${message.guild?.members.me?.user.username}\nTiming: <t:${Math.floor(Math.round(message.createdTimestamp / 1000))}:R>`)] }).catch((r) => { })
       const mutedRole = message.guild?.roles.cache.find((r) => r.name.toLowerCase() === "muted") as Role
       const expirationTime = duration ? Date.now() + duration : null
-      muteClass.mute(message, message.member!, mutedRole, reason, expirationTime)
+      muteClass.mute(message.member!, mutedRole, reason, expirationTime)
     }
       break;
 

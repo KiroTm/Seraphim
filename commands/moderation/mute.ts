@@ -46,7 +46,7 @@ export default {
         }
         const determineMuted = await muteClass.isMuted(member, mutedRole)
         if (determineMuted) return message.channel.send({ embeds: [new EmbedBuilder().setDescription(`${member.user.username} is already muted!`).setColor('Red')] })
-        const result = await muteClass.mute(message, member, mutedRole, reason, expirationTime) as boolean;
+        const result = await muteClass.mute(member, mutedRole, reason, expirationTime) as boolean;
         if (result) {
             const timeString = time ? `for ${ms(time, { long: true })}` : '';
             const description = `**${member.user.username} was muted ${timeString} | ${reason}**`;

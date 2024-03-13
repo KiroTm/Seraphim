@@ -8,7 +8,7 @@ export class CacheLoader {
     private constructor(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined) {
         this.emit(instance);
         this.bulk_loadcache(instance, cacheLoaderOpts);
-        this.timer = setInterval(() => this.bulk_loadcache(instance, cacheLoaderOpts), 30 * 1000);
+        this.timer = setInterval(() => this.bulk_loadcache(instance, cacheLoaderOpts), 120 * 1000);
     }
 
     public static getInstance(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined): CacheLoader {
@@ -20,28 +20,24 @@ export class CacheLoader {
         const client = instance._client as Client;
         client.guilds.cache.forEach(async (guild: Guild) => {
             if (cacheLoaderOpts?.includes(CacheLoaderOptions.Members)) {
-                if (guild.members.cache?.size > 30) return;
-                await guild.members.fetch();
+                guild.members.fetch();
             }
 
             if (cacheLoaderOpts?.includes(CacheLoaderOptions.Roles)) {
-                if (guild.members.cache?.size > 30) return;
-                await guild.roles.fetch();
+                guild.roles.fetch();
             }
 
             if (cacheLoaderOpts?.includes(CacheLoaderOptions.Channels)) {
-                if (guild.channels.cache?.size > 4) return;
-                await guild.channels.fetch();
+                guild.channels.fetch();
             }
 
             if (cacheLoaderOpts?.includes(CacheLoaderOptions.Bans)) {
-                await guild.bans.fetch();
+                guild.bans.fetch();
             }
         });
     }
 
     private emit(instance: ConfigInstance) {
-        console.log(instance._chalk.bold.white(`➙ Emitting 'messageCreate' to remove command response delay!\n`));
         instance._client?.emit('messageCreate', { content: 'null' } as any);
     }
 }

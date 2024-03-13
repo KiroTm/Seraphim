@@ -14,8 +14,8 @@ export class MemberClass {
         || undefined
       }
       
-    public async mute(message: Message, member: GuildMember, mutedrole: Role, reason: string, time?: number | null): Promise<void> {
-        await muteClass.mute(message, member, mutedrole, reason, time);
+    public async mute(member: GuildMember, mutedrole: Role, reason: string, time?: number | null): Promise<void> {
+        await muteClass.mute(member, mutedrole, reason, time);
     }
 
     public getAcknowledgment(member: GuildMember) {
