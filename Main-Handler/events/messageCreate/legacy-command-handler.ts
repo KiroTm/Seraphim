@@ -4,7 +4,8 @@ import { Command } from "../../../typings";
 import { CooldownManager } from "../../handlers/Cooldowns";
 import { CommandHandler } from "../../handlers/CommandHandler";
 export default async (instance: ConfigInstance, message: Message) => {
-  const allCommands = instance._commandHandler?.getAllCommands()!
+  const localCommands = instance._commandHandler?.getLocalCommands()
+  const allCommands = instance._commandHandler?.getAllCommands(localCommands)!
   const commandHandler = new CommandHandler();
   const prefix = instance._prefixHandler?.getPrefix(`${message.guildId}`) as string || "?"
   const Cooldowns = instance._cooldownsManager as CooldownManager
@@ -26,5 +27,5 @@ export default async (instance: ConfigInstance, message: Message) => {
     }
     Cooldowns.set(guild.id, member, command, (command.cooldown.Type || 'perGuildCooldown'))
   }
-  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: allCommands, prefix });
+  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix });
 };

@@ -46,7 +46,7 @@ client.on("ready", async (seraphim) => {
     commandsDir: path.join(__dirname, './src/', "Commands"),
     featuresDir: path.join(__dirname, './src/', "Events"),
     mongoUri: `${process.env.MONGO_URI}`,
-    //   SyncSlashCommands: true,
+      SyncSlashCommands: true,
     cacheOptions: [
       CacheLoaderOptions.Channels,
       CacheLoaderOptions.Members,

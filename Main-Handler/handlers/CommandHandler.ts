@@ -72,9 +72,9 @@ export class CommandHandler {
         return this.localCommands
     }
 
-    public getAllCommands() {
-        const localCommands = this.getLocalCommands()
-        const commandAliases = new Map<string, Command[]>();
+    public getAllCommands(localCommands?: Collection<string, Command> | undefined) {
+        localCommands = localCommands ?? this.getLocalCommands()
+        const commandAliases = new Collection<string, Command[]>();
         localCommands.forEach((command) => {
             if (command.aliases) {
                 command.aliases.forEach((alias) => {
