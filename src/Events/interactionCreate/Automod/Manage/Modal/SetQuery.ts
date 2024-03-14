@@ -39,5 +39,28 @@ export default async (instance: ConfigInstance, interaction: Interaction) => {
         })
 
 
+    } else if (customId === `${interaction.guildId}Automod_Manage_RuleType_Words_UpdateWords_Modal`) {
+        const modalField = interaction.fields.getField(`${interaction.guildId}Modal_Words`).value as string
+        let embeds = interaction.message?.embeds as Embed[];
+        let query = utils(interaction).functions.BannedWords.EvaluateWords(modalField)
+        await interaction.deferUpdate();
+        await interaction.editReply({
+            message: interaction.message as Message,
+            embeds: [new EmbedBuilder(embeds[0].data).setTitle(embeds[1].title), new EmbedBuilder().setColor('Blue').setTitle("Word(s) Evaluated:").setDescription(`${query.join(",").substring(0, 4000)}`)],
+            components: [
+                new ActionRowBuilder<ButtonBuilder>()
+                    .addComponents(
+                        new ButtonBuilder()
+                            .setCustomId(`${interaction.guildId}Automod_Manage_RuleType_Words_UpdateWords_Confirm`)
+                            .setStyle(ButtonStyle.Primary)
+                            .setLabel("Confirm"),
+
+                        new ButtonBuilder()
+                            .setCustomId(`${interaction.guildId}Automod_Manage_RuleType_Words_UpdateWords_Cancel`)
+                            .setStyle(ButtonStyle.Danger)
+                            .setLabel("Cancel")
+                    )
+            ]
+        })
     }
 }

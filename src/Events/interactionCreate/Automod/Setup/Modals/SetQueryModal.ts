@@ -40,6 +40,6 @@ export default async (_: ConfigInstance, interaction: Interaction) => {
         ]
       })
     }
-      break;
+    break;
   }
 }

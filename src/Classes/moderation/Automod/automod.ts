@@ -1,4 +1,5 @@
 import { Collection, ButtonInteraction, AnySelectMenuInteraction, ModalSubmitInteraction, ChatInputCommandInteraction } from "discord.js";
+import { utils } from "./utils";
 
 export enum automodtype {
   BannedWords = "bannedwords",
@@ -47,46 +48,14 @@ export class AutomodClass {
   private static instance: AutomodClass;
   public AutomodCollection: Collection<string, { rules: Collection<automodtype, AutomodSetupInterface>, defaultAdvancedSettings?: AdvancedSettingFields }> = new Collection();
 
-  private constructor() {
-    setInterval(() => {
-      this.AutomodCollection ? console.log(this.AutomodCollection.get("519734247519420438")?.rules.get(automodtype.BannedWords)?.config) : null
-    }, 10000);
-  }
+  private constructor() { }
 
   public static getInstance(): AutomodClass {
     return this.instance || (this.instance = new AutomodClass());
   }
 
-  public addOrUpdateRuleType(guildId: string, data: AutomodSetupInterface) {
-    const guildAutomodData = this.getOrCreateGuildAutomodData(guildId);
-    const existingRule = this.getOrCreateRuleTypeCollection(guildId, data.type);
+  public addOrUpdateRuleType = (g: string, d: AutomodSetupInterface, r?: boolean) => { const { type: t, config: c } = d; const e = this.getOrCreateRuleTypeCollection(g, t); if (c && c.length > 0) { c.forEach((n) => { if (e.config) { const o = e.config; const u = o && o.findIndex((a) => a.filterType === n.filterType); if (u !== -1) {if (t === automodtype.BannedWords) {const w = (o && o[u].words) || [];if (r) return e.config[u].words = n.words;const m = n.words || [];for (const a of m) w.includes(a) || w.push(a);e.config[u].words = w;} else e.config[u] = { ...e.config[u], ...n };} else e.config.push(n);} else {e.config = [n];}})}}
 
-    if (data.config && data.config.length > 0) {
-      data.config.forEach((newConfig) => {
-        if (existingRule.config) {
-          const existingConfigIndex = existingRule.config.findIndex(
-            (cfg) => cfg.filterType === newConfig.filterType
-          );
-          existingConfigIndex !== -1 ?
-            data.type === automodtype.BannedWords ?
-              existingRule.config[existingConfigIndex].words = [
-                ...(existingRule.config[existingConfigIndex].words || []),
-                ...(newConfig.words || [])
-              ] :
-              existingRule.config[existingConfigIndex] = {
-                ...existingRule.config[existingConfigIndex],
-                ...newConfig
-              }
-            : existingRule.config.push(newConfig);
-        } else {
-          existingRule.config = [newConfig];
-        }
-      });
-    }
-
-    guildAutomodData.rules.set(data.type, existingRule);
-    this.AutomodCollection.set(guildId, guildAutomodData);
-  }
 
 
   public addAdvancedSettings(guildId: string, advancedSettings: AdvancedSettingFields, ruleType?: automodtype) {
