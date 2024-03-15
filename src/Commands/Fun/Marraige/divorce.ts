@@ -1,4 +1,4 @@
-import { Callback, Command } from "../../../../typings";
+import { Callback, Command } from "../../../../Main-Handler/typings";
 import { MarriageClass } from "../../../Classes/Misc/marriage";
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ColorResolvable, ComponentType, EmbedBuilder, Guild, GuildMember, Message } from "discord.js";
 import { UserClass } from "../../../Classes/Misc/user";

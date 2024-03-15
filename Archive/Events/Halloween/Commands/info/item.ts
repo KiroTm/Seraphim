@@ -1,5 +1,5 @@
 import { ItemClass } from "../../Classes/item";
-import { Callback, Command } from "../../../../../typings";
+import { Callback, Command } from "../../../../../Main-Handler/typings";
 export default {
     name: "item",
     description: "Get information about an item!",

@@ -1,4 +1,4 @@
-import { Callback, Command } from "../../../typings";
+import { Callback, Command } from "../../../Main-Handler/typings";
 import { EmbedBuilder } from "discord.js";
 import { CpuInfo, cpus } from "os";
 import { CodeStatistics } from "../../Classes/Misc/codestats";

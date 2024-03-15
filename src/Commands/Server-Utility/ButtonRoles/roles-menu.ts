@@ -1,7 +1,7 @@
 import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, ChannelType, EmbedBuilder, Guild, Interaction, PermissionFlagsBits, Role, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextChannel, User } from "discord.js";
 import { CommandType } from "../../../../Main-Handler/ConfigHandler";
 import ButtonRoleSchema from "../../../Models/ButtonRoles-schema";
-import { Callback, Command } from "../../../../typings";
+import { Callback, Command } from "../../../../Main-Handler/typings";
 async function panelRow(array: Array<any>, Num: number, guild: Guild) {
     const Rows: Array<ActionRowBuilder<ButtonBuilder>> = [];
     let k = Num

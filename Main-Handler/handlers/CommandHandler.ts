@@ -2,7 +2,7 @@ import { ClientApplication, Collection, Guild, Message } from "discord.js";
 import { CommandType, ConfigInstance } from "../ConfigHandler";
 import { Utils } from "../../src/Functions/Utils";
 import getLocalCommands from "../utils/getLocalCommands";
-import { Command } from "../../typings";
+import { Command } from "../typings";
 export class CommandHandler {
     private localCommands = new Collection<string, Command>()
     public instance!: ConfigInstance;

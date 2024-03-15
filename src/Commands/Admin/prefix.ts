@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType, EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import { Callback, Command } from "../../../typings";
+import { Callback, Command } from "../../../Main-Handler/typings";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { PrefixHandler } from "../../../Main-Handler/handlers/PrefixHandler";
 

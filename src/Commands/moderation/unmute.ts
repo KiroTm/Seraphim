@@ -1,6 +1,6 @@
 import { Embed, EmbedBuilder, GuildMember, PermissionFlagsBits, Role } from "discord.js"
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
-import { Callback, Command } from '../../../typings';
+import { Callback, Command } from '../../../Main-Handler/typings';
 import { MemberClass } from "../../Classes/Misc/member";
 import { UnmuteClass } from "../../Classes/moderation/unmute";
 export default {

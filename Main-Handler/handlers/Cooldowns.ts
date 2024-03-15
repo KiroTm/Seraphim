@@ -1,6 +1,6 @@
 import { GuildMember, Message } from "discord.js";
 import { ConfigInstance } from "../ConfigHandler";
-import { Command } from "../../typings";
+import { Command } from "../typings";
 import ms from "ms";
 
 export type CooldownsType = "perUserCooldown" | "perGuildCooldown";

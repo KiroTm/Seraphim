@@ -1,6 +1,6 @@
 import { EmbedBuilder, GuildMember } from "discord.js";
 import { CommandType } from "../../../../../Main-Handler/ConfigHandler";
-import { Callback, Command } from "../../../../../typings";
+import { Callback, Command } from "../../../../../Main-Handler/typings";
 import { MemberClass } from "../../../../../classes/misc/member";
 import { CrateType, dropTypes } from "../../Classes/crate";
 import { InventoryClass } from "../../Classes/inventory";

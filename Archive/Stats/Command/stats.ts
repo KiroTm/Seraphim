@@ -1,6 +1,6 @@
 import { Channel, Collection, EmbedBuilder, Guild, GuildMember, Role } from "discord.js";
 import { MemberClass } from "../../../src/Classes/Misc/member";
-import { Callback, Command } from "../../../typings";
+import { Callback, Command } from "../../../Main-Handler/typings";
 import { StatsClass } from "../Class/Message";
 import { ChannelClass } from "../../../src/Classes/Misc/channel";
 import ms from "enhanced-ms";

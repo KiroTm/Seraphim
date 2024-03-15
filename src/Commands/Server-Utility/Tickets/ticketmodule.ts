@@ -1,6 +1,6 @@
 import { CategoryChannel, RoleSelectMenuBuilder, Guild, GuildMember, ActionRowBuilder, ButtonBuilder, EmbedBuilder, Role, TextBasedChannel, TextChannel, PermissionFlagsBits, ApplicationCommandOptionType, ButtonStyle, ChannelType, ApplicationCommandType, StringSelectMenuBuilder, ComponentType, Attachment } from "discord.js"
 import { CommandType } from "../../../../Main-Handler/ConfigHandler"
-import { Command, Callback } from '../../../../typings'
+import { Command, Callback } from '../../../../Main-Handler/typings'
 export default {
   name: "ticketing",
   description: 'Setup up ticketing for this server!',

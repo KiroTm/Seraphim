@@ -1,6 +1,6 @@
 import { EmbedBuilder, User, GuildMember, ApplicationCommandOptionType, UserFlagsBitField, EmbedField } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler";
-import { Callback, Command } from "../../../typings";
+import { Callback, Command } from "../../../Main-Handler/typings";
 import { MemberClass } from "../../Classes/Misc/member";
 import { UserClass } from "../../Classes/Misc/user";
 

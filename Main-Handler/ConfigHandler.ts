@@ -4,7 +4,7 @@ import { CommandHandler } from "./handlers/CommandHandler";
 import { FeaturesHandler } from "./handlers/FeaturesHandler";
 import { CacheLoader } from "./handlers/CacheLoader";
 import { CooldownConfigOptions, CooldownManager } from "./handlers/Cooldowns";
-import { Command } from "../typings";
+import { Command } from "./typings";
 import { PrefixHandler } from "./handlers/PrefixHandler";
 import ms from "enhanced-ms";
 

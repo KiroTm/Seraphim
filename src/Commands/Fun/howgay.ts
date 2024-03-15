@@ -1,5 +1,5 @@
 import { UserClass } from "../../Classes/Misc/user";
-import { Callback, Command } from "../../../typings";
+import { Callback, Command } from "../../../Main-Handler/typings";
 
 export default {
     name: 'howgay',

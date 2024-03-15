@@ -1,7 +1,7 @@
 import { Interaction, Client, GuildMember, TextChannel, User, EmbedBuilder } from "discord.js";
 import { ConfigInstance } from "../../ConfigHandler";
 import getLocalCommands from "../../utils/getLocalCommands";
-import { Command } from "../../../typings";
+import { Command } from "../../typings";
 import { Utils } from "../../../src/Functions/Utils";
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     const localCommands = instance._commandHandler?.getLocalCommands()!

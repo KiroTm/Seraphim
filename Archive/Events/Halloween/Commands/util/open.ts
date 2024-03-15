@@ -1,7 +1,7 @@
 import { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Interaction, ButtonInteraction } from "discord.js";
 import { CrateClass, CrateType } from "../../Classes/crate";
 import { InventoryClass } from "../../Classes/inventory";
-import { Command, Callback } from "../../../../../typings";
+import { Command, Callback } from "../../../../../Main-Handler/typings";
 import { dropTypes } from "../../Classes/crate";
 import { ResponseClass } from "../../../../../classes/Utility/Response";
 const inventoryClass = InventoryClass.getInstance();

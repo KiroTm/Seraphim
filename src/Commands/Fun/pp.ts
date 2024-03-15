@@ -1,5 +1,5 @@
 import { EmbedBuilder } from "discord.js"
-import { Callback, Command } from "../../../typings"
+import { Callback, Command } from "../../../Main-Handler/typings"
 import { UserClass } from "../../Classes/Misc/user"
 
 export default {

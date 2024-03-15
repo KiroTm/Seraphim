@@ -1,7 +1,7 @@
 import p from "path";
 import getFiles from "./getAllFiles";
 import { Collection } from "discord.js";
-import { Command } from "../../typings";
+import { Command } from "../typings";
 export default (path: string) => {
     const localCommands = new Collection<string, Command>()
     const commandCategories = getFiles(path, true) as string[];
