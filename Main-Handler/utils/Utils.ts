@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction, GuildMember, Message, PermissionFlags, PermissionsBitField } from 'discord.js';
 import fs from 'fs'
 import path from 'path'
-import { ConfigInstance } from '../../Main-Handler/ConfigHandler';
+import { ConfigInstance } from '../ConfigHandler';
 export class Utils {
     /**
      * @param num - Converts Numbers like 10000 to "10,000" format.
