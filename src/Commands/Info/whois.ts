@@ -3,7 +3,6 @@ import { CommandType } from "../../../Main-Handler/ConfigHandler";
 import { Callback, Command } from "../../../Main-Handler/typings";
 import { MemberClass } from "../../Classes/Misc/member";
 import { UserClass } from "../../Classes/Misc/user";
-
 const memberClass = new MemberClass();
 const userClass = new UserClass();
 export default {
@@ -28,7 +27,7 @@ export default {
         CustomErrorMessage: "?whois @user/id/name <-- (optional parameter)"
     },
     callback: async ({ args, message, interaction, guild, client }: Callback) => {
-        interaction ? await interaction.deferReply() : message
+        if (interaction) await interaction.deferReply()
         const sendEmbed = (embed: EmbedBuilder) => message ? message.channel.send({ embeds: [embed] }) : interaction.editReply({ embeds: [embed] });
         const target: GuildMember | User | undefined = message ? (memberClass.fetch(guild, args.join(' '), message) as GuildMember ?? (await userClass.fetch(client, args.join(' '), message) as User || undefined)) : (interaction.options.getMember('user') as GuildMember ?? interaction.options.getUser('user') as User ?? interaction.member)
         if (typeof target == 'undefined') {

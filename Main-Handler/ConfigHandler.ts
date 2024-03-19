@@ -32,6 +32,7 @@ export class ConfigHandler {
         testServers?: string[];
         botOwners: string[];
         SyncSlashCommands?: boolean;
+        chalk?: any
         cacheOptions?: CacheLoaderOptions[];
         CooldownConfiguration?: CooldownConfigOptions;
     }) {
@@ -46,14 +47,16 @@ export class ConfigHandler {
         testServers?: string[];
         botOwners: string[];
         SyncSlashCommands?: boolean;
+        chalk?: any
         cacheOptions?: CacheLoaderOptions[];
         CooldownConfiguration?: CooldownConfigOptions;
     }) {
         let _ = Date.now()
-        const commandHandler = new CommandHandler();
-        const chalk = (await import('chalk')).default;
-        console.log(chalk.magentaBright.bold.underline.italic("Reading Config Data..."));
         const { client, mongoUri, commandsDir, featuresDir, testServers, botOwners, SyncSlashCommands, cacheOptions, CooldownConfiguration } = options;
+        let chalk = options.chalk
+        chalk = chalk ?? (await import('chalk')).default;
+        console.log(chalk.magentaBright.bold.underline.italic("Reading Config Data..."));
+        const commandHandler = new CommandHandler();
         console.log(`${chalk.bold.white("➙ Connecting to mongoose..")}`);
         await this.connectToMongo(mongoUri, chalk);
         if (botOwners.length === 0) {
@@ -89,7 +92,7 @@ export class ConfigHandler {
         await mongoose.connect(URI).then(async () => {
             this._isConnectedToDB = true;
             console.log(`${chalk.bold.white("   ↳ Mongoose connected!\n")}`);
-        }).catch((err) => console.log("   ↳ Mongoose failed to connect", err));
+        }).catch((err) => console.log("   ↳ Mongoose failed to connect"));
     }
 }
 

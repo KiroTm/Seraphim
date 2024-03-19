@@ -30,3 +30,4 @@ export interface Command {
     extraInfo?: { command_usage?: string, command_example?: string, command_detailedExplaination?: string },
     deleted?: boolean
 }
+    
