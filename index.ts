@@ -42,11 +42,12 @@ client.on("ready", async (seraphim) => {
   client.setMaxListeners(Infinity);
   new ConfigHandler({
     client: seraphim,
+    testServers: ["1138806085352951950"],
     botOwners: ["919568881939517460"],
     commandsDir: path.join(__dirname, './src/', "Commands"),
     featuresDir: path.join(__dirname, './src/', "Events"),
     mongoUri: `${process.env.MONGO_URI}`,
-      // SyncSlashCommands: true,
+      SyncSlashCommands: true,
     cacheOptions: [
       CacheLoaderOptions.Channels,
       CacheLoaderOptions.Members,

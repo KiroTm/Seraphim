@@ -6,14 +6,8 @@ export default {
     description: "Reload Module(s)",
     type: CommandType.legacy,
     ownersOnly: true,
-    callback: async ({ message, instance}: Callback) => {               
-        if (message) {            
-            try {
-                instance._ReloadCommands(instance, message.client)                
-                await message.channel.send("Reloaded All Slash Commands!")
-            } catch (err) {
-
-            }
-        }
+    callback: async ({ message, instance }: Callback) => {
+        instance._ReloadCommands(instance, message.client, true)
+        await message.channel.send("Reloaded All Slash Commands!")
     }
 } as Command
