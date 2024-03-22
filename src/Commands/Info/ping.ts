@@ -1,4 +1,3 @@
-import { EmbedBuilder } from "discord.js";
 import { CommandType } from "../../../Main-Handler/ConfigHandler"
 import { Callback, Command } from '../../../Main-Handler/typings';
 export default {
