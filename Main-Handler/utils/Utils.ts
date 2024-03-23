@@ -245,8 +245,8 @@ export class Utils {
      * @param id Message OR Interaction user ID
      * @returns boolean
      */
-    static devOnly(instance: ConfigInstance, command: any, id: string): boolean {
-        return command.ownersOnly ? instance._botOwners?.includes(id) ? true : false : false
+    static devOnly(instance: ConfigInstance, command: any, id: string) {
+        return !command.ownersOnly || instance._botOwners?.includes(id);
     }
 
     /**
