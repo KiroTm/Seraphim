@@ -57,7 +57,7 @@ client.on("ready", async (seraphim) => {
     ],
     CooldownConfiguration: {
       SendWarningMessage: true,
-      CustomErrorMessage: "A little too quick there!",
+      CustomErrorMessage: "A little too quick there! Wait {time}",
       OwnersBypass: true,
       RatelimitIgnore: true,
     }
