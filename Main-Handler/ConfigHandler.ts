@@ -92,25 +92,15 @@ export class ConfigHandler {
 
         this._cooldownsManager = CooldownManager.getInstance(this, CooldownConfiguration || { SendWarningMessage: true, CustomErrorMessage: "A little too quick there!", OwnersBypass: false, RatelimitIgnore: true });
 
-        const i = Date.now()
-
         if (featuresDir) {
             this._featuresHandler = new FeaturesHandler();
             await this._featuresHandler.readFiles(this, featuresDir, client)
         }
 
-        console.log(Date.now() - i)
-
-
-        const thi = Date.now()
-
         if (commandsDir) {
             this._commandHandler = new CommandHandler();
             await this._commandHandler.readFiles(this, commandsDir, SyncSlashCommands);
         }
-
-        console.log(Date.now() - thi)
-
 
         if (cacheOptions && cacheOptions.length > 0) {
             this._cacheOptions = cacheOptions;
@@ -133,7 +123,6 @@ export class ConfigHandler {
             await mongoose.connect(URI);
             this._isConnectedToDB = true;
         } catch (err) {
-            console.error("Failed to connect to MongoDB:", err);
             this._isConnectedToDB = false;
         }
     }
