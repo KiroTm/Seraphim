@@ -27,5 +27,5 @@ export default async (instance: ConfigInstance, message: Message) => {
     }
     Cooldowns.set(guild.id, member, command, (command.cooldown.Type || 'perGuildCooldown'))
   }
-  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix });
+  commandHandler.run(command, { client: message.client, message, args, channel, user: author, member: member as GuildMember, instance, guild: guild as Guild, commands: localCommands, prefix }, message);
 };

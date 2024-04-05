@@ -77,7 +77,7 @@ client.on("ready", async (seraphim) => {
   });
 
   process.on("uncaughtException", (error, origin) => {return;})
-  process.on("unhandledRejection", (error, promise) => {return;});
+  process.on("unhandledRejection", (error, promise) => {console.log(`${error}`)});
 });
 
 client.login(process.env.TOKEN);

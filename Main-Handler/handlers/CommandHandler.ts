@@ -64,8 +64,12 @@ export class CommandHandler {
         return true;
     }
 
-    public async run(command: Command, callbackData: any) {
-        await command.callback(callbackData);
+    public async run(command: Command, callbackData: any, message?: Message) {
+        try {
+            await command.callback(callbackData);
+        } catch (error) {
+            message?.channel?.send("There was an error running this command!").catch(() => {})
+        }
     }
 
     public getLocalCommands() {

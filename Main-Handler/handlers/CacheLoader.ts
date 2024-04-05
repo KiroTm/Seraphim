@@ -12,7 +12,6 @@ export class CacheLoader {
     }
 
     public static getInstance(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined): CacheLoader {
-        console.log(instance._chalk.bold.white(`➙ Started Caching for: ${instance._cacheOptions.join(', ')}`));
         return this.instance || (this.instance = new CacheLoader(instance, cacheLoaderOpts));
     }
 

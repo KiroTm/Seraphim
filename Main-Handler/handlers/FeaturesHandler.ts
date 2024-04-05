@@ -11,7 +11,6 @@ export class FeaturesHandler {
   }
 
   private async readFiles(ConfigInstance: ConfigInstance, path1: string, client: Client, chalk: any) {
-    console.log(`${chalk.bold.white("➙ Loading events...")}`);
     const DefaulteventFolders = getAllFiles(path.join(__dirname, "../", 'events'), true) as any[];
     let eventFolders = [...DefaulteventFolders, ...getAllFiles(path1, true)]
 
