@@ -57,7 +57,7 @@ client.on("ready", async (seraphim) => {
     ],
     DeveloperConfiguration: {
       testServers: ["1138806085352951950"],
-    botOwners: ["919568881939517460"],
+      botOwners: ["919568881939517460"],
     },
     LegacyCommandConfiguration: {
       PrefixConfiguration: {
@@ -76,7 +76,7 @@ client.on("ready", async (seraphim) => {
     }
   });
 
-  process.on("uncaughtException", (error, origin) => {return;})
+  process.on("uncaughtException", (error, origin) => { return; })
   process.on("unhandledRejection", (error, promise) => console.error(error));
 });
 

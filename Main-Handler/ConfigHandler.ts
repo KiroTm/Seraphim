@@ -1,5 +1,4 @@
 import { Client, Collection } from "discord.js";
-import mongoose from "mongoose";
 import { CommandHandler } from "./handlers/CommandHandler";
 import { FeaturesHandler } from "./handlers/FeaturesHandler";
 import { CacheLoader } from "./handlers/CacheLoader";
@@ -8,15 +7,17 @@ import { Command } from "./typings";
 import { PrefixHandler } from "./handlers/PrefixHandler";
 import { Logger } from "./classes/Logger";
 import { Stopwatch } from "./classes/StopWatch";
+import mongoose from "mongoose";
+import figlet from "figlet";
 
 export interface ConfigHandlerInterface {
-    chalk?: any;
-    figlet?: any;
+    chalk?: any | undefined;
+    figlet?: any | undefined;
     client: Client;
     mongoUri: string;
-    commandsDir?: string;
-    featuresDir?: string;
-    cacheOptions?: CacheLoaderOptions[];
+    commandsDir?: string | undefined;
+    featuresDir?: string | undefined;
+    cacheOptions?: CacheLoaderOptions[] | undefined;
     DeveloperConfiguration: {
         botOwners: string[];
         testServers?: string[];
@@ -29,14 +30,13 @@ export interface ConfigHandlerInterface {
             defaultPrefix: string;
             dynamicPrefix: boolean;
         }
-        CooldownConfiguration?: CooldownConfigOptions;
+        CooldownConfiguration?: CooldownConfigOptions | undefined;
     }
 }
 
 export class ConfigHandler {
     public _client!: Client;
     public _chalk: any;
-    public _stopwatch: Stopwatch;
     public _testServers?: string[];
     public _botOwners?: string[];
     public _cooldownsManager?: CooldownManager;
@@ -47,28 +47,24 @@ export class ConfigHandler {
     public _cacheOptions!: CacheLoaderOptions[];
     public _localCommands!: Collection<string, Command>
     public _prefixHandler: PrefixHandler | undefined;
-    public _figlet: any | undefined;
+    public _figlet: typeof figlet
 
     constructor(options: ConfigHandlerInterface) {
         this._figlet = options.figlet || require('figlet');
 
         this._client = options.client;
 
-        this._stopwatch = new Stopwatch();
-
-        this._stopwatch.start()
-
-
         this._chalk = options.chalk || require('chalk');
 
-        console.log(this._chalk.bold.whiteBright("Firing the handler.."))
 
         this.init(options);
     }
 
     private async init(options: ConfigHandlerInterface) {
-        
-        this._stopwatch.start();
+
+        const stopWatch = new Stopwatch()
+
+        stopWatch.start()
 
         const { client, mongoUri, commandsDir, featuresDir, DeveloperConfiguration, SlashCommandConfiguration, cacheOptions, LegacyCommandConfiguration } = options;
 
@@ -79,8 +75,15 @@ export class ConfigHandler {
         const { PrefixConfiguration, CooldownConfiguration } = LegacyCommandConfiguration;
 
         this._testServers = testServers;
-        
+
         this._botOwners = botOwners;
+
+        console.log(await this._figlet.text(client.user?.username!, 'Bloody', ((error) => { })))
+
+
+        if (!this.checkFields(options)) process.exit(1)
+
+        console.log(this._chalk.grey("Loading Handlers..."))
 
         await this.connectToMongo(mongoUri);
 
@@ -93,11 +96,13 @@ export class ConfigHandler {
         this._cooldownsManager = CooldownManager.getInstance(this, CooldownConfiguration || { SendWarningMessage: true, CustomErrorMessage: "A little too quick there!", OwnersBypass: false, RatelimitIgnore: true });
 
         if (featuresDir) {
+            console.log(this._chalk.grey("Loading Event Handler..."))
             this._featuresHandler = new FeaturesHandler();
             await this._featuresHandler.readFiles(this, featuresDir, client)
         }
 
         if (commandsDir) {
+            console.log(this._chalk.grey("Loading Command Handler...\n"))
             this._commandHandler = new CommandHandler();
             await this._commandHandler.readFiles(this, commandsDir, SyncSlashCommands);
         }
@@ -114,23 +119,48 @@ export class ConfigHandler {
 
         await Logger.startUp(this);
 
-        const ElapsedTime = this._stopwatch.stop();
-        console.log(this._chalk.yellowBright.bold.underline(`Client took ${this._stopwatch.formatTime(ElapsedTime)} to get ready.`));
+        const ElapsedTime = stopWatch.stop();
+
+        console.log(this._chalk.yellowBright.bold(`\nClient took ${stopWatch.formatTime(ElapsedTime)} to get ready.`));
     }
 
     private async connectToMongo(URI: string) {
         try {
             await mongoose.connect(URI);
             this._isConnectedToDB = true;
-        } catch (err) {
-            this._isConnectedToDB = false;
+        } catch (error) {
+            return this._isConnectedToDB = false;
         }
     }
+
+    private checkFields(options: ConfigHandlerInterface): boolean {
+        const expectedRequiredFields: string[] = [
+            'client',
+            'mongoUri',
+            'DeveloperConfiguration',
+            'LegacyCommandConfiguration',
+            'SlashCommandConfiguration'
+        ];
+
+        const providedFields: string[] = Object.keys(options)
+            .filter(key => !(options[key as keyof ConfigHandlerInterface] instanceof Function));
+
+        const missingFields: string[] = expectedRequiredFields.filter(field => !providedFields.includes(field));
+
+        if (missingFields.length > 0) {
+            console.log(this._chalk.red.bold(`Missing required fields: ${missingFields.join(", ")}`));
+            return false;
+        }
+
+        return true;
+    }
+
+
+
 }
 
 export interface ConfigInstance {
     _chalk: any;
-    _stopwatch: Stopwatch;
     _figlet: any;
     _client: Client;
     _testServers?: string[];
