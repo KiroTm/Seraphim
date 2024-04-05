@@ -7,7 +7,6 @@ export type CooldownsType = "perUserCooldown" | "perGuildCooldown";
 
 export class CooldownManager {
 	private static instance: CooldownManager | null = null;
-	private timer: NodeJS.Timeout | null = null;
 	private perGuildCooldowns: Map<string, Map<string, number>> = new Map();
 	private perUserCooldowns: Map<string, Map<string, number>> = new Map();
 	private cooldownMessages: Map<string, boolean> = new Map();
@@ -15,9 +14,9 @@ export class CooldownManager {
 	private ignoredMessages: Map<string, number> = new Map();
 	private CooldownConfig: CooldownConfigOptions = {};
 
-	private constructor(instance: ConfigInstance, CooldownConfigOptions: CooldownConfigOptions) {
+	private constructor(_: ConfigInstance, CooldownConfigOptions: CooldownConfigOptions) {
 		this.CooldownConfig = CooldownConfigOptions;
-		this.timer = setInterval(() => this.clearCooldownMessages(), 30 * 1000);
+		setInterval(() => this.clearCooldownMessages(), 30 * 1000);
 	}
 
 	public static getInstance(instance: ConfigInstance, CooldownConfigOptions: CooldownConfigOptions): CooldownManager {
@@ -31,7 +30,7 @@ export class CooldownManager {
 		if (this.CooldownConfig.RatelimitIgnore) {
 			const messageCount = (this.ignoredMessages.get(userId) || 0) + 1;
 			this.ignoredMessages.set(userId, messageCount);
-			if (messageCount >= 25) {
+			if (messageCount >= 15) {
 				this.ignoreUser(userId, 60000, message);
 				this.resetMessageCount(userId);
 			}
@@ -58,11 +57,10 @@ export class CooldownManager {
 		const cooldownKey = `${authorId}-${commandName}-messageCooldown`;
 		if (!this.cooldownMessages.has(cooldownKey)) {
 			this.cooldownMessages.set(cooldownKey, true);
-			setTimeout(() => this.cooldownMessages.delete(cooldownKey), 8000);
-			const SendWarning: boolean =
-				command.cooldown?.SendWarningMessage !== false && this.CooldownConfig.SendWarningMessage !== false;
+			setTimeout(() => this.cooldownMessages.delete(cooldownKey), 7000);
+			const SendWarning: boolean = command.cooldown?.SendWarningMessage !== false && this.CooldownConfig.SendWarningMessage !== false;
 			if (SendWarning) {
-				const msg = message.reply(command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there!");
+				const msg = message.reply(`${command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there! Wait {time}"}`.replace(/{time}/g, ''));
 				setTimeout(() => msg.then((m) => m.delete().catch((er) => { })), 8000);
 			}
 		}
@@ -102,11 +100,10 @@ export class CooldownManager {
 	}
 
 	private ignoreUser(userId: string, ignoreDuration: number, message: Message) {
-		if (this.CooldownConfig.RatelimitIgnore) {
-			this.ignoredUsers.set(userId, ignoreDuration);
-			message.reply(`You're being ratelimited! ${message.client.user.username} will ignore your commands for 1 minute`);
-			setTimeout(() => this.unignoreUser(userId), ignoreDuration);
-		}
+		if (!this.CooldownConfig.RatelimitIgnore) return;
+		this.ignoredUsers.set(userId, ignoreDuration);
+		message.reply(`You're being ratelimited! ${message.client.user.username} will ignore your commands for 1 minute`);
+		setTimeout(() => this.unignoreUser(userId), ignoreDuration);
 	}
 
 	private unignoreUser(userId: string) {

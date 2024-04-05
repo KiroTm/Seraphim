@@ -1,6 +1,7 @@
 import { IntentsBitField, Client, Partials, ActivityType } from 'discord.js'
 import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
 import path from "path";
+import figlet from 'figlet';
 const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
 require("dotenv/config");
 
@@ -42,40 +43,41 @@ client.on("ready", async (seraphim) => {
   const chalk = (await import("chalk")).default;
   client.setMaxListeners(Infinity);
   new ConfigHandler({
+    chalk,
     client: seraphim,
-    testServers: ["1138806085352951950"],
-    botOwners: ["919568881939517460"],
+    figlet: figlet,
     commandsDir: path.join(__dirname, './src/', "Commands"),
     featuresDir: path.join(__dirname, './src/', "Events"),
-    mongoUri: `${process.env.MONGO_URI}`,
-    // SyncSlashCommands: true,
+    mongoUri: process.env.MONGO_URI!,
     cacheOptions: [
+      CacheLoaderOptions.Bans,
       CacheLoaderOptions.Channels,
       CacheLoaderOptions.Members,
       CacheLoaderOptions.Roles,
-      CacheLoaderOptions.Bans,
     ],
-    CooldownConfiguration: {
-      SendWarningMessage: true,
-      CustomErrorMessage: "A little too quick there! Wait {time}",
-      OwnersBypass: true,
-      RatelimitIgnore: true,
+    DeveloperConfiguration: {
+      testServers: ["1138806085352951950"],
+    botOwners: ["919568881939517460"],
+    },
+    LegacyCommandConfiguration: {
+      PrefixConfiguration: {
+        defaultPrefix: "?",
+        dynamicPrefix: true
+      },
+      CooldownConfiguration: {
+        SendWarningMessage: true,
+        CustomErrorMessage: "A little too quick there! Wait {time}",
+        OwnersBypass: true,
+        RatelimitIgnore: true,
+      }
+    },
+    SlashCommandConfiguration: {
+      SyncSlashCommands: false
     }
   });
 
-  process.on("uncaughtException", (error, origin) => {
-    console.log(
-      chalk.redBright(
-        `Uncaught Exception: ${error.message}\nOrigin: ${origin}`,
-      ),
-    );
-  });
-
-  process.on("unhandledRejection", (error, promise) => {
-    console.log(
-      chalk.redBright(`Unhandled Rejection - ${error}\nPromise: ${promise.catch((e) => console.log(e))}`),
-    );
-  });
+  process.on("uncaughtException", (error, origin) => {return;})
+  process.on("unhandledRejection", (error, promise) => {return;});
 });
 
 client.login(process.env.TOKEN);

@@ -1,9 +1,10 @@
 import { Collection } from "discord.js";
-import { ConfigInstance } from "../ConfigHandler";
+import { ConfigHandler, ConfigInstance } from "../ConfigHandler";
 import PrefixSchema from "../models/PrefixSchema";
 
 export class PrefixHandler {
     private static instance: PrefixHandler | null = null;
+    private defaultPrefix: string = ""
     private prefixes = new Collection<string, string>();
 
     private constructor(instance: ConfigInstance) {
@@ -19,13 +20,21 @@ export class PrefixHandler {
         this.uploadPrefix(key, prefix);
     }
 
-    public getPrefix(key: string): string | undefined {
-        return this.prefixes.get(key);
+    public getPrefix(key: string): string {
+        return (this.prefixes.get(key) ?? this.defaultPrefix);
     }
 
     private async fetchPrefixes(): Promise<void> {
         const Prefixes = await PrefixSchema.find();
         Prefixes.forEach(({ GuildID, Prefix }) => this.prefixes.set(GuildID, Prefix));
+    }
+
+    public getDefaultPrefix() {
+        return this.defaultPrefix
+    }
+
+    public setDefaultPrefix(prefix: string): void {
+        this.defaultPrefix = prefix
     }
 
     private async uploadPrefix(guildID: string, prefix: string): Promise<void> {

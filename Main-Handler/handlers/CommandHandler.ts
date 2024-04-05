@@ -11,10 +11,8 @@ export class CommandHandler {
 
     async readFiles(instance: ConfigInstance, commandsdir: any, reloadslash?: boolean | false) {
         const { _chalk, _client } = instance;
-        console.log(`${_chalk.bold.white("➙ Loading legacy commands...")}`);
         this.localCommands = await getLocalCommands(commandsdir);
         if (!reloadslash) return;
-        console.log(`${_chalk.bold.white("➙ Loading slash commands...")}`);
         const slashcommands = this.localCommands.filter(c => typeof c.type !== 'undefined' && c.type !== CommandType.legacy);
         console.log(`${_chalk.bold.white(`➙ Iterating through ${slashcommands.size} slash commands...`)}`);
         const application = instance._client?.application as ClientApplication;

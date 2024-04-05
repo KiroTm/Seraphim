@@ -7,7 +7,7 @@ export default async (instance: ConfigInstance, message: Message) => {
   const localCommands = instance._commandHandler?.getLocalCommands()
   const allCommands = instance._commandHandler?.getAllCommands(localCommands)!
   const commandHandler = new CommandHandler();
-  const prefix = instance._prefixHandler?.getPrefix(`${message.guildId}`) as string || "?"
+  const prefix = instance._prefixHandler?.getPrefix(`${message.guildId}`) as string
   const Cooldowns = instance._cooldownsManager as CooldownManager
   if (!message.content.startsWith(prefix) || message.author.bot || message.channel.type !== ChannelType.GuildText || !message.guild || !message.member) return;
   if (Cooldowns.isUserIgnored(message.author.id)) return;

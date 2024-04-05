@@ -19,7 +19,7 @@ export default {
     ],
     aliases: ["w"],
     cooldown: {
-        Duration: '5s'
+        Duration: '15s'
     },
     args: {
         minArgs: 1,
