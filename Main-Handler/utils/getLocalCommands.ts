@@ -1,11 +1,11 @@
-import getFiles from "./getAllFiles";
+import getAllFiles from "./getAllFiles";
 import { Collection } from "discord.js";
 import { Command } from "../typings";
-export default (path: string) => {
+export default async (path: string) => {
     const localCommands = new Collection<string, Command>()
-    const commandCategories = getFiles(path, true) as string[];
+    const commandCategories = await getAllFiles(path, true) as string[];
     for (const commandCategory of commandCategories) {
-        const commandFiles = getFiles(commandCategory) as string[];
+        const commandFiles = await getAllFiles(commandCategory) as string[];
         commandFiles.map((path) => {
             const commandModule: Command = require(path).default;
             if (!commandModule || !commandModule.name) return;

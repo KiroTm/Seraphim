@@ -3,11 +3,10 @@ import mongoose from "mongoose";
 import { CommandHandler } from "./handlers/CommandHandler";
 import { FeaturesHandler } from "./handlers/FeaturesHandler";
 import { CacheLoader } from "./handlers/CacheLoader";
-import { CooldownConfigOptions, CooldownManager } from "./handlers/Cooldowns";
+import { CooldownManager, CooldownConfigOptions } from "./handlers/Cooldowns";
 import { Command } from "./typings";
 import { PrefixHandler } from "./handlers/PrefixHandler";
 import { Logger } from "./classes/Logger";
-import figlet from "figlet";
 import { Stopwatch } from "./classes/StopWatch";
 
 export interface ConfigHandlerInterface {
@@ -26,7 +25,7 @@ export interface ConfigHandlerInterface {
         SyncSlashCommands: boolean;
     }
     LegacyCommandConfiguration: {
-        PrefixConfiguration: {
+        PrefixConfiguration?: {
             defaultPrefix: string;
             dynamicPrefix: boolean;
         }
@@ -37,42 +36,51 @@ export interface ConfigHandlerInterface {
 export class ConfigHandler {
     public _client!: Client;
     public _chalk: any;
-    public _testServers: string[] | undefined;
-    public _botOwners: string[] | undefined;
-    public _cooldownsManager: CooldownManager | undefined;
-    public _commandHandler: CommandHandler | undefined;
-    public _eventHandler: any | undefined;
-    public _featuresHandler: FeaturesHandler | undefined;
-    public _isConnectedToDB: boolean | false | undefined;
+    public _stopwatch: Stopwatch;
+    public _testServers?: string[];
+    public _botOwners?: string[];
+    public _cooldownsManager?: CooldownManager;
+    public _commandHandler?: CommandHandler;
+    public _featuresHandler?: FeaturesHandler;
+    public _isConnectedToDB: boolean = false;
     public _ReloadCommands!: Function;
     public _cacheOptions!: CacheLoaderOptions[];
     public _localCommands!: Collection<string, Command>
     public _prefixHandler: PrefixHandler | undefined;
-    public _figlet: any | undefined
+    public _figlet: any | undefined;
 
     constructor(options: ConfigHandlerInterface) {
+        this._figlet = options.figlet || require('figlet');
+
+        this._client = options.client;
+
+        this._stopwatch = new Stopwatch();
+
+        this._stopwatch.start()
+
+
+        this._chalk = options.chalk || require('chalk');
+
+        console.log(this._chalk.bold.whiteBright("Firing the handler.."))
+
         this.init(options);
     }
 
-    async init(options: ConfigHandlerInterface) {
+    private async init(options: ConfigHandlerInterface) {
+        
+        this._stopwatch.start();
 
-        let stopWatch = new Stopwatch()
+        const { client, mongoUri, commandsDir, featuresDir, DeveloperConfiguration, SlashCommandConfiguration, cacheOptions, LegacyCommandConfiguration } = options;
 
-        stopWatch.start()
+        const { botOwners = [], testServers = [] } = DeveloperConfiguration;
 
-        let { client, mongoUri, commandsDir, featuresDir, DeveloperConfiguration , SlashCommandConfiguration, cacheOptions, LegacyCommandConfiguration, chalk, figlet } = options;
+        const { SyncSlashCommands } = SlashCommandConfiguration;
 
-        let { PrefixConfiguration, CooldownConfiguration } = LegacyCommandConfiguration
+        const { PrefixConfiguration, CooldownConfiguration } = LegacyCommandConfiguration;
 
-        let { SyncSlashCommands } = SlashCommandConfiguration
-
-        let { botOwners, testServers } = DeveloperConfiguration
-
-        const commandHandler = new CommandHandler();
-
-        chalk = chalk ?? (await import('chalk')).default;
-
-        figlet = figlet ?? (await import('figlet')).default;
+        this._testServers = testServers;
+        
+        this._botOwners = botOwners;
 
         await this.connectToMongo(mongoUri);
 
@@ -82,73 +90,70 @@ export class ConfigHandler {
             if (ownerId && !botOwners.includes(ownerId)) botOwners.push(ownerId);
         }
 
-        this._chalk = chalk
+        this._cooldownsManager = CooldownManager.getInstance(this, CooldownConfiguration || { SendWarningMessage: true, CustomErrorMessage: "A little too quick there!", OwnersBypass: false, RatelimitIgnore: true });
 
-        this._figlet = figlet
+        const i = Date.now()
 
-        this._client = client;
+        if (featuresDir) {
+            this._featuresHandler = new FeaturesHandler();
+            await this._featuresHandler.readFiles(this, featuresDir, client)
+        }
 
-        this._testServers = testServers;
+        console.log(Date.now() - i)
 
-        this._botOwners = botOwners;
 
-        this._ReloadCommands = async (instance_1: ConfigInstance) => this._commandHandler?.readFiles(instance_1, commandsDir!)
+        const thi = Date.now()
 
-        this._cooldownsManager = CooldownManager.getInstance(this, CooldownConfiguration ?? { SendWarningMessage: true, CustomErrorMessage: "A little too quick there!", OwnersBypass: false, RatelimitIgnore: true });
+        if (commandsDir) {
+            this._commandHandler = new CommandHandler();
+            await this._commandHandler.readFiles(this, commandsDir, SyncSlashCommands);
+        }
 
-        if (featuresDir) this._featuresHandler = new FeaturesHandler(this, featuresDir, client, chalk);
+        console.log(Date.now() - thi)
 
-        if (commandsDir) { this._commandHandler = commandHandler; commandHandler.readFiles(this, commandsDir, SyncSlashCommands) }
 
         if (cacheOptions && cacheOptions.length > 0) {
             this._cacheOptions = cacheOptions;
-            CacheLoader.getInstance(this, cacheOptions) 
+            CacheLoader.getInstance(this, cacheOptions);
         }
 
-        if (LegacyCommandConfiguration.PrefixConfiguration) {
-            this._prefixHandler = PrefixHandler.getInstance(this); 
-            PrefixHandler.getInstance(this).setDefaultPrefix(PrefixConfiguration.defaultPrefix)
+        if (PrefixConfiguration) {
+            this._prefixHandler = PrefixHandler.getInstance(this);
+            this._prefixHandler.setDefaultPrefix(PrefixConfiguration.defaultPrefix);
         }
 
-        await Logger.startUp(this)
+        await Logger.startUp(this);
 
-        const ElapsedTime = stopWatch.stop();
-
-        console.log(chalk.yellowBright.bold.underline(`Client took ${stopWatch.formatTime(ElapsedTime)} to get ready.`))
+        const ElapsedTime = this._stopwatch.stop();
+        console.log(this._chalk.yellowBright.bold.underline(`Client took ${this._stopwatch.formatTime(ElapsedTime)} to get ready.`));
     }
 
     private async connectToMongo(URI: string) {
-        await mongoose.connect(URI)
-        .catch((err) => {
-            this._isConnectedToDB = false
-        })
-        .then(async () => {
+        try {
+            await mongoose.connect(URI);
             this._isConnectedToDB = true;
-        })
+        } catch (err) {
+            console.error("Failed to connect to MongoDB:", err);
+            this._isConnectedToDB = false;
+        }
     }
 }
 
 export interface ConfigInstance {
     _chalk: any;
+    _stopwatch: Stopwatch;
     _figlet: any;
     _client: Client;
-    _testServers: Array<string> | undefined;
-    _botOwners: Array<string> | undefined;
-    _cooldownsManager: CooldownManager | undefined;
-    _commandHandler: CommandHandler | undefined;
-    _eventHandler: any | undefined;
-    _featuresHandler: FeaturesHandler | undefined;
-    _isConnectedToDB: boolean | false | undefined;
+    _testServers?: string[];
+    _botOwners?: string[];
+    _cooldownsManager?: CooldownManager;
+    _commandHandler?: CommandHandler;
+    _featuresHandler?: FeaturesHandler;
+    _isConnectedToDB: boolean;
     _ReloadCommands: Function;
-    _cacheOptions: CacheLoaderOptions[]
-    _localCommands: Collection<string, Command>
-    _prefixHandler: PrefixHandler | undefined;
-}
-
-export enum CommandType {
-    slash,
-    legacy,
-    both
+    _cacheOptions?: CacheLoaderOptions[];
+    _localCommands?: Collection<string, Command>;
+    _prefixHandler?: PrefixHandler;
 }
 
 export enum CacheLoaderOptions {
@@ -156,4 +161,10 @@ export enum CacheLoaderOptions {
     Roles = 'roles',
     Channels = 'channels',
     Bans = 'bans',
+}
+
+export enum CommandType {
+    slash,
+    legacy,
+    both
 }

@@ -3,12 +3,10 @@ import { ConfigInstance, CacheLoaderOptions } from "../ConfigHandler";
 
 export class CacheLoader {
     private static instance: CacheLoader | null = null;
-    private timer: NodeJS.Timeout | null = null;
 
     private constructor(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined) {
-        this.emit(instance);
         this.bulk_loadcache(instance, cacheLoaderOpts);
-        this.timer = setInterval(() => this.bulk_loadcache(instance, cacheLoaderOpts), 120 * 1000);
+        setInterval(() => this.bulk_loadcache(instance, cacheLoaderOpts), 120 * 1000);
     }
 
     public static getInstance(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined): CacheLoader {
@@ -34,9 +32,5 @@ export class CacheLoader {
                 guild.bans.fetch();
             }
         });
-    }
-
-    private emit(instance: ConfigInstance) {
-        instance._client?.emit('messageCreate', { content: 'null' } as any);
     }
 }

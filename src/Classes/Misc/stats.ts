@@ -20,7 +20,7 @@ export class StatsClass {
 
     public add(message: Message) {
         const guildId = message.guild?.id;
-        const userId = message.author.id;
+        const userId = message.author?.id;
         const messageId = `${message.id}-${message.createdTimestamp}`;
         const timestamp = message.createdTimestamp;
         const channelId = message.channelId;
