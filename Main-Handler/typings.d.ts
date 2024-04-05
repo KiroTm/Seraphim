@@ -22,7 +22,7 @@ export interface Command {
     aliases?: Array<string>
     type?: CommandType | CommandType.legacy,
     permissions?: Array<bigint>
-    args?: { minArgs: number, maxArgs: number, CustomErrorMessage: string}
+    args?: { minArgs: number, maxArgs: number, CustomErrorMessage: string }
     cooldown?: { CustomCooldownMessage?: string, Duration: string, Type?: CooldownsType, SendWarningMessage?: boolean | true }
     options?: Array<ApplicationCommandOption>
     ownersOnly?: boolean | false
@@ -30,4 +30,3 @@ export interface Command {
     extraInfo?: { command_usage?: string, command_example?: string, command_detailedExplaination?: string },
     deleted?: boolean
 }
-    

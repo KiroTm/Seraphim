@@ -1,5 +1,6 @@
-import fs from 'fs'
 import path from 'path'
+import fs from 'fs'
+
 const getAllFiles = (path1: any, foldersOnly: boolean = false) => {
     const files = fs.readdirSync(path1, {
         withFileTypes: true,

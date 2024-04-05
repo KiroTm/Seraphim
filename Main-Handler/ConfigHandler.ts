@@ -1,12 +1,12 @@
-import { Client, Collection } from "discord.js";
-import { CommandHandler } from "./handlers/CommandHandler";
-import { FeaturesHandler } from "./handlers/FeaturesHandler";
-import { CacheLoader } from "./handlers/CacheLoader";
 import { CooldownManager, CooldownConfigOptions } from "./handlers/Cooldowns";
-import { Command } from "./typings";
+import { FeaturesHandler } from "./handlers/FeaturesHandler";
+import { CommandHandler } from "./handlers/CommandHandler";
 import { PrefixHandler } from "./handlers/PrefixHandler";
-import { Logger } from "./classes/Logger";
+import { CacheLoader } from "./handlers/CacheLoader";
 import { Stopwatch } from "./classes/StopWatch";
+import { Client, Collection } from "discord.js";
+import { Logger } from "./classes/Logger";
+import { Command } from "./typings";
 import mongoose from "mongoose";
 import figlet from "figlet";
 

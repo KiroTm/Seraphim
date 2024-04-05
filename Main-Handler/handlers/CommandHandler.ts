@@ -1,7 +1,7 @@
 import { ClientApplication, Collection, Guild, Message } from "discord.js";
-import { CommandType, ConfigInstance } from "../ConfigHandler";
-import { Utils } from '../utils/Utils';
 import getLocalCommands from "../utils/getLocalCommands";
+import { ConfigInstance } from "../ConfigHandler";
+import { Utils } from '../utils/Utils';
 import { Command } from "../typings";
 
 export class CommandHandler {
@@ -68,7 +68,7 @@ export class CommandHandler {
         try {
             await command.callback(callbackData);
         } catch (error) {
-            message?.channel?.send("There was an error running this command!").catch(() => {})
+            message?.channel?.send("There was an error running this command!").catch(() => { })
         }
     }
 

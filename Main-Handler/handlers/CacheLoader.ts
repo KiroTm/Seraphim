@@ -1,5 +1,5 @@
-import { Client, Guild } from "discord.js";
 import { ConfigInstance, CacheLoaderOptions } from "../ConfigHandler";
+import { Client, Guild } from "discord.js";
 
 export class CacheLoader {
     private static instance: CacheLoader | null = null;
@@ -14,23 +14,11 @@ export class CacheLoader {
     }
 
     private async bulk_loadcache(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined) {
-        const client = instance._client as Client;
-        client.guilds.cache.forEach(async (guild: Guild) => {
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Members)) {
-                guild.members.fetch();
-            }
-
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Roles)) {
-                guild.roles.fetch();
-            }
-
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Channels)) {
-                guild.channels.fetch();
-            }
-
-            if (cacheLoaderOpts?.includes(CacheLoaderOptions.Bans)) {
-                guild.bans.fetch();
-            }
+        instance._client.guilds.cache.forEach(async (guild: Guild) => {
+            cacheLoaderOpts?.forEach(option => {
+                guild[option]?.fetch?.();
+            });
         });
     }
+
 }
