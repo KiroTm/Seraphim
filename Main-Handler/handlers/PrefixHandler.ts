@@ -7,7 +7,7 @@ export class PrefixHandler {
     private defaultPrefix: string = ""
     private prefixes = new Collection<string, string>();
 
-    private constructor(instance: ConfigInstance) {
+    private constructor(_: ConfigInstance) {
         this.setupPeriodicUpdates();
     }
 

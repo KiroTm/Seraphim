@@ -6,11 +6,11 @@ import { ConfigInstance } from "../ConfigHandler";
 export class FeaturesHandler {
   private filesCollection: Collection<string, number> = new Collection<string, number>();
 
-  constructor(instance: ConfigInstance, featuresDir: string, client: Client, chalk: any) {
-    this.readFiles(instance, featuresDir, client, chalk);
+  constructor(instance: ConfigInstance, featuresDir: string, client: Client) {
+    this.readFiles(instance, featuresDir, client);
   }
 
-  private async readFiles(ConfigInstance: ConfigInstance, path1: string, client: Client, chalk: any) {
+  private async readFiles(ConfigInstance: ConfigInstance, path1: string, client: Client) {
     const DefaulteventFolders = getAllFiles(path.join(__dirname, "../", 'events'), true) as any[];
     let eventFolders = [...DefaulteventFolders, ...getAllFiles(path1, true)]
 
