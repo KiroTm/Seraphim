@@ -1,10 +1,11 @@
 import { ConfigInstance, CacheLoaderOptions } from "../ConfigHandler";
-import { Client, Guild } from "discord.js";
+import { Guild, Client } from "discord.js";
 
 export class CacheLoader {
     private static instance: CacheLoader | null = null;
 
     private constructor(instance: ConfigInstance, cacheLoaderOpts: CacheLoaderOptions[] | undefined) {
+        this.emit(instance._client!)
         this.bulk_loadcache(instance, cacheLoaderOpts);
         setInterval(() => this.bulk_loadcache(instance, cacheLoaderOpts), 120 * 1000);
     }
@@ -19,6 +20,10 @@ export class CacheLoader {
                 guild[option]?.fetch?.();
             });
         });
+    }
+
+    private emit(client: Client) {
+        client.emit('messageCreate', { content: null } as any)
     }
 
 }
