@@ -22,8 +22,9 @@ export const client = new Client({
     ThreadMember,
     GuildMember,
   ],
+  shards: 'auto',
   rest: {
-    globalRequestsPerSecond: 9999,
+    globalRequestsPerSecond: 9999
   },
   presence: {
     activities: [

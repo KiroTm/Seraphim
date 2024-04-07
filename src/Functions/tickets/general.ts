@@ -7,7 +7,7 @@ export async function makeTicket(interaction: ButtonInteraction, data: any) {
     const Everyone = guild.roles.cache.find((r) => r.id === guild.id) as Role
     const Bot = interaction.client.user as User
     await interaction.deferReply({ ephemeral: true })
-    const ID = (await import('nanoid')).nanoid()
+    const ID = member.user.id
     guild.channels.create({
         name: `${interaction.user.username.replace(/ /g, '')}`,
         type: ChannelType.GuildText,

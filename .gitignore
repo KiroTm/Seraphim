@@ -1,6 +1,5 @@
 node_modules
 .zed
-package.json
 package-lock.json
 .env
 .DS_Store
