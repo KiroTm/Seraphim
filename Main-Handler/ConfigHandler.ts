@@ -9,45 +9,145 @@ import { Command } from "./typings";
 import mongoose from "mongoose";
 import figlet from "figlet";
 
+/**
+ * Represents the configuration interface for the bot.
+ */
 export interface ConfigHandlerInterface {
+  /** 
+   * Chalk library for colorizing terminal output. 
+   */
   chalk?: any | undefined;
+  /** 
+   * Figlet library for generating ASCII art from text. 
+   */
   figlet?: any | undefined;
+  /** 
+   * The Discord client instance. 
+   */
   client: Client;
+  /** 
+   * MongoDB URI for database connection. 
+   */
   mongoUri: string;
+  /** 
+   * Directory path for bot commands. 
+   */
   commandsDir?: string | undefined;
+  /** 
+   * Directory path for bot features. 
+   */
   featuresDir?: string | undefined;
+  /** 
+   * Cache loader options for caching Discord data. 
+   */
   cacheOptions?: CacheLoaderOptions[] | undefined;
+  /** 
+   * Configuration for bot developers. 
+   */
   DeveloperConfiguration: {
+    /** 
+     * Array of bot owners' Discord user IDs. 
+     */
     botOwners: string[];
+    /** 
+     * Array of test server IDs for development purposes. 
+     */
     testServers?: string[];
   },
+  /** 
+   * Configuration for slash commands. 
+   */
   SlashCommandConfiguration: {
+    /** 
+     * Whether to synchronize slash commands with Discord API. 
+     */
     SyncSlashCommands: boolean;
   }
+  /** 
+   * Configuration for legacy commands. 
+   */
   LegacyCommandConfiguration: {
+    /** 
+     * Configuration for command prefixes. 
+     */
     PrefixConfiguration?: {
+      /** 
+       * Default prefix for command invocation. 
+       */
       defaultPrefix: string;
+      /** 
+       * Whether to allow dynamic prefixes. 
+       */
       dynamicPrefix: boolean;
     }
+    /** 
+     * Configuration for command cooldowns. 
+     */
     CooldownConfiguration?: CooldownConfigOptions | undefined;
   }
 }
 
+/**
+ * Represents the main configuration handler for the bot.
+ */
 export class ConfigHandler {
+  /** 
+   * The Discord client instance. 
+   */
   public _client!: Client;
+  /** 
+   * Chalk library for colorizing terminal output. 
+   */
   public _chalk: any;
+  /** 
+   * Array of test server IDs for development purposes. 
+   */
   public _testServers?: string[];
+  /** 
+   * Array of bot owners' Discord user IDs. 
+   */
   public _botOwners?: string[];
+  /** 
+   * Cooldown manager for handling command cooldowns. 
+   */
   public _cooldownsManager?: CooldownManager;
+  /** 
+   * Command handler for managing bot commands. 
+   */
   public _commandHandler?: CommandHandler;
+  /** 
+   * Features handler for managing bot features. 
+   */
   public _featuresHandler?: FeaturesHandler;
+  /** 
+   * Indicates whether the bot is connected to the MongoDB database. 
+   */
   public _isConnectedToDB: boolean = false;
+  /** 
+   * Function for reloading commands. 
+   */
   public _ReloadCommands!: Function;
+  /** 
+   * Cache loader options for caching Discord data. 
+   */
   public _cacheOptions!: CacheLoaderOptions[];
+  /** 
+   * Collection of local bot commands. 
+   */
   public _localCommands!: Collection<string, Command>
+  /** 
+   * Prefix handler for managing command prefixes. 
+   */
   public _prefixHandler: PrefixHandler | undefined;
+  /** 
+   * Figlet library for generating ASCII art from text. 
+   */
   public _figlet: typeof figlet
 
+  /**
+   * Constructs a new instance of the ConfigHandler class.
+   * @param {ConfigHandlerInterface} options - The configuration options for the bot.
+   */
   constructor(options: ConfigHandlerInterface) {
     this._figlet = options.figlet || require('figlet');
 
@@ -59,6 +159,10 @@ export class ConfigHandler {
     this.init(options);
   }
 
+  /**
+   * Initializes the bot configuration.
+   * @param {ConfigHandlerInterface} options - The configuration options for the bot.
+   */
   private async init(options: ConfigHandlerInterface) {
 
     const stopWatch = new Stopwatch()
@@ -135,8 +239,12 @@ export class ConfigHandler {
     console.log(this._chalk.yellowBright.bold(`\nClient took ${stopWatch.formatTime(ElapsedTime)} to get ready.`));
   }
 
+  /**
+   * Connects to the MongoDB database.
+   * @param {string} URI - The MongoDB URI for connection.
+   */
   private async connectToMongo(URI: string) {
-      await mongoose.connect(URI)
+    await mongoose.connect(URI)
       .catch(() => {
         this._isConnectedToDB = false
       })
@@ -145,6 +253,11 @@ export class ConfigHandler {
       })
   }
 
+  /**
+   * Checks if all required fields are present in the configuration.
+   * @param {ConfigHandlerInterface} options - The configuration options for the bot.
+   * @returns {object} - An object containing the result and missing fields.
+   */
   private checkFields(options: ConfigHandlerInterface) {
     const expectedRequiredFields: string[] = [
       'client',
@@ -168,31 +281,100 @@ export class ConfigHandler {
 
 }
 
+/**
+ * Represents the configuration instance for the bot.
+ */
 export interface ConfigInstance {
+  /** 
+   * Instance of the Chalk library for colorizing terminal output. 
+   */
   _chalk: any;
+  /** 
+   * Instance of the Figlet library for generating ASCII art from text. 
+   */
   _figlet: any;
+  /** 
+   * The Discord client instance. 
+   */
   _client: Client;
+  /** 
+   * Array of test server IDs for development purposes. 
+   */
   _testServers?: string[];
+  /** 
+   * Array of bot owners' Discord user IDs. 
+   */
   _botOwners?: string[];
+  /** 
+   * Instance of the CooldownManager class for handling command cooldowns. 
+   */
   _cooldownsManager?: CooldownManager;
+  /** 
+   * Instance of the CommandHandler class for managing bot commands. 
+   */
   _commandHandler?: CommandHandler;
+  /** 
+   * Instance of the FeaturesHandler class for managing bot features. 
+   */
   _featuresHandler?: FeaturesHandler;
+  /** 
+   * Indicates whether the bot is connected to the MongoDB database. 
+   */
   _isConnectedToDB: boolean;
+  /** 
+   * Function for reloading commands. 
+   */
   _ReloadCommands: Function;
+  /** 
+   * Array of cache loader options for caching Discord data. 
+   */
   _cacheOptions?: CacheLoaderOptions[];
+  /** 
+   * Collection of local bot commands. 
+   */
   _localCommands?: Collection<string, Command>;
+  /** 
+   * Instance of the PrefixHandler class for managing command prefixes. 
+   */
   _prefixHandler?: PrefixHandler;
 }
 
+/**
+ * Enum representing options for cache loading.
+ */
 export enum CacheLoaderOptions {
+  /** 
+   * Option to cache members. 
+   */
   Members = 'members',
+  /** 
+   * Option to cache roles. 
+   */
   Roles = 'roles',
+  /** 
+   * Option to cache channels. 
+   */
   Channels = 'channels',
+  /** 
+   * Option to cache bans. 
+   */
   Bans = 'bans',
 }
 
+/**
+ * Enum representing different types of command.
+ */
 export enum CommandType {
+  /** 
+   * Slash command type. 
+   */
   slash,
+  /** 
+   * Legacy command type. 
+   */
   legacy,
+  /** 
+   * Represents both slash and legacy commands. 
+   */
   both
 }

@@ -4,9 +4,21 @@ import { ConfigInstance } from "../ConfigHandler";
 import { Utils } from '../utils/Utils';
 import { Command } from "../typings";
 
+/**
+ * Class responsible for handling commands.
+ */
 export class CommandHandler {
+    /** 
+     * Collection to store local commands. 
+     */
     private localCommands = new Collection<string, Command>();
 
+    /**
+     * Reads command files from a directory and registers them as slash commands.
+     * @param {ConfigInstance} instance - The configuration instance for the bot.
+     * @param {string} commandsDir - The directory containing the command files.
+     * @param {boolean} reloadSlash - Whether to reload slash commands.
+     */
     async readFiles(instance: ConfigInstance, commandsDir: string, reloadSlash: boolean = false) {
         const { _chalk, _client, _testServers } = instance;
         this.localCommands = await getLocalCommands(commandsDir);
@@ -18,7 +30,7 @@ export class CommandHandler {
 
         this.localCommands.each((commandObject, name) => {
             const { description, deleted, testServersOnly } = commandObject;
-            const options = commandObject as any
+            const options = commandObject as any;
             const existingCommand = commands.find(c => c.name === name);
 
             if (existingCommand) {
@@ -51,11 +63,27 @@ export class CommandHandler {
         Promise.allSettled(promises)
     }
 
+    /**
+     * Deletes a command from either global or guild-specific slash commands.
+     * @param {ClientApplication} application - The client application.
+     * @param {string} name - The name of the command to delete.
+     * @param {any} _chalk - Chalk instance for logging.
+     * @param {Object} guildCommand - Information about guild-specific command (optional).
+     */
     private deleteCommand(application: ClientApplication, name: string, _chalk: any, guildCommand?: { guild: Guild, id: string }) {
         (guildCommand?.guild ?? application).commands.delete(guildCommand?.id ?? name);
         console.log(_chalk.redBright(`Deleting ${guildCommand ? `Guild Command for ${guildCommand.guild.name}` : "Global Command"}`));
     }
 
+    /**
+     * Checks if a command can be run.
+     * @param {ConfigInstance} instance - The configuration instance for the bot.
+     * @param {any} command - The command to check.
+     * @param {Message} message - The message object.
+     * @param {string[]} args - The command arguments.
+     * @param {string} prefix - The command prefix.
+     * @returns {boolean} - True if the command can be run, false otherwise.
+     */
     public canRun(instance: ConfigInstance, command: any, message: Message, args: string[], prefix: string): boolean {
         const { devOnly, HandlehasPermissions, CheckArgs } = Utils
         if (devOnly(instance, command, message.author.id) === false) return false;
@@ -64,6 +92,12 @@ export class CommandHandler {
         return true;
     }
 
+    /**
+     * Executes a command callback.
+     * @param {Command} command - The command to execute.
+     * @param {any} callbackData - Data to pass to the command callback.
+     * @param {Message} message - The message object.
+     */
     public async run(command: Command, callbackData: any, message?: Message) {
         try {
             await command.callback(callbackData);
@@ -72,10 +106,19 @@ export class CommandHandler {
         }
     }
 
+    /**
+     * Retrieves local commands.
+     * @returns {Collection<string, Command>} - Collection of local commands.
+     */
     public getLocalCommands() {
         return this.localCommands;
     }
 
+    /**
+     * Retrieves all commands including aliases.
+     * @param {Collection<string, Command>} localCommands - Collection of local commands (optional).
+     * @returns {Collection<string, Command[]>} - Collection of command names mapped to their respective commands.
+     */
     public getAllCommands(localCommands?: Collection<string, Command>) {
         localCommands = localCommands ?? this.getLocalCommands()
         const commandAliases = new Collection<string, Command[]>();

@@ -3,33 +3,82 @@ import { ConfigInstance } from "../ConfigHandler";
 import { Command } from "../typings";
 import ms from "ms";
 
+/**
+ * Type representing the type of cooldowns.
+ */
 export type CooldownsType = "perUserCooldown" | "perGuildCooldown";
 
+/**
+ * Class responsible for managing command cooldowns.
+ */
 export class CooldownManager {
+	/** 
+	 * Static instance of the CooldownManager class. 
+	 */
 	private static instance: CooldownManager | null = null;
+	/** 
+	 * Map to store per-guild cooldowns. 
+	 */
 	private perGuildCooldowns: Map<string, Map<string, number>> = new Map();
+	/** 
+	 * Map to store per-user cooldowns. 
+	 */
 	private perUserCooldowns: Map<string, Map<string, number>> = new Map();
+	/** 
+	 * Map to store cooldown messages. 
+	 */
 	private cooldownMessages: Map<string, boolean> = new Map();
+	/** 
+	 * Map to store ignored users. 
+	 */
 	private ignoredUsers: Map<string, number> = new Map();
+	/** 
+	 * Map to store ignored messages. 
+	 */
 	private ignoredMessages: Map<string, number> = new Map();
+	/** 
+	 * Configuration options for cooldowns. 
+	 */
 	private CooldownConfig: CooldownConfigOptions = {};
 
+	/**
+	 * Creates an instance of CooldownManager.
+	 * @param {ConfigInstance} instance - The configuration instance for the bot.
+	 * @param {CooldownConfigOptions} CooldownConfigOptions - Configuration options for cooldowns.
+	 */
 	private constructor(_: ConfigInstance, CooldownConfigOptions: CooldownConfigOptions) {
 		this.CooldownConfig = CooldownConfigOptions;
+		// Periodically clear cooldown messages
 		setInterval(() => this.clearCooldownMessages(), 30 * 1000);
 	}
 
+	/**
+	 * Returns the singleton instance of CooldownManager.
+	 * @param {ConfigInstance} instance - The configuration instance for the bot.
+	 * @param {CooldownConfigOptions} CooldownConfigOptions - Configuration options for cooldowns.
+	 * @returns {CooldownManager} - The CooldownManager instance.
+	 */
 	public static getInstance(instance: ConfigInstance, CooldownConfigOptions: CooldownConfigOptions): CooldownManager {
 		return this.instance || (this.instance = new CooldownManager(instance, CooldownConfigOptions));
 	}
 
-	public setCooldownMessage(userId: string, commandName: string, message: Message) {
+	/**
+	 * Sets a cooldown message for a specific user and command.
+	 * @param {string} userId - The ID of the user.
+	 * @param {string} commandName - The name of the command.
+	 * @param {Message} message - The message triggering the cooldown.
+	 */
+	public setCooldownMessage(userId: string, commandName: string, message: Message): void {
+		// Set cooldown message flag
 		const cooldownKey = `${userId}-${commandName}`;
 		this.cooldownMessages.set(cooldownKey, true);
+		// Remove cooldown message after 4 seconds
 		setTimeout(() => this.cooldownMessages.delete(cooldownKey), 4000);
+		// Check for ratelimiting
 		if (this.CooldownConfig.RatelimitIgnore) {
 			const messageCount = (this.ignoredMessages.get(userId) || 0) + 1;
 			this.ignoredMessages.set(userId, messageCount);
+			// Ignore user if message count exceeds 15
 			if (messageCount >= 15) {
 				this.ignoreUser(userId, 60000, message);
 				this.resetMessageCount(userId);
@@ -37,7 +86,14 @@ export class CooldownManager {
 		}
 	}
 
-	public set(guildId: string, member: GuildMember, command: Command, type: CooldownsType) {
+	/**
+	 * Sets a cooldown for a command.
+	 * @param {string} guildId - The ID of the guild.
+	 * @param {GuildMember} member - The guild member who triggered the command.
+	 * @param {Command} command - The command object.
+	 * @param {CooldownsType} type - The type of cooldown (perGuildCooldown or perUserCooldown).
+	 */
+	public set(guildId: string, member: GuildMember, command: Command, type: CooldownsType): void {
 		if (type == 'perGuildCooldown') {
 			this.setPerGuildCooldown(guildId, member.user.id, command.name, ms(command.cooldown!.Duration));
 		} else if (type == 'perUserCooldown') {
@@ -45,6 +101,14 @@ export class CooldownManager {
 		}
 	}
 
+	/**
+	 * Checks if a user or guild is on cooldown for a command.
+	 * @param {string} guildId - The ID of the guild.
+	 * @param {string} memberId - The ID of the member.
+	 * @param {string} userId - The ID of the user.
+	 * @param {string} commandName - The name of the command.
+	 * @returns {boolean} - True if on cooldown, false otherwise.
+	 */
 	public onCooldown(guildId: string, memberId: string, userId: string, commandName: string): boolean {
 		return (
 			this.getPerGuildCooldown(guildId, memberId, commandName) > 0 ||
@@ -53,6 +117,14 @@ export class CooldownManager {
 		);
 	}
 
+	/**
+	 * Replies with a cooldown message for a command.
+	 * @param {Message} message - The message triggering the cooldown.
+	 * @param {string} authorId - The ID of the message author.
+	 * @param {string} commandName - The name of the command.
+	 * @param {Command} command - The command object.
+	 * @returns {string | undefined} - The cooldown message.
+	 */
 	public reply(message: Message, authorId: string, commandName: string, command: Command): string | undefined {
 		const cooldownKey = `${authorId}-${commandName}-messageCooldown`;
 		if (!this.cooldownMessages.has(cooldownKey)) {
@@ -67,8 +139,14 @@ export class CooldownManager {
 		}
 		return undefined;
 	}
-	
-	public removeCooldown(cooldownType: CooldownsType, message: Message, commandName: string) {
+
+	/**
+	 * Removes a cooldown for a user or guild.
+	 * @param {CooldownsType} cooldownType - The type of cooldown to remove (perUserCooldown or perGuildCooldown).
+	 * @param {Message} message - The message triggering the removal.
+	 * @param {string} commandName - The name of the command.
+	 */
+	public removeCooldown(cooldownType: CooldownsType, message: Message, commandName: string): void {
 		const userID = message.author.id;
 		const targetMap = cooldownType === 'perUserCooldown' ? this.perUserCooldowns : this.perGuildCooldowns;
 		const targetKey = (cooldownType === 'perUserCooldown' ? userID : message.guildId) as string;
@@ -79,15 +157,20 @@ export class CooldownManager {
 		}
 	}
 
-	public isUserIgnored(key: string) {
-		return this.ignoredUsers.get(key)
+	/**
+	 * Checks if a user is ignored for ratelimiting.
+	 * @param {string} key - The ID of the user.
+	 * @returns {number | undefined} - The duration of the ignore.
+	 */
+	public isUserIgnored(key: string): number | undefined {
+		return this.ignoredUsers.get(key);
 	}
 
 	private getCooldownMessage(command: Command, commandName: string, message: Message): string {
 		const customMessage = command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there! Wait {TIME}";
 		return this.replacePlaceholders(customMessage, commandName, message);
 	}
-	
+
 	private replacePlaceholders(MessageContent: string, commandName: string, message: Message): string {
 		const Placeholders: { [key: string]: string } = {
 			"{TIME}": this.getTimeLeft(message, commandName),
@@ -95,19 +178,20 @@ export class CooldownManager {
 			"{CHANNEL}": (message.channel.type === 0 ? message.channel.name : 'Fancy'),
 			"{GUILD}": message.guild?.name!,
 		};
-	
+
 		return MessageContent.replace(/({\w+})/g, (match, placeholder) => {
-			return Placeholders[placeholder] || match}
+			return Placeholders[placeholder] || match
+		}
 		);
 	}
 
 	private getTimeLeft(message: Message, commandName: string): string {
-		const { author: { id }, guildId  } = message
+		const { author: { id }, guildId } = message
 		const perUserCooldown = this.getPerUserCooldown(id, commandName);
 		const perGuildCooldown = this.getPerGuildCooldown(guildId!, id, commandName);
 		const remainingCooldown = Math.max(perUserCooldown, perGuildCooldown);
 		return `${Math.ceil(remainingCooldown / 1000)} seconds`;
-	}	
+	}
 
 	private setPerGuildCooldown(guildId: string, memberId: string, commandName: string, cooldownTime: number) {
 		this.getOrCreateGuildCooldowns(guildId).set(`${memberId}-${commandName}`, Date.now() + cooldownTime);
@@ -169,9 +253,24 @@ export class CooldownManager {
 	}
 }
 
+/**
+ * Interface representing configuration options for cooldowns.
+ */
 export interface CooldownConfigOptions {
+	/** 
+	 * Indicates whether to send warning messages for cooldowns. 
+	 */
 	SendWarningMessage?: boolean;
+	/** 
+	 * Indicates whether bot owners bypass cooldowns. 
+	 */
 	OwnersBypass?: boolean;
+	/** 
+	 * Custom error message for cooldowns. 
+	 */
 	CustomErrorMessage?: string;
+	/** 
+	 * Indicates whether to ignore ratelimiting. 
+	 */
 	RatelimitIgnore?: boolean;
 }
