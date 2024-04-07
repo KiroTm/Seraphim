@@ -60,5 +60,11 @@ export default {
         }
       }
     }
+  },
+  extraInfo: {
+    command_usage: "{PREFIX}automod <setup/view>",
+    command_example: "{PREFIX}automod setup\n{PREFIX}automod view",
+    command_detailedExplaination: "The `automod` command allows you to manage and configure automated moderation settings for your server. It provides two subcommands:\n\n- `{PREFIX}automod setup`: Use this subcommand to set up the automod module. It allows you to create custom rules, manage existing rules, and configure advanced settings.\n- `{PREFIX}automod view`: Use this subcommand to view and manage completed automod settings. It allows you to see the current automod configuration and make adjustments as needed.\n\nOnce you use the setup subcommand, you'll be presented with options to create rules, manage rules, or configure advanced settings. You can create rules based on various criteria such as banned words, server invites, phishing links, etc. Additionally, you can set up advanced settings like ignored channels, roles, actions (kick, warn, mute, ban), threshold, and duration.\n\nFor more information and detailed instructions, use the respective subcommands with the prefix."
   }
+
 } as Command

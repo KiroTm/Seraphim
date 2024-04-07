@@ -33,9 +33,9 @@ export default {
                         .setDescription(`Message stats for ${guild.name}.  Started Caching <t:1696982480:R>`)
                         .addFields(
                             {
-                                name: `<:People:1161712673868755005> Top 10 members.`, 
-                                value: top.map((value, index, ) => `**${index + 1}.** ${value.member} - ${value.value.size} messages`).join("\n"),
-                                inline: false 
+                                name: `<:People:1161712673868755005> Top 10 members.`,
+                                value: top.map((value, index,) => `**${index + 1}.** ${value.member} - ${value.value.size} messages`).join("\n"),
+                                inline: false
                             }
                         )
                         .setFooter({
@@ -112,18 +112,24 @@ export default {
             })
         } else if (queryType == 'lookback') {
             const days = parseInt(args[1] ?? undefined)
-            if (!days ) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time!\nCorrect usage example: ?stats lookback 2 <-- sets lookback 2 days")]})
-            if (days < 1 || !Number.isInteger(days)) return message.channel.send({embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time! Make sure the time is is a __whole number__ between 1 - 365")]})
+            if (!days) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time!\nCorrect usage example: ?stats lookback 2 <-- sets lookback 2 days")] })
+            if (days < 1 || !Number.isInteger(days)) return message.channel.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription("Invalid time! Make sure the time is is a __whole number__ between 1 - 365")] })
             statsClass.setLookback(guild, days)
-            return message.channel.send({embeds: [new EmbedBuilder().setColor('Green').setDescription(`Set the lookback to **${days} day${days == 1 ? '' : 's'}**`)]})
+            return message.channel.send({ embeds: [new EmbedBuilder().setColor('Green').setDescription(`Set the lookback to **${days} day${days == 1 ? '' : 's'}**`)] })
         } else {
             return message.channel.send({
                 embeds: [
                     new EmbedBuilder()
-                    .setColor('Red')
-                    .setDescription(`Invalid args! Must be one of \`top, me, lookback <days>, role <@role>, @user\``)
+                        .setColor('Red')
+                        .setDescription(`Invalid args! Must be one of \`top, me, lookback <days>, role <@role>, @user\``)
                 ]
             })
         }
+    },
+    extraInfo: {
+        command_usage: "{PREFIX}stats [top/me/role/lookback]",
+        command_example: "{PREFIX}stats top\n{PREFIX}stats me\n{PREFIX}stats role @Role\n{PREFIX}stats lookback 7",
+        command_detailedExplaination: "This command provides message statistics. You can use it to get information about the top members by message count, your own message statistics, message statistics of a specific role, or set a lookback period for message statistics. Here's how to use the command:\n\n- `{PREFIX}stats top`: Displays the top 10 members by message count.\n- `{PREFIX}stats me`: Displays your own message statistics.\n- `{PREFIX}stats role @Role`: Displays message statistics of members with a specific role.\n- `{PREFIX}stats lookback <days>`: Sets the lookback period for message statistics.",
     }
+
 } as Command;

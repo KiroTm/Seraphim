@@ -14,10 +14,16 @@ export default {
         message.channel.send({
             embeds: [
                 new EmbedBuilder()
-                .setColor('Blue')
-                .setAuthor({name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}`})
-                .setDescription(`**${member?.user.username}** is married to **${Partner?.username}** | <t:${Math.round(parseInt(partner.time) / 1000)}:R>`)
+                    .setColor('Blue')
+                    .setAuthor({ name: `${client.user?.username}`, iconURL: `${client.user?.displayAvatarURL()}` })
+                    .setDescription(`**${member?.user.username}** is married to **${Partner?.username}** | <t:${Math.round(parseInt(partner.time) / 1000)}:R>`)
             ]
         })
+    },
+    extraInfo: {
+        command_usage: "{PREFIX} partner",
+        command_example: "{PREFIX} partner",
+        command_detailedExplaination: "This command allows a user to get information about their partner. It retrieves the partner's username and the time when the marriage took place. If the user is not married, it displays an appropriate error message."
     }
+
 } as Command

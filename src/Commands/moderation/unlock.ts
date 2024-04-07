@@ -26,5 +26,11 @@ export default {
 
             message.channel.send(`${channel} has been unlocked by ${message.author}`);
         }
+    },
+    extraInfo: {
+        command_usage: "{PREFIX}unlock [channel]",
+        command_example: "{PREFIX}unlock #general",
+        command_detailedExplaination: "The `unlock` command allows moderators to unlock the specified channel, restoring users' ability to send messages. This command is useful when you want to lift restrictions on a previously locked channel. When executed, the command will unlock the mentioned channel or the current channel if no channel is mentioned. Note that the bot requires the 'Manage Messages' permission to execute this command successfully.\n\nUsage: {PREFIX}unlock [channel]\nExample: {PREFIX}unlock #general\n\nAfter executing the command, the bot will enable the permission to send messages in the specified channel, effectively unlocking it. It will then send a confirmation message indicating that the channel has been unlocked."
     }
+
 } as Command;

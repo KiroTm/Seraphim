@@ -32,4 +32,9 @@ export default {
     message ? message.channel.send(replyObject) : interaction.reply(replyObject);
     if (prefixOption) prefixHandler.setPrefix(key, prefixOption);
   },
+  extraInfo: {
+    command_usage: "{PREFIX} prefix [new_prefix]",
+    command_example: "{PREFIX} prefix !",
+    command_detailedExplaination: "This command allows administrators to set the bot's prefix for the guild. If a new prefix is provided, it will be set for the guild. If no new prefix is provided, it will display the current prefix for the guild."
+  }  
 } as Command;

@@ -26,6 +26,12 @@ export default {
             embeds: [new EmbedBuilder().setColor("#2B2D32").addFields(embedFields)],
         });
     },
+    extraInfo: {
+        command_usage: "{PREFIX} botinfo",
+        command_example: "{PREFIX} botinfo",
+        command_detailedExplaination: "This command provides information about the bot, including its latency, statistics (number of users, servers, and channels), code statistics (lines of code and number of files), uptime, and CPU usage. Here's how to use the command:\n\n- `{PREFIX} botinfo`: Displays information about the bot.",
+    }
+
 } as Command;
 
 function generalStatistics(instance: ConfigInstance) {
