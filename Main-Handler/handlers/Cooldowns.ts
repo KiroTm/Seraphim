@@ -1,4 +1,4 @@
-import { GuildMember, Message } from "discord.js";
+import { GuildMember, Message, ChannelType } from "discord.js";
 import { ConfigInstance } from "../ConfigHandler";
 import { Command } from "../typings";
 import ms from "ms";
@@ -53,19 +53,21 @@ export class CooldownManager {
 		);
 	}
 
-	public reply(message: Message, authorId: string, commandName: string, command: Command) {
+	public reply(message: Message, authorId: string, commandName: string, command: Command): string | undefined {
 		const cooldownKey = `${authorId}-${commandName}-messageCooldown`;
 		if (!this.cooldownMessages.has(cooldownKey)) {
 			this.cooldownMessages.set(cooldownKey, true);
 			setTimeout(() => this.cooldownMessages.delete(cooldownKey), 7000);
 			const SendWarning: boolean = command.cooldown?.SendWarningMessage !== false && this.CooldownConfig.SendWarningMessage !== false;
 			if (SendWarning) {
-				const msg = message.reply(`${command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there! Wait {time}"}`.replace(/{time}/g, ''));
-				setTimeout(() => msg.then((m) => m.delete().catch((er) => { })), 8000);
+				const content = this.getCooldownMessage(command, commandName, message)
+				const msg = message.reply(content)
+				setTimeout(() => msg.then((m) => m?.delete().catch(() => { })), 6000);
 			}
 		}
+		return undefined;
 	}
-
+	
 	public removeCooldown(cooldownType: CooldownsType, message: Message, commandName: string) {
 		const userID = message.author.id;
 		const targetMap = cooldownType === 'perUserCooldown' ? this.perUserCooldowns : this.perGuildCooldowns;
@@ -80,6 +82,32 @@ export class CooldownManager {
 	public isUserIgnored(key: string) {
 		return this.ignoredUsers.get(key)
 	}
+
+	private getCooldownMessage(command: Command, commandName: string, message: Message): string {
+		const customMessage = command.cooldown?.CustomCooldownMessage || this.CooldownConfig.CustomErrorMessage || "A little too quick there! Wait {TIME}";
+		return this.replacePlaceholders(customMessage, commandName, message);
+	}
+	
+	private replacePlaceholders(MessageContent: string, commandName: string, message: Message): string {
+		const Placeholders: { [key: string]: string } = {
+			"{TIME}": this.getTimeLeft(message, commandName),
+			"{USER}": message.author.username,
+			"{CHANNEL}": (message.channel.type === 0 ? message.channel.name : 'Fancy'),
+			"{GUILD}": message.guild?.name!,
+		};
+	
+		return MessageContent.replace(/({\w+})/g, (match, placeholder) => {
+			return Placeholders[placeholder] || match}
+		);
+	}
+
+	private getTimeLeft(message: Message, commandName: string): string {
+		const { author: { id }, guildId  } = message
+		const perUserCooldown = this.getPerUserCooldown(id, commandName);
+		const perGuildCooldown = this.getPerGuildCooldown(guildId!, id, commandName);
+		const remainingCooldown = Math.max(perUserCooldown, perGuildCooldown);
+		return `${Math.ceil(remainingCooldown / 1000)} seconds`;
+	}	
 
 	private setPerGuildCooldown(guildId: string, memberId: string, commandName: string, cooldownTime: number) {
 		this.getOrCreateGuildCooldowns(guildId).set(`${memberId}-${commandName}`, Date.now() + cooldownTime);
