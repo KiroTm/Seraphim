@@ -260,7 +260,7 @@ export class Utils {
      * @alias hasPermissions
      */
     static HandlehasPermissions(command: { permissions?: bigint[] }, message?: Message, interaction?: ChatInputCommandInteraction, instance?: ConfigInstance): boolean {
-      const member = (message ?? interaction)!.member as GuildMember
+        const member = (message ?? interaction)!.member as GuildMember
         if (instance && instance._botOwners?.includes(member.user.id)) return true
         const permissions = command.permissions || [];
         const text = `You can't use this command, use the help command to know more..`
@@ -269,5 +269,18 @@ export class Utils {
             return false;
         }
         return true;
+    }
+
+
+    /**
+         * 
+         * @param command Command Object
+         * @param message Message
+         * @param args Array of words
+         * @returns boolean
+         */
+    static hasValidSubcommands(command: any, message: Message, args: string[]): boolean {
+        if (!command.subcommands?.length) return true
+        else return false
     }
 }

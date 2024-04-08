@@ -4,9 +4,14 @@ import { EmbedBuilder, User } from 'discord.js';
 export default {
     name: 'meter',
     description: 'Meter',
+    cooldown: {
+        Duration: '5 s',
+        Type: 'perUserCooldown',
+        CustomCooldownMessage: "Yo bro calm down. Wait {TIME}"
+    },
     callback: async ({ message, client, args }: Callback) => {
         const subcommand = args[0]?.toLowerCase() ?? undefined;
-        const subcommands = ["femboy", "racist", "rizz", "gay", "pp"]
+        const subcommands = ["femboy", "racist", "rizz", "gay", "pp", "skibidi", "furry", "height", "black", "fat", "pedo", "horny"]
         if (!subcommands.includes(subcommand)) return message?.channel?.send({ embeds: [new EmbedBuilder().setColor('Red').setDescription(`Invalid sub command provided. Must be one of ${subcommands.join(" | ")}`)] })
         const user = await (new UserClass().fetch(client, args[1] ?? message.author.id, message)) || message.author;
         message.channel.send({
@@ -39,7 +44,14 @@ function getDescription(Subcommand: string, member: User): string {
         racist: `${member} is ${percentage} racist`,
         rizz: `${member} has ${percentage} rizz`,
         gay: `${member} is ${percentage} gay`,
-        pp: `${member}'s pp:\n8${"=".repeat(Math.floor(Math.random() * 10) + 1)}D`,
+        pp: `${member}'s pp:\n8${"=".repeat(Math.floor(Math.random() * 20) + 1)}D`,
+        skibidi: `${member} is ${percentage} skibidi`,
+        furry: `${member} is ${percentage} furry`,
+        height: `${member} is ${Math.floor(Math.random() * 6) + 1}'${Math.floor(Math.random() * 12) + 1} feet tall`,
+        black: `${member} is ${percentage} black`,
+        fat: `${member} is ${Math.floor(Math.random() * 150) + 30} Kgs`,
+        pedo: `${member} is ${percentage} pedo.`,
+        horny: `${member} is ${percentage} horny.`,
     }
 
     return Placeholders[Subcommand as keyof typeof Placeholders];

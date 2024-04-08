@@ -1,10 +1,10 @@
-import { Message, Collection, Role, EmbedBuilder } from "discord.js";
 import { AdvancedSettingFields, AutomodClass, AutomodSetupInterface, automodtype } from "../../Classes/moderation/Automod/automod";
+import { ModlogType, Modlogs } from "../../Classes/moderation/modlogs";
+import { Message, Collection, Role, EmbedBuilder } from "discord.js";
 import { ResponseClass } from "../../Classes/Utility/Response";
 import { WarnClass } from "../../Classes/moderation/warn";
-import { ModlogType, Modlogs } from "../../Classes/moderation/modlogs";
-import ms from "ms";
 import { MuteClass } from "../../Classes/moderation/mute";
+import ms from "ms";
 const muteClass = MuteClass.getInstance();
 const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();
@@ -12,7 +12,8 @@ const automodClass = AutomodClass.getInstance();
 const violationsCollection: Collection<string, Collection<string, number>> = new Collection();
 const linkCooldownCollection: Collection<string, Collection<string, number>> = new Collection();
 const messageTimestamps: Collection<string, Collection<string, any>> = new Collection();
-export default async (_: any, message: Message) => {
+export default async (_: any, oldMessage: Message, newMessage: Message | undefined) => {
+  const message = newMessage ?? oldMessage;
   const { author, guildId, channelId, member } = message;
   const automodData = automodClass.AutomodCollection.get(guildId!);
   if (!automodData || author.bot) return;
@@ -224,3 +225,6 @@ function performCustomAction(rule: AutomodSetupInterface, message: Message, adva
   }
 }
 
+export const config = {
+  prerequisiteEvents: ['messageCreate', 'messageUpdate']
+}

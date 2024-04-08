@@ -85,7 +85,8 @@ export class CommandHandler {
      * @returns {boolean} - True if the command can be run, false otherwise.
      */
     public canRun(instance: ConfigInstance, command: any, message: Message, args: string[], prefix: string): boolean {
-        const { devOnly, HandlehasPermissions, CheckArgs } = Utils
+        const { devOnly, HandlehasPermissions, CheckArgs, hasValidSubcommands } = Utils
+        if (hasValidSubcommands(command, message, args) === false) return false;
         if (devOnly(instance, command, message.author.id) === false) return false;
         if (HandlehasPermissions(command, message, undefined, instance) === false) return false;
         if (CheckArgs(command, args, prefix, message, undefined) === false) return false;

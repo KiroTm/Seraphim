@@ -1,5 +1,5 @@
+import { Client, Collection, Events } from "discord.js";
 import { ConfigInstance } from "../ConfigHandler";
-import { Client, Collection } from "discord.js";
 import getAllFiles from "../utils/getAllFiles";
 import path from "path";
 
@@ -29,7 +29,7 @@ export class FeaturesHandler {
       const eventFiles = (await getAllFiles(eventFolder) as string[]).sort();
 
       // Extract the event name from the folder path
-      const eventname = eventFolder.replace(/\\/g, "/").split('/').pop() as string;
+      const eventname = eventFolder.replace(/\\/g, "/").split('/').pop();
 
       // Store the count of event files in the collection
       this.filesCollection.set(eventname, eventFiles.length);
@@ -38,15 +38,31 @@ export class FeaturesHandler {
       const eventPromises = eventFiles.map(async (eventFile) => {
         // Dynamically load the event function from the file
         const eventFunction = require(eventFile);
-        // Attach event listener to the client
-        client.on(eventname, async (...args) => {
-          try {
-            // Execute the event function passing the instance and other arguments
-            await eventFunction.default(instance, ...args);
-          } catch (err) {
-            console.error(err);
-          }
-        });
+
+        if (Object.values(Events).includes(eventname)) {
+          // Attach event listener to the client
+          client.on(eventname, async (...args) => {
+            try {
+              // Execute the event function passing the instance and other arguments
+              await eventFunction.default(instance, ...args);
+            } catch (error) {
+              return;
+            }
+          });
+        } else {
+          const config = eventFunction.config
+          if (!config) console.log(instance._chalk.red(`Custom event ${eventname} does not have a config object!`))
+          const { prerequisiteEvents } = config
+          prerequisiteEvents.forEach((event: string) => {
+            client.on(event, async (...args) => {
+              try {
+                await eventFunction.default(instance, ...args)
+              } catch (error) {
+
+              }
+            })
+          });
+        }
       });
       // Wait for all event promises to resolve
       await Promise.all(eventPromises);
@@ -59,5 +75,15 @@ export class FeaturesHandler {
    */
   public getLocalFiles(): Collection<string, number> {
     return this.filesCollection;
+  }
+
+  private getCustomEventClass(eventName: string, eventModule: any): any {
+    try {
+      const CustomEventClass = Reflect.get(eventModule, Object.keys(eventModule)[0]);
+      return CustomEventClass;
+    } catch (error) {
+      console.error(`Error loading custom event class for ${eventName}: ${error}`);
+      return null;
+    }
   }
 }
