@@ -273,14 +273,41 @@ export class Utils {
 
 
     /**
-         * 
-         * @param command Command Object
-         * @param message Message
-         * @param args Array of words
-         * @returns boolean
-         */
+     * 
+     * @param command Command Object
+     * @param message Message
+     * @param args Array of words
+     * @returns boolean
+     */
     static hasValidSubcommands(command: any, message: Message, args: string[]): boolean {
         if (!command.subcommands?.length) return true
         else return false
+    }
+
+    /**
+    * Static method to register a handler for a specific type.
+    * @param {string} handlerType - The type of handler being registered.
+    * @param {any} handler - The handler to be registered.
+    */
+    static registerHandler(handlerType: string, handler: any) {
+        // Create an object to store handlers for different types.
+        const handlerRegistry: { [type: string]: any[] } = {};
+
+        // Check if the handler type is not already registered.
+        if (!handlerRegistry[handlerType]) {
+            // If the handler type is not registered, create an empty array to store handlers for this type.
+            handlerRegistry[handlerType] = [];
+        }
+
+        // Add the handler to the array of handlers for the specified type.
+        handlerRegistry[handlerType].push(handler);
+    }
+
+    static createClassDecorator<TFunction extends (...args: any[]) => void>(fn: TFunction): ClassDecorator {
+        return fn;
+    }
+
+    static createProxy<T extends object>(target: T, handler: ProxyHandler<T>): T {
+        return new Proxy(target, handler);
     }
 }

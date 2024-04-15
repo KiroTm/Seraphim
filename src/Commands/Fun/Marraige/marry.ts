@@ -78,8 +78,8 @@ export default {
         m && m.deletable ? m.delete() : null;
     },
     extraInfo: {
-        command_usage: "{PREFIX} marry @user",
-        command_example: "{PREFIX} marry @JohnDoe",
+        command_usage: "{PREFIX}marry @user",
+        command_example: "{PREFIX}marry @JohnDoe",
         command_detailedExplaination: "This command allows a user to propose marriage to another user mentioned in the server. If the proposed user accepts the proposal within 10 seconds, they will be married. If the proposed user rejects the proposal or doesn't respond in time, appropriate messages will be displayed. The command has a cooldown of 15 seconds per user."
     }
 

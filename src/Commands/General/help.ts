@@ -28,9 +28,9 @@ export default {
     message.channel.send({ embeds: [new EmbedBuilder().setColor("#2B2D32").setAuthor({ name: bot.user.username, iconURL: bot.user.displayAvatarURL() }).setTitle(command.description as string).addFields(fieldsData)] });
   },
   extraInfo: {
-    command_usage: "{PREFIX} help [command]",
-    command_example: "{PREFIX} help poll",
-    command_detailedExplaination: "This command allows you to get detailed information about a specific command. You need to provide the name of the command as an argument. Here's how to use the command:\n\n- `{PREFIX} help [command]`: Provides detailed information about the specified command.\n\nFor example:\n- `{PREFIX} help poll`: Provides detailed information about the 'poll' command.",
+    command_usage: "{PREFIX}help [command]",
+    command_example: "{PREFIX}help poll",
+    command_detailedExplaination: "This command allows you to get detailed information about a specific command. You need to provide the name of the command as an argument. Here's how to use the command:\n\n- `{PREFIX}help [command]`: Provides detailed information about the specified command.\n\nFor example:\n- `{PREFIX}help poll`: Provides detailed information about the 'poll' command.",
   }
 
 } as Command;

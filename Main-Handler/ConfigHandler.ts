@@ -4,7 +4,7 @@ import { CommandHandler } from "./handlers/CommandHandler";
 import { PrefixHandler } from "./handlers/PrefixHandler";
 import { CacheLoader } from "./handlers/CacheLoader";
 import { Client, Collection } from "discord.js";
-import { Stopwatch } from "./classes/StopWatch";
+import { Stopwatch } from "./utils/StopWatch";
 import { Command } from "./typings";
 import mongoose from "mongoose";
 import figlet from "figlet";
@@ -219,7 +219,6 @@ export class ConfigHandler {
       this._cacheOptions = cacheOptions!;
       CacheLoader.getInstance(this, cacheOptions);
     }
-
 
     if (featuresDir) {
       this._featuresHandler = new FeaturesHandler();

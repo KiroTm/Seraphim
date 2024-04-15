@@ -28,8 +28,8 @@ export default {
         });
     },
     extraInfo: {
-        command_usage: "{PREFIX} ship [member1] [member2]",
-        command_example: "{PREFIX} ship @user1 @user2",
+        command_usage: "{PREFIX}ship [member1] [member2]",
+        command_example: "{PREFIX}ship @user1 @user2",
         command_detailedExplaination: "This command allows users to 'ship' or imagine a romantic relationship between two mentioned members. If no members are mentioned, it randomly selects two members from the server. It then calculates a 'ship name' and a 'ship percentage' based on the provided or randomly selected members. The command has a cooldown of 2 seconds per user and displays a custom cooldown message if the cooldown is triggered."
     }
 

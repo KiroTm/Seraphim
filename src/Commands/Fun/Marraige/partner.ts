@@ -21,8 +21,8 @@ export default {
         })
     },
     extraInfo: {
-        command_usage: "{PREFIX} partner",
-        command_example: "{PREFIX} partner",
+        command_usage: "{PREFIX}partner",
+        command_example: "{PREFIX}partner",
         command_detailedExplaination: "This command allows a user to get information about their partner. It retrieves the partner's username and the time when the marriage took place. If the user is not married, it displays an appropriate error message."
     }
 

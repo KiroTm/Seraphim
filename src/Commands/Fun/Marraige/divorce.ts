@@ -76,8 +76,8 @@ export default {
 
     },
     extraInfo: {
-        command_usage: "{PREFIX} divorce",
-        command_example: "{PREFIX} divorce",
+        command_usage: "{PREFIX}divorce",
+        command_example: "{PREFIX}divorce",
         command_detailedExplaination: "This command allows a user to initiate a divorce with their married partner. If the user is not married or their partner is not in the server, appropriate error messages will be displayed. The command sends a proposal to the partner and waits for their response within 10 seconds. If the partner accepts, the divorce is finalized, and if the partner rejects or does not respond in time, appropriate messages are displayed."
     }
 

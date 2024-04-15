@@ -1,9 +1,10 @@
-import { IntentsBitField, Client, Partials, ActivityType } from 'discord.js'
 import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
-import path from "path";
+import { IntentsBitField, Client, Partials, ActivityType } from 'discord.js'
 import figlet from 'figlet';
-const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
+import path from "path";
 require("dotenv/config");
+
+const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
 
 export const client = new Client({
   intents: [
@@ -48,7 +49,7 @@ client.on("ready", async (seraphim) => {
     client: seraphim,
     figlet: figlet,
     commandsDir: path.join(__dirname, './src/', "Commands"),
-    featuresDir: path.join(__dirname, './src/', "Events"),
+    // featuresDir: path.join(__dirname, './src/', "Events"),
     mongoUri: process.env.MONGO_URI!,
     cacheOptions: [
       CacheLoaderOptions.Bans,

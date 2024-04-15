@@ -27,9 +27,9 @@ export default {
         });
     },
     extraInfo: {
-        command_usage: "{PREFIX} botinfo",
-        command_example: "{PREFIX} botinfo",
-        command_detailedExplaination: "This command provides information about the bot, including its latency, statistics (number of users, servers, and channels), code statistics (lines of code and number of files), uptime, and CPU usage. Here's how to use the command:\n\n- `{PREFIX} botinfo`: Displays information about the bot.",
+        command_usage: "{PREFIX}botinfo",
+        command_example: "{PREFIX}botinfo",
+        command_detailedExplaination: "This command provides information about the bot, including its latency, statistics (number of users, servers, and channels), code statistics (lines of code and number of files), uptime, and CPU usage. Here's how to use the command:\n\n- `{PREFIX}botinfo`: Displays information about the bot.",
     }
 
 } as Command;

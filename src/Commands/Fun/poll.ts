@@ -76,9 +76,9 @@ export default {
         }
     },
     extraInfo: {
-        command_usage: "{PREFIX} poll [message] | [choice1] | [choice2] ...",
-        command_example: "{PREFIX} poll Who is your favorite soccer player? | Ronaldo | Messi",
-        command_detailedExplaination: "This command allows you to create a poll with multiple choices. It supports up to 10 choices. You need to separate the message and choices using the '|' symbol. Here's how to use the command:\n\n- `{PREFIX} poll [message] | [choice1] | [choice2] ...`: Creates a poll with the given message and choices.\n\nFor example:\n- `{PREFIX} poll Who is your favorite soccer player? | Ronaldo | Messi`: Creates a poll asking for the favorite soccer player with choices Ronaldo and Messi."
+        command_usage: "{PREFIX}poll [message] | [choice1] | [choice2] ...",
+        command_example: "{PREFIX}poll Who is your favorite soccer player? | Ronaldo | Messi",
+        command_detailedExplaination: "This command allows you to create a poll with multiple choices. It supports up to 10 choices. You need to separate the message and choices using the '|' symbol. Here's how to use the command:\n\n- `{PREFIX}poll [message] | [choice1] | [choice2] ...`: Creates a poll with the given message and choices.\n\nFor example:\n- `{PREFIX}poll Who is your favorite soccer player? | Ronaldo | Messi`: Creates a poll asking for the favorite soccer player with choices Ronaldo and Messi."
     }
 
 } as Command
