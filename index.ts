@@ -1,12 +1,12 @@
-import { ConfigHandler, CacheLoaderOptions } from "./Main-Handler/ConfigHandler";
-import { IntentsBitField, Client, Partials, ActivityType } from 'discord.js'
-import figlet from 'figlet';
+import { IntentsBitField, Partials, ActivityType, Events, TextChannel } from 'discord.js'
+import { ConfigHandler, CacheLoaderOptions } from "./Old-Handler/ConfigHandler";
+import { GarnetClient } from "./Garnet/Framework/src/GarnetClient";
 import path from "path";
 require("dotenv/config");
 
 const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
 
-export const client = new Client({
+export const client = new GarnetClient({
   intents: [
     IntentsBitField.Flags.Guilds,
     IntentsBitField.Flags.GuildMessages,
@@ -39,17 +39,56 @@ export const client = new Client({
     roles: [],
     parse: [],
   },
-});
+  prefixConfig: {
+    defaultPrefix: "?",
+    dynamicPrefix: true,
+    mentionPrefix: true
+  }
+})
+
+client.login(process.env.TOKEN!)
+
+// export const client = new Client({
+//   intents: [
+//     IntentsBitField.Flags.Guilds,
+//     IntentsBitField.Flags.GuildMessages,
+//     IntentsBitField.Flags.MessageContent,
+//     IntentsBitField.Flags.GuildMembers,
+//     IntentsBitField.Flags.DirectMessages,
+//     IntentsBitField.Flags.GuildMessageReactions,
+//   ],
+//   partials: [
+//     Partials.Message,
+//     Channel,
+//     GuildScheduledEvent,
+//     Reaction,
+//     ThreadMember,
+//     GuildMember,
+//   ],
+//   shards: 'auto',
+//   rest: {
+//     globalRequestsPerSecond: 9999
+//   },
+//   presence: {
+//     activities: [
+//       { name: "for ?help", type: ActivityType.Watching },
+//       { name: "your queries", type: ActivityType.Listening },
+//     ],
+//     status: "idle",
+//   },
+//   allowedMentions: {
+//     repliedUser: true,
+//     roles: [],
+//     parse: [],
+//   },
+// });
 
 client.on("ready", async (seraphim) => {
-  const chalk = (await import("chalk")).default;
   client.setMaxListeners(Infinity);
   new ConfigHandler({
-    chalk,
     client: seraphim,
-    figlet: figlet,
     commandsDir: path.join(__dirname, './src/', "Commands"),
-    // featuresDir: path.join(__dirname, './src/', "Events"),
+    featuresDir: path.join(__dirname, './src/', "Events"),
     mongoUri: process.env.MONGO_URI!,
     cacheOptions: [
       CacheLoaderOptions.Bans,
@@ -64,7 +103,8 @@ client.on("ready", async (seraphim) => {
     LegacyCommandConfiguration: {
       PrefixConfiguration: {
         defaultPrefix: "?",
-        dynamicPrefix: true
+        dynamicPrefix: true,
+        mentionPrefix: true,
       },
       CooldownConfiguration: {
         SendWarningMessage: true,
@@ -81,5 +121,3 @@ client.on("ready", async (seraphim) => {
   process.on("uncaughtException", (error, origin) => { return; })
   process.on("unhandledRejection", (error, promise) => console.error(error));
 });
-
-client.login(process.env.TOKEN);

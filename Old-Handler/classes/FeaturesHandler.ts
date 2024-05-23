@@ -20,7 +20,7 @@ export class FeaturesHandler {
    */
   public async readFiles(instance: ConfigInstance, path1: string, client: Client) {
     // Retrieve all files from the specified path and subdirectories
-    const DefaulteventFolders = await getAllFiles(path.join(__dirname, "../", 'events'), true) as any[];
+    const DefaulteventFolders = await getAllFiles(path.join(__dirname, "../../", 'events'), true) as any[];
     let eventFolders = [...DefaulteventFolders, ...(await getAllFiles(path1, true))]
 
     // Iterate through each event folder
@@ -49,28 +49,23 @@ export class FeaturesHandler {
               return;
             }
           });
+        } else { 
+          const { default: EventClass } = await eventFunction;
+
+          const event = new EventClass(client);
+
+          const config = eventFunction.config;
+
+          client.on(event.name, (...args: any[]) => event.run(...args));
+
+          if (!config) console.log(instance._chalk.red(`Custom event ${eventname} does not have a config object!`))
+          const { prerequisiteEvents } = config
+          prerequisiteEvents.forEach((baseEvent: string) => {
+            client.on(baseEvent, async (...args) => {
+              event.run(instance, ...args)
+            })
+          });
         }
-        // } else { 
-        //   const { default: EventClass } = await eventFunction;
-
-        //   const event = new EventClass(client);
-
-        //   const config = eventFunction.config;
-
-        //   client.on(event.name, (...args: any[]) => event.run(...args));
-
-        //   if (!config) console.log(instance._chalk.red(`Custom event ${eventname} does not have a config object!`))
-        //   const { prerequisiteEvents } = config
-        //   prerequisiteEvents.forEach((event: string) => {
-        //     client.on(event, async (...args) => {
-        //       try {
-        //         await eventFunction.default(instance, ...args)
-        //       } catch (error) {
-
-        //       }
-        //     })
-        //   });
-        // }
       });
       // Wait for all event promises to resolve
       await Promise.all(eventPromises);

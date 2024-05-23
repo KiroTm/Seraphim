@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, Channel, Collection, Embed, EmbedBuilder, Guild, GuildMember, PermissionFlagsBits } from "discord.js";
-import { CommandType } from "../../../../../Main-Handler/ConfigHandler";
-import { Callback, Command } from "../../../../../Main-Handler/typings";
+import { CommandType } from "../../../../../Old-Handler/ConfigHandler";
+import { Callback, Command } from "../../../../../Old-Handler/typings";
 import DropSchema from "../../../../../models/Drop-Schema";
 import { DropClass } from "../../Classes/drops";
 import { MemberClass } from "../../../../../classes/misc/member";

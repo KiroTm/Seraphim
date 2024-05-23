@@ -4,6 +4,8 @@
     "@types/node": "^20.8.10"
   },
   "dependencies": {
+    "@sapphire/framework": "^5.2.1",
+    "@swc/core": "^1.4.17",
     "@types/ms": "^0.7.33",
     "axios": "^1.6.5",
     "canvacord": "^5.4.10",
@@ -13,7 +15,8 @@
     "enhanced-ms": "^2.3.0",
     "figlet": "^1.7.0",
     "mongoose": "^8.0.0",
-    "ms": "^2.1.3"
+    "ms": "^2.1.3",
+    "ts-node": "^10.9.2"
   },
   "name": "seraphim",
   "description": "### A versatile Discord.js Bot featuring a custom command handler for both legacy and slash types, powered by NeoHandler (v1.6.0).",

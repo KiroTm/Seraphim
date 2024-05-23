@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildMember, Interaction, Message, PermissionFlagsBits } from "discord.js";
-import { Callback, Command } from "../../../../../Main-Handler/typings";
+import { Callback, Command } from "../../../../../Old-Handler/typings";
 import { CraftingClass } from "../../Classes/crafting"
 import { ItemClass } from "../../Classes/item";
 import { InventoryClass } from "../../Classes/inventory";

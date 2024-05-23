@@ -1,5 +1,5 @@
 import { Interaction, } from "discord.js";
-import { ConfigInstance } from "../../../../../../Main-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../Old-Handler/ConfigHandler";
 import { automodtype } from "../../../../../Classes/moderation/Automod/automod";
 import { utils } from "../../../../../Classes/moderation/Automod/utils";
 

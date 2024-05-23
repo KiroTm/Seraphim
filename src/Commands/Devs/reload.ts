@@ -1,5 +1,5 @@
-import { CommandType } from "../../../Main-Handler/ConfigHandler";
-import { Callback, Command } from "../../../Main-Handler/typings";
+import { CommandType } from "../../../Old-Handler/ConfigHandler";
+import { Callback, Command } from "../../../Old-Handler/typings";
 
 export default {
     name: "reload",

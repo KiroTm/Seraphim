@@ -1,6 +1,6 @@
 import { ApplicationCommandOptionType, EmbedBuilder, Guild, PermissionFlagsBits, parseEmoji } from "discord.js";
-import { CommandType } from "../../../Main-Handler/ConfigHandler";
-import { Callback, Command } from "../../../Main-Handler/typings";
+import { CommandType } from "../../../Old-Handler/ConfigHandler";
+import { Callback, Command } from "../../../Old-Handler/typings";
 
 export default {
     name: 'emojify',

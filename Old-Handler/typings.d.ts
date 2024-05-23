@@ -1,6 +1,6 @@
 import { ApplicationCommandOption, ChatInputCommandInteraction, Client, Collection, CommandInteraction, Events, Guild, GuildMember, Message, PermissionFlags, PermissionsBitField, TextChannel, User } from "discord.js";
 import { CommandType, ConfigInstance } from "./ConfigHandler";
-import { CooldownsType } from "./handlers/Cooldowns";
+import { CooldownsType } from "./classes/Cooldowns";
 
 /**
  * Represents a callback function for handling commands.

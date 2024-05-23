@@ -1,5 +1,5 @@
 import { DropClass } from "../../Classes/drops";
-import { Callback, Command } from "../../../../../Main-Handler/typings";
+import { Callback, Command } from "../../../../../Old-Handler/typings";
 const dropsClass = DropClass.getInstance()
 export default {
     name: "trigger",

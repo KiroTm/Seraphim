@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ColorResolvable, ComponentType, EmbedBuilder, GuildMember, Message } from "discord.js";
-import { Callback, Command } from "../../../../Main-Handler/typings";
+import { Callback, Command } from "../../../../Old-Handler/typings";
 import { MarriageClass } from "../../../Classes/Misc/marriage";
 const marriageClass = MarriageClass.getInstance();
 async function proposal(a: GuildMember, b: GuildMember, message: Message): Promise<{ description: string, color: ColorResolvable }> {

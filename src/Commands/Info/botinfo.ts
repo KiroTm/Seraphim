@@ -1,9 +1,9 @@
-import { Callback, Command } from "../../../Main-Handler/typings";
+import { Callback, Command } from "../../../Old-Handler/typings";
 import { EmbedBuilder } from "discord.js";
 import { CpuInfo, cpus } from "os";
 import { CodeStatistics } from "../../Classes/Misc/codestats";
 import { Timestamp } from "../../Classes/Utility/Timestamp";
-import { ConfigInstance } from "../../../Main-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../Old-Handler/ConfigHandler";
 
 export default {
     name: "botinfo",

@@ -1,5 +1,5 @@
 import { Message } from "discord.js";
-import { ConfigInstance } from "../../../Main-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../Old-Handler/ConfigHandler";
 import { StatsClass } from "../../Classes/Misc/stats";
 
 export default (_: ConfigInstance, message: Message) => {

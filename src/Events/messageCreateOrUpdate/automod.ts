@@ -5,8 +5,8 @@ import { ResponseClass } from "../../Classes/Utility/Response";
 import { WarnClass } from "../../Classes/moderation/warn";
 import { MuteClass } from "../../Classes/moderation/mute";
 import ms from "ms";
-import { ApplyOptions } from "../../../Main-Handler/decorators/ApplyOptions";
-import { Event, EventOptions } from "../../../Main-Handler/classes/Event";
+import { ApplyOptions } from "../../../Garnet/Decorator/ApplyOptions";
+import { Event, EventOptions } from "../../../Old-Handler/classes/EventHandler";
 const muteClass = MuteClass.getInstance();
 const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();
@@ -28,14 +28,14 @@ const Violation = {
     violationsCollection.set(guildId, guildViolations.set(authorId, 0))
   }
 }
+
 @ApplyOptions<EventOptions>({
   event: 'messageCreateOrUpdate',
   prerequisite: {
     events: ['messageCreate', 'messageUpdate'],
-    method: () => {}
   }
 })
-export class automod extends Event {
+export default class automod extends Event {
   public override async run(_: any, oldMessage: Message, newMessage?: Message | undefined) {
     const message = newMessage ?? oldMessage;
     const { author, guildId, channelId, member } = message;

@@ -1,5 +1,5 @@
 import { UserClass } from "../../Classes/Misc/user";
-import { Callback, Command } from "../../../Main-Handler/typings";
+import { Callback, Command } from "../../../Old-Handler/typings";
 import { EmbedBuilder, User } from 'discord.js';
 export default {
     name: 'meter',
@@ -52,12 +52,14 @@ function getDescription(Subcommand: string, member: User): string {
         fat: `${member} is ${Math.floor(Math.random() * 150) + 30} Kgs.`,
         pedo: `${member} is ${percentage} pedo.`,
         horny: `${member} is ${percentage} horny.`,
-        gyatt: `${member} has ${Math.floor(Math.random() * 1) + 103} cm gyatt.`,
+        gyatt: `${member} has level ${Math.floor(Math.random() * 11) + 2} gyatt.`,
         hot: `${member} is ${percentage} hot.`,
         cute: `${member} is ${percentage} cute.`,
         ugly: `${member} is ${percentage} ugly.`,
         slutty: `${member} is ${percentage} slutty.`,
-        sigma: `${member} is ${percentage} sigma.`
+        sigma: `${member} is ${percentage} sigma.`,
+        dumb: `${member} is ${percentage} dumb.`,
+        alpha: `${member} is ${percentage} dumb.`,
     }
 
     return Placeholders[Subcommand as keyof typeof Placeholders];

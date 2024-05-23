@@ -1,8 +1,8 @@
 import { ChannelType, Embed, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
 import { ConfigInstance } from "../../ConfigHandler";
 import { Command } from "../../typings";
-import { CooldownManager } from "../../handlers/Cooldowns";
-import { CommandHandler } from "../../handlers/CommandHandler";
+import { CooldownManager } from "../../classes/Controllers/Cooldowns";
+import { CommandHandler } from "../../classes/CommandHandler";
 
 export default async (instance: ConfigInstance, message: Message) => {
   if (message.author.bot || message.channel.type !== ChannelType.GuildText || !message.guild || !message.member) return;

@@ -1,4 +1,4 @@
-import { Callback, Command } from "../../../../Main-Handler/typings";
+import { Callback, Command } from "../../../../Old-Handler/typings";
 import { MarriageClass } from "../../../Classes/Misc/marriage";
 import { EmbedBuilder, GuildMember } from "discord.js";
 import { UserClass } from "../../../Classes/Misc/user";
