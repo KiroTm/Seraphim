@@ -1,5 +1,5 @@
-import { GarnetClient } from "../../Garnet/Framework/src/GarnetClient";
-import { Core } from "../../Garnet/Core/src/Core";
+import { GarnetClient } from "../../GarnetHandler/Framework/src/GarnetClient";
+import { Core } from "../../GarnetHandler/Core/src/Core";
 
 export interface EventOptions extends Core.Options {
   event: string;

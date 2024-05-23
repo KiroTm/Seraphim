@@ -1,7 +1,7 @@
 import { EmbedBuilder, GuildMember, APIEmbedField, TextChannel } from "discord.js";
-import { CommandType } from "../../../Old-Handler/ConfigHandler";
+import { CommandType } from "../../../OldHandler/ConfigHandler";
 import ms from "ms";
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { Callback, Command } from "../../../OldHandler/typings";
 import { ResponseClass } from "../../Classes/Utility/Response";
 export default {
   name: "help",

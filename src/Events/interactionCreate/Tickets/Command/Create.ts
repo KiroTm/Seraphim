@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder, Interaction, APIRole, Message, ModalBuilder, RoleSelectMenuBuilder, TextInputBuilder, TextInputStyle, ChannelSelectMenuBuilder, ChannelType, Role, parseEmoji, TextChannel, ActionRow, Embed, StringSelectMenuBuilder } from "discord.js";
-import { ConfigHandler } from "../../../../../Old-Handler/ConfigHandler";
+import { ConfigHandler } from "../../../../../OldHandler/ConfigHandler";
 import TicketSetup from "../../../../Models/TicketSetup";
 interface ITicketChannel {
     GuildID: string;

@@ -1,5 +1,5 @@
 import { Client, ClientOptions } from "discord.js";
-import { CooldownConfigOptions } from "../../../Old-Handler/classes/Cooldowns";
+import { CooldownConfigOptions } from "../../../OldHandler/classes/Cooldowns";
 
 /**
  * Custom client class extending the Discord.js Client, providing advanced configurations and features tailored for robust bot development.

@@ -1,5 +1,5 @@
 import { UserClass } from "../../Classes/Misc/user";
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { Callback, Command } from "../../../OldHandler/typings";
 import { EmbedBuilder, User } from 'discord.js';
 export default {
     name: 'meter',

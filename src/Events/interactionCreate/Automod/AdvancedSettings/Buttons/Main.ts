@@ -1,5 +1,5 @@
 import { Interaction, EmbedBuilder, ModalBuilder, ActionRowBuilder, TextInputBuilder, TextInputStyle, APIEmbedField } from "discord.js";
-import { ConfigInstance } from "../../../../../../Old-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../OldHandler/ConfigHandler";
 import { AdvancedSettingFields, AutomodClass, automodtype } from "../../../../../Classes/moderation/Automod/automod";
 import ms from "ms";
 import { utils } from "../../../../../Classes/moderation/Automod/utils";

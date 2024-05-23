@@ -1,5 +1,5 @@
 import { Interaction } from "discord.js";
-import { ConfigInstance } from "../../../../../Old-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../../../OldHandler/ConfigHandler";
 import { TicketSetupClass } from "../../../../Classes/Tickets/Setup";
 const ticketSetupClass = TicketSetupClass.getInstance()
 export default async (instance: ConfigInstance, interaction: Interaction) => {

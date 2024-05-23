@@ -1,6 +1,6 @@
 import { IntentsBitField, Partials, ActivityType, Events, TextChannel } from 'discord.js'
-import { ConfigHandler, CacheLoaderOptions } from "./Old-Handler/ConfigHandler";
-import { GarnetClient } from "./Garnet/Framework/src/GarnetClient";
+import { ConfigHandler, CacheLoaderOptions } from "./OldHandler/ConfigHandler";
+import { GarnetClient } from "./GarnetHandler/Framework/src/GarnetClient";
 import path from "path";
 require("dotenv/config");
 

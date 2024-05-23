@@ -5,8 +5,8 @@ import { ResponseClass } from "../../Classes/Utility/Response";
 import { WarnClass } from "../../Classes/moderation/warn";
 import { MuteClass } from "../../Classes/moderation/mute";
 import ms from "ms";
-import { ApplyOptions } from "../../../Garnet/Decorator/ApplyOptions";
-import { Event, EventOptions } from "../../../Old-Handler/classes/EventHandler";
+import { ApplyOptions } from "../../../GarnetHandler/Decorator/ApplyOptions";
+import { Event, EventOptions } from "../../../OldHandler/classes/EventHandler";
 const muteClass = MuteClass.getInstance();
 const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();

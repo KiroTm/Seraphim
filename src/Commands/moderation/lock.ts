@@ -1,6 +1,6 @@
 import { ChannelType, EmbedBuilder, Guild, PermissionFlagsBits } from "discord.js";
 import { ChannelClass } from "../../Classes/Misc/channel";
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { Callback, Command } from "../../../OldHandler/typings";
 const channelClass = new ChannelClass()
 export default {
     name: 'lock',

@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, Interaction } from "discord.js";
-import { ConfigInstance } from "../../../../../../../Old-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../../OldHandler/ConfigHandler";
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isRoleSelectMenu()) return;
     if (!interaction.customId.startsWith(`${interaction.guildId}Automod_Setup_AdvancedSetting`)) return;

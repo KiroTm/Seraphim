@@ -1,6 +1,6 @@
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { Callback, Command } from "../../../OldHandler/typings";
 import { ChannelClass } from "../../Classes/Misc/channel";
-import { CommandType } from "../../../Old-Handler/ConfigHandler";
+import { CommandType } from "../../../OldHandler/ConfigHandler";
 import { EmbedBuilder, PermissionFlagsBits, TextChannel } from "discord.js";
 import ms from "enhanced-ms";
 const C = new ChannelClass();

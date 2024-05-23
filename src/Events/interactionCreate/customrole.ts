@@ -1,5 +1,5 @@
 import { ColorResolvable, EmbedBuilder, GuildMember, Interaction } from "discord.js";
-import { ConfigInstance } from "../../../Old-Handler/ConfigHandler";
+import { ConfigInstance } from "../../../OldHandler/ConfigHandler";
 
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isModalSubmit() || !interaction.customId.endsWith("CustomRoleModal")) return;

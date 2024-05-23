@@ -1,6 +1,6 @@
 import { EmbedBuilder, GuildMember, PermissionFlagsBits, User } from "discord.js";
-import { Callback, Command } from "../../../Old-Handler/typings";
-import { CommandType } from "../../../Old-Handler/ConfigHandler";
+import { Callback, Command } from "../../../OldHandler/typings";
+import { CommandType } from "../../../OldHandler/ConfigHandler";
 import { MemberClass } from "../../Classes/Misc/member";
 import { Modlogs } from "../../Classes/moderation/modlogs";
 import { Messagepagination } from "../../Functions/utility/pagination";

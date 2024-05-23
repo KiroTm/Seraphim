@@ -1,6 +1,6 @@
 import { ApplicationCommand, EmbedBuilder } from "discord.js";
-import { CommandType } from "../../../Old-Handler/ConfigHandler";
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { CommandType } from "../../../OldHandler/ConfigHandler";
+import { Callback, Command } from "../../../OldHandler/typings";
 
 export default {
     name: "slash",

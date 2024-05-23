@@ -1,4 +1,4 @@
-import { Callback, Command } from "../../../../Old-Handler/typings";
+import { Callback, Command } from "../../../../OldHandler/typings";
 import { EmbedBuilder, GuildMember, Message } from 'discord.js';
 import { MarriageClass } from "../../../Classes/Misc/marriage";
 const marriageClass = MarriageClass.getInstance()

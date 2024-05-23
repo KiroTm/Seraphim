@@ -1,5 +1,5 @@
 import { EmbedBuilder, GuildMember } from "discord.js";
-import { Command, Callback } from "../../../../../Old-Handler/typings";
+import { Command, Callback } from "../../../../../OldHandler/typings";
 import { EconomyClass } from "../../Classes/economy";
 import { InventoryClass } from "../../Classes/inventory";
 const economyClass = new EconomyClass()

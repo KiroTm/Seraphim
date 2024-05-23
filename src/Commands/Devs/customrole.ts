@@ -1,6 +1,6 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Guild, GuildMember, GuildPremiumTier, Interaction, ModalBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
 import { MemberClass } from "../../Classes/Misc/member";
-import { Callback, Command } from "../../../Old-Handler/typings";
+import { Callback, Command } from "../../../OldHandler/typings";
 const memberClass = new MemberClass()
 export default {
     name: 'customrole',
