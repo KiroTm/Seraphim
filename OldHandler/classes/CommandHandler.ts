@@ -1,7 +1,7 @@
 import { ClientApplication, Collection, Guild, Message } from "discord.js";
 import getLocalCommands from "../utils/getLocalCommands";
 import { ConfigInstance } from "../ConfigHandler";
-import { Utils } from '../utils/Utils';
+import { Utils } from '../../Garnet/Utilities/Utils';
 import { Command } from "../typings";
 
 /**

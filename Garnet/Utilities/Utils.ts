@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, GuildMember, Message } from 'discord.js';
-import { ConfigInstance } from '../ConfigHandler';
+import { ConfigInstance } from '../../OldHandler/ConfigHandler';
 import path from 'path'
 import fs from 'fs'
 
@@ -301,13 +301,5 @@ export class Utils {
 
         // Add the handler to the array of handlers for the specified type.
         handlerRegistry[handlerType].push(handler);
-    }
-
-    static createClassDecorator<TFunction extends (...args: any[]) => void>(fn: TFunction): ClassDecorator {
-        return fn;
-    }
-
-    static createProxy<T extends object>(target: T, handler: ProxyHandler<T>): T {
-        return new Proxy(target, handler);
     }
 }

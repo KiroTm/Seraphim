@@ -1,6 +1,6 @@
 import { GuildMember, Role, Collection } from "discord.js";
 import muteSchema from "../../Models/mute-schema";
-import { client } from "../../..";
+import { client } from "../..";
 export interface MuteInterface {
     _id?: string,
     GuildID?: string;

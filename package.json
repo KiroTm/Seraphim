@@ -4,10 +4,12 @@
     "@types/node": "^20.8.10"
   },
   "dependencies": {
+    "@sapphire/decorators": "^6.1.0",
     "@sapphire/framework": "^5.2.1",
+    "@sapphire/utilities": "^3.16.2",
     "@swc/core": "^1.4.17",
     "@types/ms": "^0.7.33",
-    "axios": "^1.6.5",
+    "axios": "^1.7.2",
     "canvacord": "^5.4.10",
     "chalk": "^5.3.0",
     "discord-html-transcripts": "^3.2.0",
@@ -21,11 +23,11 @@
   "name": "seraphim",
   "description": "### A versatile Discord.js Bot featuring a custom command handler for both legacy and slash types, powered by NeoHandler (v1.6.0).",
   "version": "1.0.0",
-  "main": "index.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-s": "ts-node --swc .",
-    "start": "ts-node ./index.ts"
+    "start": "ts-node ./src/index.ts"
   },
   "keywords": [],
   "author": "",

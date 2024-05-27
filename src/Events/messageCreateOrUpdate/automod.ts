@@ -5,8 +5,8 @@ import { ResponseClass } from "../../Classes/Utility/Response";
 import { WarnClass } from "../../Classes/moderation/warn";
 import { MuteClass } from "../../Classes/moderation/mute";
 import ms from "ms";
-import { ApplyOptions } from "../../../GarnetHandler/Decorator/ApplyOptions";
-import { Event, EventOptions } from "../../../OldHandler/classes/EventHandler";
+import { ApplyOptions } from "../../../Garnet/Decorator/ApplyOptions";
+import { Event, EventOptions } from "../../../Garnet/Framework/structures/EventHandler";
 const muteClass = MuteClass.getInstance();
 const modlogClass = Modlogs.getInstance()
 const warnClass = WarnClass.getInstance();
@@ -36,7 +36,7 @@ const Violation = {
   }
 })
 export default class automod extends Event {
-  public override async run(_: any, oldMessage: Message, newMessage?: Message | undefined) {
+  public override async run(oldMessage: Message, newMessage?: Message | undefined) {
     const message = newMessage ?? oldMessage;
     const { author, guildId, channelId, member } = message;
     const automodData = automodClass.AutomodCollection.get(guildId!);

@@ -14,8 +14,8 @@
 		// "noImplicitReturns": true,
 		"pretty": true,
 		"resolveJsonModule": true,
-		"strict": true,
+		"strict": false,
 		"target": "ES2020",
 		"useDefineForClassFields": true
-	}
+	},
 }

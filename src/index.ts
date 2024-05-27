@@ -1,7 +1,8 @@
 import { IntentsBitField, Partials, ActivityType, Events, TextChannel } from 'discord.js'
-import { ConfigHandler, CacheLoaderOptions } from "./OldHandler/ConfigHandler";
-import { GarnetClient } from "./GarnetHandler/Framework/src/GarnetClient";
+import { ConfigHandler, CacheLoaderOptions } from "../OldHandler/ConfigHandler";
+import { GarnetClient } from "../Garnet/Framework/GarnetClient";
 import path from "path";
+import axios from 'axios';
 require("dotenv/config");
 
 const { Channel, GuildScheduledEvent, Reaction, ThreadMember, GuildMember } = Partials;
@@ -38,13 +39,9 @@ export const client = new GarnetClient({
     repliedUser: true,
     roles: [],
     parse: [],
-  },
-  prefixConfig: {
-    defaultPrefix: "?",
-    dynamicPrefix: true,
-    mentionPrefix: true
   }
 })
+
 
 client.login(process.env.TOKEN!)
 
@@ -87,8 +84,8 @@ client.on("ready", async (seraphim) => {
   client.setMaxListeners(Infinity);
   new ConfigHandler({
     client: seraphim,
-    commandsDir: path.join(__dirname, './src/', "Commands"),
-    featuresDir: path.join(__dirname, './src/', "Events"),
+    commandsDir: path.join(__dirname, './', "Commands"),
+    featuresDir: path.join(__dirname, './', "Events"),
     mongoUri: process.env.MONGO_URI!,
     cacheOptions: [
       CacheLoaderOptions.Bans,

@@ -2,7 +2,7 @@ import { Interaction, Client, GuildMember, TextChannel, User, EmbedBuilder } fro
 import { ConfigInstance } from "../../ConfigHandler";
 import getLocalCommands from "../../utils/getLocalCommands";
 import { Command } from "../../typings";
-import { Utils } from "../../utils/Utils";
+import { Utils } from "../../../Garnet/Utilities/Utils";
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     const localCommands = instance._commandHandler?.getLocalCommands()!
     if (!interaction.isChatInputCommand()) return;

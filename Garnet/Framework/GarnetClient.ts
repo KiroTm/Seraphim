@@ -1,5 +1,6 @@
 import { Client, ClientOptions } from "discord.js";
-import { CooldownConfigOptions } from "../../../OldHandler/classes/Cooldowns";
+import { CooldownConfigOptions } from "../../OldHandler/classes/Cooldowns";
+import { global } from "../Core/shared/global"
 
 /**
  * Custom client class extending the Discord.js Client, providing advanced configurations and features tailored for robust bot development.
@@ -42,13 +43,14 @@ export class GarnetClient<Ready extends boolean = boolean> extends Client<Ready>
      */
     public constructor(options: GarnetClientOptions) {
         super(options);
+        global.client = this
     }
 
     /**
      * Logs the client into the Discord API using a specified token.
      * @param {string} token - The bot token to use for authentication.
      * @returns {Promise<string>} A promise that resolves with the token used for logging in.
-     */
+     */ 
     public override async login(token: string): Promise<string> {
         return super.login(token);
     }

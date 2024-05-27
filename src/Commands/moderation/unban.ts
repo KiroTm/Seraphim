@@ -2,7 +2,7 @@ import { EmbedBuilder, GuildMember, PermissionFlagsBits, User } from "discord.js
 import { CommandType } from "../../../OldHandler/ConfigHandler";
 import { Callback, Command } from "../../../OldHandler/typings";
 import { MemberClass } from "../../Classes/Misc/member";
-import { client } from "../../..";
+import { client } from "../..";
 import { UserClass } from "../../Classes/Misc/user";
 
 export default {
