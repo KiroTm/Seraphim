@@ -1,6 +1,6 @@
 import { Message, MessageCreateOptions, MessageEditOptions, MessageReplyOptions, TextChannel } from "discord.js";
-import { ConfigInstance } from "../../../OldHandler/ConfigHandler";
-import { CooldownsType } from "../../../OldHandler/classes/Controllers/Cooldowns";
+import { ConfigInstance } from "../../../NeoHandler/ConfigHandler";
+import { CooldownsType } from "../../../NeoHandler/classes/Cooldowns";
 import ms from "ms";
 
 export class ResponseClass {

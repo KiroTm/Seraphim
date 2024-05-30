@@ -1,8 +1,8 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, EmbedBuilder, GuildMember, Interaction, Message } from "discord.js";
-import { ItemClass } from "../../Classes/item";
-import { ResponseClass } from "../../../../../classes/Utility/Response";
-import { Callback, Command } from "../../../../../OldHandler/typings"
+import { ResponseClass } from "../../../../../src/Classes/Utility/Response";
+import { Callback, Command } from "../../../../../NeoHandler/typings"
 import { InventoryClass } from "../../Classes/inventory";
+import { ItemClass } from "../../Classes/item";
 const itemClass = new ItemClass()
 const responseClass = new ResponseClass()
 const inventoryClass = InventoryClass.getInstance()

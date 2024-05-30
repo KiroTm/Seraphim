@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Embed, EmbedBuilder, EmbedData, Interaction, Message, ModalBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder, TextInputBuilder, TextInputStyle } from "discord.js";
-import { ConfigInstance } from "../../../../../../OldHandler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../NeoHandler/ConfigHandler";
 import { utils } from "../../../../../Classes/moderation/Automod/utils";
 import ms from "ms";
 export default async (instance: ConfigInstance, interaction: Interaction) => {

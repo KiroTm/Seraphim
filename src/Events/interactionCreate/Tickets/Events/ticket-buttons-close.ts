@@ -1,5 +1,5 @@
 import { ButtonInteraction, EmbedBuilder, Guild, GuildMember, Interaction, InteractionReplyOptions, TextChannel } from "discord.js";
-import { ConfigHandler } from "../../../../../OldHandler/ConfigHandler";
+import { ConfigHandler } from "../../../../../NeoHandler/ConfigHandler";
 import DB from "../../../../Models/tickets-schema";
 import TicketSetupData from '../../../../Models/TicketSetup';
 import { createTranscript } from "discord-html-transcripts";

@@ -1,7 +1,7 @@
 import { EmbedBuilder } from "discord.js";
 import { ItemClass } from "../../Classes/item";
-import { Messagepagination } from "../../../../../functions/utility/pagination";
-import { Callback, Command } from "../../../../../OldHandler/typings";
+import { Messagepagination } from "../../../../../src/Functions/utility/pagination";
+import { Callback, Command } from "../../../../../NeoHandler/typings";
 export default {
     name: "shop",
     description: "Shop",

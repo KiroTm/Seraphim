@@ -1,11 +1,11 @@
-import { EmbedBuilder, GuildMember } from "discord.js";
-import { CommandType } from "../../../../../OldHandler/ConfigHandler";
-import { Callback, Command } from "../../../../../OldHandler/typings";
-import { MemberClass } from "../../../../../classes/misc/member";
+import { Messagepagination } from "../../../../../src/Functions/utility/pagination";
+import { CommandType } from "../../../../../NeoHandler/ConfigHandler";
+import { Callback, Command } from "../../../../../NeoHandler/typings";
+import { MemberClass } from '../../../../../src/Classes/Misc/member';
 import { CrateType, dropTypes } from "../../Classes/crate";
 import { InventoryClass } from "../../Classes/inventory";
+import { EmbedBuilder, GuildMember } from "discord.js";
 import { AllItems } from "../../Classes/types";
-import { Messagepagination } from "../../../../../functions/utility/pagination";
 const memberClass = new MemberClass()
 const Inventory = InventoryClass.getInstance()
 export default {

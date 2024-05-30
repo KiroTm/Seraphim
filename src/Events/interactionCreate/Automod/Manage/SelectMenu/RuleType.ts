@@ -1,5 +1,5 @@
 import { APISelectMenuOption, ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, Interaction, Message, RestOrArray, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuComponentData, StringSelectMenuOptionBuilder } from "discord.js";
-import { ConfigInstance } from "../../../../../../OldHandler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../NeoHandler/ConfigHandler";
 import { AutomodClass, RuleConfig, automodtype } from "../../../../../Classes/moderation/Automod/automod";
 import { utils } from "../../../../../Classes/moderation/Automod/utils";
 import ms from "ms";

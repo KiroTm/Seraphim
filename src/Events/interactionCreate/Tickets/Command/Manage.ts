@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ComponentType, Embed, EmbedBuilder, Interaction, Message, MessageComponent, ModalBuilder, RoleSelectMenuBuilder, StringSelectMenuBuilder, TextChannel, TextInputBuilder, TextInputStyle } from "discord.js";
-import { ConfigHandler } from "../../../../../OldHandler/ConfigHandler";
+import { ConfigHandler } from "../../../../../NeoHandler/ConfigHandler";
 import TicketSetup from "../../../../Models/TicketSetup";
 
 export default async (instance: ConfigHandler, interaction: Interaction) => {

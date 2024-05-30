@@ -1,5 +1,5 @@
 import { GuildMember, Role } from "discord.js";
-import { ConfigHandler } from "../../../OldHandler/ConfigHandler";
+import { ConfigHandler } from "../../../NeoHandler/ConfigHandler";
 import { MuteClass } from "../../Classes/moderation/mute";
 const muteClass = MuteClass.getInstance();
 

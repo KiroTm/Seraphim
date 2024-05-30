@@ -1,10 +1,10 @@
 import { ActionRowBuilder, ApplicationCommandOptionType, ButtonBuilder, ButtonStyle, Channel, Collection, Embed, EmbedBuilder, Guild, GuildMember, PermissionFlagsBits } from "discord.js";
-import { CommandType } from "../../../../../OldHandler/ConfigHandler";
-import { Callback, Command } from "../../../../../OldHandler/typings";
-import DropSchema from "../../../../../models/Drop-Schema";
-import { DropClass } from "../../Classes/drops";
-import { MemberClass } from "../../../../../classes/misc/member";
+import { CommandType } from "../../../../../NeoHandler/ConfigHandler";
+import { Callback, Command } from "../../../../../NeoHandler/typings";
+import { MemberClass } from '../../../../../src/Classes/Misc/member';
+import DropSchema from "../../../../../src/Models/Drop-Schema";
 import { InventoryClass } from "../../Classes/inventory";  // Import the InventoryClass
+import { DropClass } from "../../Classes/drops";
 const dropClass = DropClass.getInstance();
 const inventoryInstance = InventoryClass.getInstance();  // Get an instance of the InventoryClass
 

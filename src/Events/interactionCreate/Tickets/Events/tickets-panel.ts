@@ -2,7 +2,7 @@ import { Client, EmbedBuilder, Guild, GuildMember, Interaction } from "discord.j
 import { makeTicket } from "../../../../Functions/tickets/general";
 import TicketChannelSchema from '../../../../Models/TicketSetup'
 import TicketSchema from '../../../../Models/tickets-schema'
-import { ConfigInstance } from "../../../../../OldHandler/ConfigHandler";
+import { ConfigInstance } from "../../../../../NeoHandler/ConfigHandler";
 export default async (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isButton()) return;
     const { customId } = interaction;

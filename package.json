@@ -27,7 +27,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-s": "ts-node --swc .",
-    "start": "ts-node ./src/index.ts"
+    "start": "ts-node ./src/index.ts",
+    "start-p": "ts-node ./pieces/index.ts"
   },
   "keywords": [],
   "author": "",

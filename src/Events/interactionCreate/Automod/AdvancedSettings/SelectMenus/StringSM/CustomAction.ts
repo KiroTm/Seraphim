@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Colors, EmbedBuilder, Interaction } from "discord.js";
-import { ConfigInstance } from "../../../../../../../OldHandler/ConfigHandler";
+import { ConfigInstance } from "../../../../../../../NeoHandler/ConfigHandler";
 
 export default (instance: ConfigInstance, interaction: Interaction) => {
     if (!interaction.isStringSelectMenu() || interaction.customId !== `${interaction.guildId}Automod_Setup_AdvancedSetting_CustomAction_SelectMenu`) return;

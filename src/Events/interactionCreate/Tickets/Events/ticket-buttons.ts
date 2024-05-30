@@ -1,7 +1,7 @@
 import DJS, { ButtonInteraction, ActionRowBuilder, EmbedBuilder, Guild, GuildMember, Interaction, InteractionReplyOptions, TextChannel, ButtonBuilder, ButtonStyle } from "discord.js";
 import DB from "../../../../Models/tickets-schema"
 import TicketSetupData from '../../../../Models/TicketSetup'
-import { ConfigInstance } from "../../../../../OldHandler/ConfigHandler";
+import { ConfigInstance } from "../../../../../NeoHandler/ConfigHandler";
 async function editReply(interaction: ButtonInteraction, options: InteractionReplyOptions) { await interaction.editReply(options) }
 function canRun(member: GuildMember, data: any): boolean {
     const handlers = data.Handlers as string[]

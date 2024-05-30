@@ -1,5 +1,5 @@
 import { IntentsBitField, Partials, ActivityType, Events, TextChannel } from 'discord.js'
-import { ConfigHandler, CacheLoaderOptions } from "../OldHandler/ConfigHandler";
+import { ConfigHandler, CacheLoaderOptions } from "../NeoHandler/ConfigHandler";
 import { GarnetClient } from "../Garnet/Framework/GarnetClient";
 import path from "path";
 import axios from 'axios';

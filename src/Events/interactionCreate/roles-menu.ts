@@ -1,5 +1,5 @@
 import { ButtonInteraction, EmbedBuilder, Guild, GuildMember, Interaction, Message, Role } from "discord.js";
-import { ConfigHandler } from "../../../OldHandler/ConfigHandler";
+import { ConfigHandler } from "../../../NeoHandler/ConfigHandler";
 import ButtonRolesSchema from "../../Models/ButtonRoles-schema";
 async function Error(interaction: ButtonInteraction, Description: string) {
     await interaction.editReply({

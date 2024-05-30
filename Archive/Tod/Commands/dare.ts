@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Callback, Command } from "../../../OldHandler/typings";
+import { Callback, Command } from "../../../NeoHandler/typings";
 import { EmbedBuilder } from "discord.js";
 
 export default {

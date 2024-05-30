@@ -1,5 +1,5 @@
 import { Client, ClientOptions } from "discord.js";
-import { CooldownConfigOptions } from "../../OldHandler/classes/Cooldowns";
+import { CooldownConfigOptions } from "../../NeoHandler/classes/Cooldowns";
 import { global } from "../Core/shared/global"
 
 /**

@@ -1,5 +1,5 @@
 import { ChatInputCommandInteraction, GuildMember, Message } from 'discord.js';
-import { ConfigInstance } from '../../OldHandler/ConfigHandler';
+import { ConfigInstance } from '../../NeoHandler/ConfigHandler';
 import path from 'path'
 import fs from 'fs'
 
