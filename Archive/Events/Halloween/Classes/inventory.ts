@@ -1,5 +1,5 @@
 import { Collection, GuildMember } from "discord.js";
-import InventorySchema from "../../../../src/Models/InventorySchema";
+import InventorySchema from "../../../../home/Models/InventorySchema";
 import { AllItems, items } from "./types";
 
 export class InventoryClass {

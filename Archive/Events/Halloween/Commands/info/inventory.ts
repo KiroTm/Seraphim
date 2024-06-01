@@ -1,7 +1,7 @@
-import { Messagepagination } from "../../../../../src/Functions/utility/pagination";
+import { Messagepagination } from "../../../../../home/Functions/utility/pagination";
 import { CommandType } from "../../../../../NeoHandler/ConfigHandler";
 import { Callback, Command } from "../../../../../NeoHandler/typings";
-import { MemberClass } from '../../../../../src/Classes/Misc/member';
+import { MemberClass } from '../../../../../home/Classes/Misc/member';
 import { CrateType, dropTypes } from "../../Classes/crate";
 import { InventoryClass } from "../../Classes/inventory";
 import { EmbedBuilder, GuildMember } from "discord.js";

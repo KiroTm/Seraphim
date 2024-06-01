@@ -1,5 +1,5 @@
 import { ButtonStyle, EmbedBuilder, ActionRowBuilder, ButtonBuilder, Interaction, ButtonInteraction } from "discord.js";
-import { ResponseClass } from "../../../../../src/Classes/Utility/Response";
+import { ResponseClass } from "../../../../../home/Classes/Utility/Response";
 import { Command, Callback } from "../../../../../NeoHandler/typings";
 import { CrateClass, CrateType } from "../../Classes/crate";
 import { InventoryClass } from "../../Classes/inventory";

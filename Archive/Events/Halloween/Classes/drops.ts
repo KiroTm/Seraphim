@@ -1,6 +1,6 @@
 import { ActionRowBuilder, Activity, ButtonBuilder, ButtonInteraction, ButtonStyle, Collection, ComponentType, EmbedBuilder, Guild, GuildMember, Message, TextChannel } from "discord.js";
-import DropSchema from "../../../../src/Models/Drop-Schema";
-import { client } from "../../../../src";
+import DropSchema from "../../../../home/Models/Drop-Schema";
+import { client } from "../../../../home";
 import { InventoryClass } from "./inventory";
 import { CrateType, dropTypes } from "./crate";
 

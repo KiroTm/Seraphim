@@ -1,4 +1,4 @@
-import { Messagepagination } from '../../../../src/Functions/utility/pagination';
+import { Messagepagination } from '../../../../home/Functions/utility/pagination';
 import { InventoryClass } from './inventory';
 import {AllItems, items } from './types'
 import { Message, Collection, EmbedBuilder, parseEmoji, GuildMember } from "discord.js"

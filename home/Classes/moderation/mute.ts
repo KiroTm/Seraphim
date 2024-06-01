@@ -1,6 +1,6 @@
 import { GuildMember, Role, Collection } from "discord.js";
-import muteSchema from "../../Models/mute-schema";
-import { client } from "../..";
+import muteSchema from "../../../home/Models/mute-schema";
+import { garnetClient as client } from "../../../Main";
 export interface MuteInterface {
     _id?: string,
     GuildID?: string;

@@ -1,6 +1,6 @@
 import { EmbedBuilder } from "discord.js";
 import { ItemClass } from "../../Classes/item";
-import { Messagepagination } from "../../../../../src/Functions/utility/pagination";
+import { Messagepagination } from "../../../../../home/Functions/utility/pagination";
 import { Callback, Command } from "../../../../../NeoHandler/typings";
 export default {
     name: "shop",
