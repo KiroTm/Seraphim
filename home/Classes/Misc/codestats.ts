@@ -27,7 +27,7 @@ export class CodeStatistics {
             }
         };
 
-        await processDirectory('src');
+        await processDirectory('home');
         return { linesOfCode: totalLines, numOfFiles: totalFiles };
     }
 }

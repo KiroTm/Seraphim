@@ -1,6 +1,6 @@
 import { APISelectMenuOption, ActionRowBuilder, AnySelectMenuInteraction, ButtonBuilder, ButtonInteraction, ButtonStyle, ChannelSelectMenuBuilder, ChannelType, ChatInputCommandInteraction, Collection, Embed, EmbedBuilder, ModalSubmitInteraction, RestOrArray, RoleSelectMenuBuilder, SelectMenuComponentOptionData, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js";
 import ms from "ms";
-import { garnetClient as client } from "../../../../Main";
+import { garnetClient as client } from "../../../..";
 import { automodtype, AdvancedSettingCustomActions, AutomodSetupInterface } from "./automod";
 
 export function utils(interaction: | ButtonInteraction | AnySelectMenuInteraction | ModalSubmitInteraction | ChatInputCommandInteraction) {

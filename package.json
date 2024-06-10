@@ -13,6 +13,7 @@
     "canvacord": "^5.4.10",
     "chalk": "^5.3.0",
     "discord-html-transcripts": "^3.2.0",
+    "discord.js": "^14.15.3",
     "dotenv": "^16.3.1",
     "enhanced-ms": "^2.3.0",
     "figlet": "^1.7.0",
@@ -23,11 +24,11 @@
   "name": "seraphim",
   "description": "### A versatile Discord.js Bot featuring a custom command handler for both legacy and slash types, powered by NeoHandler (v1.6.0).",
   "version": "1.0.0",
-  "main": "./src/index.ts",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start-s": "ts-node --swc .",
-    "start": "ts-node ./src/index.ts"
+    "start": "ts-node index.ts"
   },
   "keywords": [],
   "author": "",

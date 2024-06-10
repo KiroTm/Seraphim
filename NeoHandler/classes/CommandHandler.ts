@@ -1,6 +1,6 @@
 import { ClientApplication, Collection, Guild, Message } from "discord.js";
 import getLocalCommands from "../utils/getLocalCommands";
-import { ConfigInstance } from "../ConfigHandler";
+import { CommandType, ConfigInstance } from "../ConfigHandler";
 import { Utils } from '../../Garnet/Utilities/Utils';
 import { Command } from "../typings";
 
@@ -21,17 +21,20 @@ export class CommandHandler {
      */
     async readFiles(instance: ConfigInstance, commandsDir: string, reloadSlash: boolean = false) {
         const { _chalk, _client, _testServers } = instance;
-        this.localCommands = await getLocalCommands(commandsDir);
+        this.localCommands = (await getLocalCommands(commandsDir))
+        const slashCommands = this.localCommands.filter((c) => (typeof c.type !== 'undefined' && c.type !== CommandType.legacy))
         if (!reloadSlash) return;
 
         const application = _client?.application as ClientApplication;
         const commands = await application.commands.fetch();
         const promises: Promise<any>[] = [];
 
-        this.localCommands.each((commandObject, name) => {
+        slashCommands.each((commandObject, name) => {
             const { description, deleted, testServersOnly } = commandObject;
             const options = commandObject as any;
             const existingCommand = commands.find(c => c.name === name);
+            console.log(name)
+            console.log(existingCommand ? true : false)
 
             if (existingCommand) {
                 if (deleted) {
@@ -53,14 +56,19 @@ export class CommandHandler {
                     });
 
                     promises.push(...guildCommands || []);
-                } else if (!deleted) {
-                    promises.push(application.commands.create({ name, description, options }));
+                } else if (deleted) {
+                    console.log(_chalk.blueBright(`Skipping ${name} global command since deleted is set to true.`));
+                } else {
+                    const commandData: any = { name };
+                    if (description) commandData.description = description;
+                    if (options.length) commandData.options = options;
+                    promises.push(application.commands.create(commandData));
                     console.log(_chalk.yellowBright(`Creating global slash command: ${name}.`));
                 }
             }
         });
-
-        Promise.allSettled(promises)
+        console.log(promises)
+        await Promise.resolve(promises)
     }
 
     /**
