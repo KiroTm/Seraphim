@@ -33,8 +33,6 @@ export class CommandHandler {
             const { description, deleted, testServersOnly } = commandObject;
             const options = commandObject as any;
             const existingCommand = commands.find(c => c.name === name);
-            console.log(name)
-            console.log(existingCommand ? true : false)
 
             if (existingCommand) {
                 if (deleted) {
@@ -67,7 +65,6 @@ export class CommandHandler {
                 }
             }
         });
-        console.log(promises)
         await Promise.resolve(promises)
     }
 
