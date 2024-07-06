@@ -44,7 +44,7 @@ export class CacheLoader {
             // Iterate over each cache option.
             cacheLoaderOpts?.forEach(option => {
                 // Fetch data for the cache option.
-                guild[option]?.fetch?.();
+                guild[option]?.fetch?.().catch(() => {});
             });
         });
     }

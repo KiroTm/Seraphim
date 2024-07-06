@@ -31,7 +31,7 @@ export class CommandHandler {
 
         slashCommands.each((commandObject, name) => {
             const { description, deleted, testServersOnly } = commandObject;
-            const options = commandObject as any;
+            const options = commandObject.options as any;
             const existingCommand = commands.find(c => c.name === name);
 
             if (existingCommand) {
@@ -90,11 +90,11 @@ export class CommandHandler {
      * @returns {boolean} - True if the command can be run, false otherwise.
      */
     public canRun(instance: ConfigInstance, command: any, message: Message, args: string[], prefix: string): boolean {
-        const { devOnly, HandlehasPermissions, CheckArgs, hasValidSubcommands } = Utils
+        const { devOnly, handleHasPermissions, checkArgs, hasValidSubcommands } = Utils
         if (hasValidSubcommands(command, message, args) === false) return false;
         if (devOnly(instance, command, message.author.id) === false) return false;
-        if (HandlehasPermissions(command, message, undefined, instance) === false) return false;
-        if (CheckArgs(command, args, prefix, message, undefined) === false) return false;
+        if (handleHasPermissions(command, message, undefined, instance) === false) return false;
+        if (checkArgs(command, args, prefix, message, undefined) === false) return false;
         return true;
     }
 
