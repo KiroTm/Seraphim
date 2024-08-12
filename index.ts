@@ -1,9 +1,10 @@
-import { IntentsBitField, Partials, ClientOptions, TextChannel } from 'discord.js'
+import { IntentsBitField, Partials, ClientOptions, Client, Collection, ChannelType, PermissionsBitField, Attachment, AttachmentBuilder } from 'discord.js'
 import { GarnetClient, GarnetClientOptions } from './Garnet/Framework/GarnetClient';
 import { CacheLoaderOptions, ConfigHandler } from './NeoHandler/ConfigHandler';
 import { LogLevel, Logger, SapphireClient } from '@sapphire/framework';
 require("dotenv/config");
 import { join } from 'path';
+
 // B A S E  O P T I O N S
 
 const baseoptions = {
@@ -24,14 +25,14 @@ const baseoptions = {
     Partials.GuildMember,
   ],
   rest: {
-    globalRequestsPerSecond: 9999
+    globalRequestsPerSecond: 9999,
   },
   allowedMentions: {
     repliedUser: true,
     roles: [],
     parse: [],
-  }
-}
+  },
+} as ClientOptions
 
 // S A P P H I R E  C L I E N T  O P T I O N S 
 
@@ -54,43 +55,44 @@ export const garnetClient = new GarnetClient(baseoptions as GarnetClientOptions)
 
 // N E O - H A N D L E R 
 
-garnetClient.on("ready", async (seraphim) => {
-  garnetClient.setMaxListeners(Infinity);
+garnetClient.on("ready", async (seraphim: Client) => {
+  //@ts-ignore
+  garnetClient.setMaxListeners(Infinity)
   new ConfigHandler({
     client: seraphim,
     commandsDir: join(__dirname, './home', "Commands"),
     featuresDir: join(__dirname, './home', "Events"),
     mongoUri: process.env.MONGO_URI!,
-      cacheOptions: [
-        CacheLoaderOptions.Bans,
-        CacheLoaderOptions.Channels,
-        CacheLoaderOptions.Members,
-        CacheLoaderOptions.Roles,
-      ],
-      DeveloperConfiguration: {
-        testServers: ["1138806085352951950"],
-        botOwners: ["919568881939517460"],
+    cacheOptions: [
+      CacheLoaderOptions.Bans,
+      CacheLoaderOptions.Channels,
+      CacheLoaderOptions.Members,
+      CacheLoaderOptions.Roles,
+    ],
+    DeveloperConfiguration: {
+      testServers: ["1138806085352951950"],
+      botOwners: ["919568881939517460", "1203054172686254081"],
+    },
+    LegacyCommandConfiguration: {
+      PrefixConfiguration: {
+        defaultPrefix: "?",
+        dynamicPrefix: true,
+        mentionPrefix: true,
       },
-      LegacyCommandConfiguration: {
-        PrefixConfiguration: {
-          defaultPrefix: "?",
-          dynamicPrefix: true,
-          mentionPrefix: true,
-        },
-        CooldownConfiguration: {
-          SendWarningMessage: true,
-          CustomErrorMessage: "A little too quick there! Wait {TIME}",
-          OwnersBypass: true,
-          RatelimitIgnore: true,
-        }
-      },
-      SlashCommandConfiguration: {
-        SyncSlashCommands: true
+      CooldownConfiguration: {
+        SendWarningMessage: true,
+        CustomErrorMessage: "A little too quick there! Wait {TIME}",
+        OwnersBypass: true,
+        RatelimitIgnore: true,
       }
-    });
-  
-    process.on("uncaughtException", (error, origin) => { return; })
-    process.on("unhandledRejection", (error, promise) => console.error(error));
+    },
+    SlashCommandConfiguration: {
+      SyncSlashCommands: true
+    }
+  });
+
+  process.on("uncaughtException", (error, origin) => { return; })
+  process.on("unhandledRejection", (error, promise) => console.error(error));
 });
 
 

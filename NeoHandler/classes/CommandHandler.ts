@@ -59,7 +59,7 @@ export class CommandHandler {
                 } else {
                     const commandData: any = { name };
                     if (description) commandData.description = description;
-                    if (options.length) commandData.options = options;
+                    if (options?.length) commandData.options = options;
                     promises.push(application.commands.create(commandData));
                     console.log(_chalk.yellowBright(`Creating global slash command: ${name}.`));
                 }

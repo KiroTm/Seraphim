@@ -181,7 +181,8 @@ export class ConfigHandler {
     try {
       await mongoose.connect(URI);
       this._isConnectedToDB = true;
-    } catch {
+    } catch (error) {
+      console.log(error)
       this._isConnectedToDB = false;
     }
   }
