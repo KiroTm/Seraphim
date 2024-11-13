@@ -57,9 +57,7 @@ export class ShipCommand extends Command {
     }
 
     public async messageRun(message: Message, args: Args) {
-        const { UserOne: { username: firstUsername, memberData: firstMemberData },
-            UserTwo: { username: secondUsername, memberData: secondMemberData },
-            areBothMembers } = await this.getUserData(message, args);
+        const { UserOne: { username: firstUsername, memberData: firstMemberData }, UserTwo: { username: secondUsername, memberData: secondMemberData }, areBothMembers } = await this.getUserData(message, args);
 
         const { compatibilityScore, progressBar, shipName, remark } = this.calculateShipCompatibility(firstUsername, secondUsername);
 
@@ -147,10 +145,18 @@ export class ShipCommand extends Command {
         };
     }
 
-    public createProgressBar(compatibilityScore: number) {
-        const progress = "█".repeat(Math.floor(compatibilityScore / 10)) + "░".repeat(10 - Math.floor(compatibilityScore / 10));
-        return progress;
+    public createProgressBar(compatibilityScore: number): string {
+        const filledBars = Math.floor(compatibilityScore / 20);  // Divides into 5 sections
+        const halfFilled = compatibilityScore % 20 >= 10 ? 1 : 0;
+        const emptyBars = 5 - filledBars - halfFilled;
+    
+        return `<:bar_begin_filled:1306259920949215233>` +
+               `${"<:bar_full_filled:1306259924132691968>".repeat(filledBars)}` +
+               `${halfFilled ? "<:bar_half_filled:1306259927400185917>" : ""}` +
+               `${"<:bar_empty:1306258495582240821>".repeat(emptyBars)}` +
+               `<:bar_end:1306257974934765760>`;
     }
+    
 
     private hashString(input: string): number {
         return [...input].reduce((hash, char) => {
@@ -171,27 +177,33 @@ export class ShipCommand extends Command {
         let firstInput = await args.pick('string').catch(() => null);
         let secondInput = await args.pick('string').catch(() => null);
 
-        let firstMember: any = undefined;
-        let secondMember: any = undefined;
+        let firstMember;
+        let secondMember;
 
         if (!firstInput) {
+            // Case 1: No arguments provided
             firstMember = message.member!;
             secondMember = message.guild?.members.cache.random() || firstMember;
+        } else if (!secondInput) {
+            // Case 2: One argument provided
+            secondMember = await fetchMember(firstInput);
+            firstMember = message.member!;
         } else {
+            // Case 3: Two arguments provided
             firstMember = await fetchMember(firstInput);
             secondMember = await fetchMember(secondInput);
         }
 
         return {
             UserOne: {
-                username: firstMember?.user?.globalName ?? firstMember?.user?.username ?? firstInput,
+                username: firstMember?.user ? firstMember?.nickname ?? firstMember?.user?.globalName ?? firstMember?.user?.username : firstInput,
                 memberData: firstMember
             },
             UserTwo: {
-                username: secondMember?.user?.globalName ?? secondMember?.user?.username ?? secondInput,
+                username: secondMember?.user ? secondMember?.nickname ?? secondMember?.user?.globalName ?? secondMember?.user?.username : secondInput,
                 memberData: secondMember
             },
-            areBothMembers: !!firstMember?.user && !!secondMember?.user
+            areBothMembers: !!firstMember.user && !!secondMember
         };
         
     }
