@@ -5,6 +5,7 @@ import { createCanvas, loadImage } from '@napi-rs/canvas';
 interface ShipReturnData {
     username: string;
     memberData?: GuildMember | undefined;
+    input?: any
 }
 
 const CANVAS_WIDTH = 292; // Canvas width for the ship image
@@ -58,6 +59,8 @@ export class ShipCommand extends Command {
 
     public async messageRun(message: Message, args: Args) {
         const { UserOne: { username: firstUsername, memberData: firstMemberData }, UserTwo: { username: secondUsername, memberData: secondMemberData }, areBothMembers } = await this.getUserData(message, args);
+
+        console.log(firstUsername, secondUsername)
 
         const { compatibilityScore, progressBar, shipName, remark } = this.calculateShipCompatibility(firstUsername, secondUsername);
 
@@ -149,14 +152,14 @@ export class ShipCommand extends Command {
         const filledBars = Math.floor(compatibilityScore / 20);  // Divides into 5 sections
         const halfFilled = compatibilityScore % 20 >= 10 ? 1 : 0;
         const emptyBars = 5 - filledBars - halfFilled;
-    
+
         return `<:bar_begin_filled:1306259920949215233>` +
-               `${"<:bar_full_filled:1306259924132691968>".repeat(filledBars)}` +
-               `${halfFilled ? "<:bar_half_filled:1306259927400185917>" : ""}` +
-               `${"<:bar_empty:1306258495582240821>".repeat(emptyBars)}` +
-               `<:bar_end:1306257974934765760>`;
+            `${"<:bar_full_filled:1306259924132691968>".repeat(filledBars)}` +
+            `${halfFilled ? "<:bar_half_filled:1306259927400185917>" : ""}` +
+            `${"<:bar_empty:1306258495582240821>".repeat(emptyBars)}` +
+            `<:bar_end:1306257974934765760>`;
     }
-    
+
 
     private hashString(input: string): number {
         return [...input].reduce((hash, char) => {
@@ -194,17 +197,23 @@ export class ShipCommand extends Command {
             secondMember = await fetchMember(secondInput);
         }
 
-        return {
+        const data = {
             UserOne: {
-                username: firstMember?.user ? firstMember?.nickname ?? firstMember?.user?.globalName ?? firstMember?.user?.username : firstInput,
-                memberData: firstMember
+                username: firstMember?.user ? firstMember?.nickname ?? firstMember?.user?.globalName ?? firstMember?.user?.username : firstMember,
+                memberData: firstMember,
+                input: firstInput
             },
             UserTwo: {
-                username: secondMember?.user ? secondMember?.nickname ?? secondMember?.user?.globalName ?? secondMember?.user?.username : secondInput,
-                memberData: secondMember
+                username: secondMember?.user ? secondMember?.nickname ?? secondMember?.user?.globalName ?? secondMember?.user?.username : secondMember,
+                memberData: secondMember,
+                input: secondInput
             },
-            areBothMembers: !!firstMember.user && !!secondMember
+            areBothMembers: !!firstMember.user && !!secondMember.user
         };
-        
+
+        console.log(data)
+
+        return data
+
     }
 }
