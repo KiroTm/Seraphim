@@ -60,8 +60,6 @@ export class ShipCommand extends Command {
     public async messageRun(message: Message, args: Args) {
         const { UserOne: { username: firstUsername, memberData: firstMemberData }, UserTwo: { username: secondUsername, memberData: secondMemberData }, areBothMembers } = await this.getUserData(message, args);
 
-        console.log(firstUsername, secondUsername)
-
         const { compatibilityScore, progressBar, shipName, remark } = this.calculateShipCompatibility(firstUsername, secondUsername);
 
         const messagePayload: MessageCreateOptions = {
@@ -210,8 +208,6 @@ export class ShipCommand extends Command {
             },
             areBothMembers: !!firstMember.user && !!secondMember.user
         };
-
-        console.log(data)
 
         return data
 
